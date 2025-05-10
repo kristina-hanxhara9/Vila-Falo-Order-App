@@ -5,7 +5,13 @@ const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
 require('dotenv').config();
+import * as serviceWorker from './serviceWorker';
 
+// More code here...
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below.
+serviceWorker.register();
 // Initialize express app
 const app = express();
 
