@@ -3,7 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth'); // Middleware for authentication
 const Table = require('../../models/Table'); // Table model
 
-// @route   GET api/tables
+// @route   GET /api/tables
 // @desc    Get all tables
 // @access  Private
 router.get('/', auth, async (req, res) => {
@@ -17,7 +17,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// @route   GET api/tables/:id
+// @route   GET /api/tables/:id
 // @desc    Get table by ID
 // @access  Private
 router.get('/:id', auth, async (req, res) => {
@@ -38,7 +38,7 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   POST api/tables
+// @route   POST /api/tables
 // @desc    Create a table
 // @access  Private (both manager and waiter can create)
 router.post('/', auth, async (req, res) => {
@@ -72,7 +72,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/tables/:id
+// @route   PUT /api/tables/:id
 // @desc    Update table
 // @access  Private
 router.put('/:id', auth, async (req, res) => {
@@ -109,7 +109,7 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/tables/:id
+// @route   DELETE /api/tables/:id
 // @desc    Delete a table
 // @access  Private (both manager and waiter can delete)
 router.delete('/:id', auth, async (req, res) => {

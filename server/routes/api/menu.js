@@ -1,10 +1,9 @@
-// server/routes/menu.js
 const express = require('express');
 const router = express.Router();
 const MenuItem = require('../../models/MenuItem');
 const auth = require('../../middleware/auth');
 
-// @route   GET api/menu
+// @route   GET /api/menu
 // @desc    Get all menu items
 // @access  Public
 router.get('/', async (req, res) => {
@@ -30,7 +29,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// @route   GET api/menu/category/:category
+// @route   GET /api/menu/category/:category
 // @desc    Get menu items by category
 // @access  Public
 router.get('/category/:category', async (req, res) => {
@@ -51,7 +50,7 @@ router.get('/category/:category', async (req, res) => {
   }
 });
 
-// @route   POST api/menu
+// @route   POST /api/menu
 // @desc    Add a new menu item
 // @access  Private (manager only)
 router.post('/', auth, async (req, res) => {
@@ -81,7 +80,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// @route   PUT api/menu/:id
+// @route   PUT /api/menu/:id
 // @desc    Update a menu item
 // @access  Private (manager only)
 router.put('/:id', auth, async (req, res) => {
@@ -122,7 +121,7 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
-// @route   DELETE api/menu/:id
+// @route   DELETE /api/menu/:id
 // @desc    Delete a menu item
 // @access  Private (manager only)
 router.delete('/:id', auth, async (req, res) => {
