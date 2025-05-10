@@ -4,12 +4,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "restaurant",
+    "api",
+    "backend"
+  ],
+  "author": "Kristina Hanxhara",
   "license": "ISC",
-  "description": "",
+  "description": "Backend API server for Vila Falo restaurant order system",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
