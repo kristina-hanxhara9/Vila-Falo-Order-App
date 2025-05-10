@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Vila-Falo-Order-App/static/css/main.25eb4008.css",
+    "main.js": "/Vila-Falo-Order-App/static/js/main.cdeb383d.js",
+    "static/js/453.419a5d54.chunk.js": "/Vila-Falo-Order-App/static/js/453.419a5d54.chunk.js",
+    "index.html": "/Vila-Falo-Order-App/index.html",
+    "main.25eb4008.css.map": "/Vila-Falo-Order-App/static/css/main.25eb4008.css.map",
+    "main.cdeb383d.js.map": "/Vila-Falo-Order-App/static/js/main.cdeb383d.js.map",
+    "453.419a5d54.chunk.js.map": "/Vila-Falo-Order-App/static/js/453.419a5d54.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.25eb4008.css",
+    "static/js/main.cdeb383d.js"
+  ]
+}
