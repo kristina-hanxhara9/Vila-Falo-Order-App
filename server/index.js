@@ -26,29 +26,8 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Socket.io handling
-io.on('connection', (socket) => {
-  console.log('New client connected');
-
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
-
-  socket.on('table-status-change', (data) => {
-    console.log('Table status change:', data);
-    io.emit('table-updated', data);
-  });
-
-  socket.on('new-order', (data) => {
-    console.log('New order:', data);
-    io.emit('new-order', data);
-  });
-
-  socket.on('order-status-change', (data) => {
-    console.log('Order status change:', data);
-    io.emit('order-updated', data);
-  });
-});
+// Use modular socket handlers
+require('./sockets/socketEvents')(io);
 
 // Define Routes
 app.use('/api/auth', require('./routes/api/auth'));
