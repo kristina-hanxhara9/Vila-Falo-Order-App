@@ -10,9 +10,9 @@
     "client": "cd client && npm start",
     "install-all": "npm install && cd server && npm install && cd ../client && npm install"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
+"engines": {
+  "node": "18.17.1"
+},
   "dependencies": {
     "concurrently": "^8.2.2",
     "jwt-decode": "^4.0.0",
