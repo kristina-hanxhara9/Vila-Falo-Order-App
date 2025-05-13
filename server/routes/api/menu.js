@@ -18,6 +18,7 @@ router.get('/', async (req, res) => {
     // Check if any items were found
     if (menuItems.length === 0) {
       console.log('No menu items found in database');
+      return res.status(404).json({ message: 'No menu items found' });
     } else {
       console.log('Menu items categories:', menuItems.map(item => item.category));
     }
@@ -43,6 +44,10 @@ router.get('/category/:category', async (req, res) => {
     
     console.log(`Found ${menuItems.length} menu items in category ${req.params.category}`);
     
+    if (menuItems.length === 0) {
+      return res.status(404).json({ message: 'No menu items found in this category' });
+    }
+
     res.json(menuItems);
   } catch (err) {
     console.error('Error fetching menu items by category:', err.message);
@@ -58,9 +63,13 @@ router.post('/', auth, async (req, res) => {
   if (req.user.role !== 'manager') {
     return res.status(403).json({ message: 'Nuk keni akses në këtë funksion' });
   }
-  
+
   const { name, albanianName, category, price, description, albanianDescription } = req.body;
   
+  if (!name || !category || !price) {
+    return res.status(400).json({ message: 'Please provide name, category, and price' });
+  }
+
   try {
     // Create new menu item
     const newMenuItem = new MenuItem({

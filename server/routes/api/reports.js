@@ -26,7 +26,7 @@ router.get('/', auth, async (req, res) => {
     res.json(orders);
   } catch (err) {
     console.error('Error getting orders:', err);
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
@@ -43,7 +43,7 @@ router.get('/active', auth, async (req, res) => {
     res.json(orders);
   } catch (err) {
     console.error('Error getting active orders:', err);
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
@@ -57,16 +57,16 @@ router.get('/:id', auth, async (req, res) => {
       .populate('waiter', 'name');
     
     if (!order) {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found' });
     }
     
     res.json(order);
   } catch (err) {
     console.error('Error getting order by ID:', err);
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found' });
     }
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
@@ -75,7 +75,6 @@ router.get('/:id', auth, async (req, res) => {
 // @access  Private
 router.get('/table/:tableId', auth, async (req, res) => {
   try {
-    console.log('Getting orders for table:', req.params.tableId);
     const orders = await Order.find({ 
       table: req.params.tableId,
       status: { $in: ['active', 'completed'] }
@@ -84,14 +83,13 @@ router.get('/table/:tableId', auth, async (req, res) => {
       .populate('table', 'number')
       .populate('waiter', 'name');
     
-    console.log('Found orders:', orders.length);
     res.json(orders);
   } catch (err) {
     console.error('Error getting orders by table:', err);
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found for table' });
     }
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
@@ -109,9 +107,9 @@ router.get('/waiter/:waiterId', auth, async (req, res) => {
   } catch (err) {
     console.error('Error getting orders by waiter:', err);
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found for waiter' });
     }
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
@@ -122,23 +120,17 @@ router.post('/', auth, async (req, res) => {
   try {
     const { tableId, items } = req.body;
     
-    // Validate input
     if (!tableId || !items || items.length === 0) {
-      return res.status(400).json({ message: 'Ju lutem plotësoni të gjitha fushat e kërkuara' });
+      return res.status(400).json({ message: 'Please provide all required fields' });
     }
     
-    // Check if table exists
     const table = await Table.findById(tableId);
     if (!table) {
-      return res.status(404).json({ message: 'Tavolina nuk u gjet' });
+      return res.status(404).json({ message: 'Table not found' });
     }
     
-    // Calculate total amount
-    const totalAmount = items.reduce((total, item) => {
-      return total + (item.price * item.quantity);
-    }, 0);
+    const totalAmount = items.reduce((total, item) => total + (item.price * item.quantity), 0);
     
-    // Create new order
     const newOrder = new Order({
       table: tableId,
       waiter: req.user.id,
@@ -154,17 +146,14 @@ router.post('/', auth, async (req, res) => {
     
     const order = await newOrder.save();
     
-    // Update table status to "ordering" or "unpaid"
     table.status = table.status === 'free' ? 'ordering' : 'unpaid';
     table.currentOrder = order._id;
     await table.save();
     
-    // Populate table and waiter info
     const populatedOrder = await Order.findById(order._id)
       .populate('table', 'number')
       .populate('waiter', 'name');
     
-    // Emit socket events if available
     if (io) {
       io.emit('new-order', populatedOrder);
       io.emit('table-updated', table);
@@ -173,7 +162,7 @@ router.post('/', auth, async (req, res) => {
     res.json(populatedOrder);
   } catch (err) {
     console.error('Error creating order:', err);
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
@@ -184,41 +173,30 @@ router.put('/:id', auth, async (req, res) => {
   try {
     const { items, status } = req.body;
     
-    // Find the order
     let order = await Order.findById(req.params.id);
     
     if (!order) {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found' });
     }
     
-    // Update order fields
     if (items) {
       order.items = items;
-      
-      // Recalculate total amount
-      order.totalAmount = items.reduce((total, item) => {
-        return total + (item.price * item.quantity);
-      }, 0);
+      order.totalAmount = items.reduce((total, item) => total + (item.price * item.quantity), 0);
     }
     
     if (status) {
       order.status = status;
-      
-      // If order is completed, set completion date
       if (status === 'completed') {
         order.completedAt = Date.now();
       }
     }
     
-    // Save order
     order = await order.save();
     
-    // Populate table and waiter info
     const populatedOrder = await Order.findById(order._id)
       .populate('table', 'number')
       .populate('waiter', 'name');
     
-    // Emit socket event if available
     if (io) {
       io.emit('order-updated', populatedOrder);
     }
@@ -227,9 +205,9 @@ router.put('/:id', auth, async (req, res) => {
   } catch (err) {
     console.error('Error updating order:', err);
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found' });
     }
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
@@ -237,24 +215,21 @@ router.put('/:id', auth, async (req, res) => {
 // @desc    Delete an order
 // @access  Private (manager only)
 router.delete('/:id', auth, async (req, res) => {
-  // Only managers can delete orders
   if (req.user.role !== 'manager') {
-    return res.status(403).json({ message: 'Nuk keni akses në këtë funksion' });
+    return res.status(403).json({ message: 'Access denied' });
   }
   
   try {
     const order = await Order.findById(req.params.id);
     
     if (!order) {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found' });
     }
     
-    // Update table status if this is the current order
     let updatedTable = null;
     const table = await Table.findById(order.table);
     
     if (table && table.currentOrder && table.currentOrder.toString() === req.params.id) {
-      // Check if there are other active orders for this table
       const activeOrders = await Order.find({
         table: order.table,
         status: 'active',
@@ -270,22 +245,20 @@ router.delete('/:id', auth, async (req, res) => {
     
     await Order.findByIdAndDelete(req.params.id);
     
-    // Emit socket events if available
     if (io) {
       io.emit('order-deleted', req.params.id);
-      
       if (updatedTable) {
         io.emit('table-updated', updatedTable);
       }
     }
     
-    res.json({ message: 'Porosia u fshi me sukses' });
+    res.json({ message: 'Order deleted successfully' });
   } catch (err) {
     console.error('Error deleting order:', err);
     if (err.kind === 'ObjectId') {
-      return res.status(404).json({ message: 'Porosia nuk u gjet' });
+      return res.status(404).json({ message: 'Order not found' });
     }
-    res.status(500).send('Gabim në server');
+    res.status(500).send('Server error');
   }
 });
 
