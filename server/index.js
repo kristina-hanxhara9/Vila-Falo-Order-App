@@ -27,7 +27,7 @@ app.use(cors());
 app.use(express.json());
 
 // Use modular socket handlers
-require('./sockets/socketEvents')(io);
+require('./sockets/index')(io);
 
 // Define Routes
 app.use('/api/auth', require('./routes/api/auth'));
