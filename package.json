@@ -1,22 +1,26 @@
 {
   "name": "restaurant-order-system",
   "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
   "description": "Restaurant order system for Vila Falo",
-  "main": "server/index.js",
-  "scripts": {
-    "start": "node server/index.js",
-    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
-    "server": "cd server && npm run dev",
-    "client": "cd client && npm start",
-    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  "engines": {
+    "node": ">=18.0.0"
   },
-"engines": {
-  "node": "18.17.1"
-},
+  "scripts": {
+    "install-all": "npm install",
+    "start": "npm run start:server",
+    "dev": "npm-run-all --parallel dev:server dev:client",
+    "start:server": "npm --workspace=server start",
+    "dev:server": "npm --workspace=server run dev",
+    "start:client": "npm --workspace=client run serve",
+    "dev:client": "npm --workspace=client start"
+  },
   "dependencies": {
-    "concurrently": "^8.2.2",
-    "jwt-decode": "^4.0.0",
-    "mongodb": "^6.16.0"
+    "npm-run-all": "^4.1.5"
   },
   "keywords": [
     "restaurant",
