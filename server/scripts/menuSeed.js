@@ -1,6 +1,7 @@
 // server/scripts/menuSeed.js
 require('dotenv').config();
 const mongoose = require('mongoose');
+const config = require('../config/config');
 
 // Direct MongoDB connection URI
 const MONGO_URI = process.env.MONGO_URI 
