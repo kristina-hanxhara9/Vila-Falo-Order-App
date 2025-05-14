@@ -3,7 +3,6 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const http = require('http');
 const socketIo = require('socket.io');
-const path = require('path');
 require('dotenv').config();
 
 // Initialize express app
@@ -29,21 +28,17 @@ app.use(express.json());
 // Use modular socket handlers
 require('./sockets/index')(io);
 
-// Define Routes
+// Define API Routes
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/tables', require('./routes/api/tables'));
 app.use('/api/menu', require('./routes/api/menu'));
 app.use('/api/orders', require('./routes/api/orders'));
 app.use('/api/reports', require('./routes/api/reports'));
 
-// Serve static assets in production
-if (process.env.NODE_ENV === 'production') {
-  const clientBuildPath = path.join(__dirname, '..', 'client', 'build');
-  app.use(express.static(clientBuildPath));
-
-  app.get('*path', (req, res) => {
-    res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });}
+// Catch-all for undefined routes (only API focused)
+app.all('*', (req, res) => {
+  res.status(404).json({ message: 'API route not found' });
+});
 
 // Global error handler
 app.use((err, req, res, next) => {
