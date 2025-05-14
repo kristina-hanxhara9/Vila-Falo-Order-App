@@ -1,17 +1,15 @@
-// server/scripts/menuSeed.js
 require('dotenv').config();
 const mongoose = require('mongoose');
 const config = require('../config/config');
 
-// Direct MongoDB connection URI
-const MONGO_URI = process.env.MONGO_URI 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB Connected to:', MONGO_URI))
+// Use the config file's mongoURI instead of direct env variable
+mongoose.connect(config.mongoURI)
+  .then(() => console.log('MongoDB Connected to:', config.mongoURI))
   .catch(err => {
     console.error('MongoDB connection error:', err);
     process.exit(1);
   });
-
+  
 // Define MenuItem schema
 const MenuItemSchema = new mongoose.Schema({
   name: {
