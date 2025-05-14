@@ -3,9 +3,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 // Direct MongoDB connection URI
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/restaurant';
-
-// Connect to MongoDB
+const MONGO_URI = process.env.MONGO_URI 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB Connected to:', MONGO_URI))
   .catch(err => {
