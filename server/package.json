@@ -1,22 +1,13 @@
 {
-  "name": "server",
+  "name": "vila-falo-server",
   "version": "1.0.0",
   "description": "Backend API server for Vila Falo restaurant order system",
   "main": "index.js",
-  "engines": {
-    "node": ">=18.0.0"
-  },
+  "engines": { "node": ">=18.0.0" },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "keywords": [
-    "restaurant",
-    "api",
-    "backend"
-  ],
-  "author": "Kristina Hanxhara",
-  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
@@ -28,5 +19,7 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
-  }
+  },
+  "license": "ISC",
+  "author": "Kristina Hanxhara"
 }
