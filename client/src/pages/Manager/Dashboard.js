@@ -113,6 +113,7 @@ const ManagerDashboard = () => {
 
   // Format currency
   const formatCurrency = (amount) => {
+    if (amount ==null) return '0 LEK';
     return amount.toLocaleString() + ' LEK';
   };
 
