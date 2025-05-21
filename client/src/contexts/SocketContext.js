@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 export const SocketContext = createContext();
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL ;
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'https://dry-cliffs-57282-2269f6e54282.herokuapp.com';
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
