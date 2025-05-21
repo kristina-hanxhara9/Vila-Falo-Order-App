@@ -9,7 +9,7 @@ require('dotenv').config();
 // Initialize express app
 const app = express();
 
-// Create HTTP server and Socket.io
+// Create HTTP server and attach Socket.io
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
@@ -26,7 +26,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Use modular socket handlers
+// Load socket handlers
 require('./sockets/index')(io);
 
 // Define Routes
@@ -38,12 +38,15 @@ app.use('/api/reports', require('./routes/api/reports'));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
+  // Path to the React build folder
   const clientBuildPath = path.join(__dirname, '..', 'client', 'build');
   app.use(express.static(clientBuildPath));
 
-  app.get('*path', (req, res) => {
+  // Serve index.html for any unknown route (to support client-side routing)
+  app.get('*', (req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
-  });}
+  });
+}
 
 // Global error handler
 app.use((err, req, res, next) => {
@@ -58,5 +61,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
-// Export io instance
+// Export the io instance for use in other parts of your application if needed
 module.exports = { io };
