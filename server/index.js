@@ -3,6 +3,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const http = require('http');
 const socketIo = require('socket.io');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -11,12 +12,9 @@ const server = http.createServer(app);
 // Connect to Database
 connectDB();
 
-// CORS configuration - allow your frontend
+// CORS configuration
 const corsOptions = {
-  origin: [
-    'https://dry-cliffs-57282-2269f6e54282.herokuapp.com',
-    'http://localhost:3000'
-  ],
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 };
@@ -38,14 +36,15 @@ app.use('/api/menu', require('./routes/api/menu'));
 app.use('/api/orders', require('./routes/api/orders'));
 app.use('/api/reports', require('./routes/api/reports'));
 
-// Health check endpoint
-app.get('/', (req, res) => {
-  res.json({ message: 'Restaurant Order System API is running!' });
-});
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  const clientBuildPath = path.join(__dirname, '..', 'client', 'build');
+  app.use(express.static(clientBuildPath));
 
-// Remove the static file serving for production
-// Remove this entire block:
-// if (process.env.NODE_ENV === 'production') { ... }
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
