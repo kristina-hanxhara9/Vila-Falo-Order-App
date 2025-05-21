@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Backend API server for Vila Falo restaurant order system",
   "main": "index.js",
-  "engines": {
-    "node": ">=22.15.1 <23.0.0",
-    "npm": "11.4.0"
-  },
+"engines": {
+  "node": ">=22.15.1 <23.0.0",
+  "npm":  "11.4.0"
+},
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"

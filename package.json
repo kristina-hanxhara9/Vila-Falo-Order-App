@@ -7,9 +7,10 @@
     "client"
   ],
   "description": "Restaurant order system for Vila Falo",
-  "engines": {
-    "node": ">=18.0.0"
-  },
+ "engines": {
+  "node": ">=22.15.1 <23.0.0",
+  "npm":  "11.4.0"
+},
   "scripts": {
     "install-all": "npm install",
     "start": "npm run start:server",
