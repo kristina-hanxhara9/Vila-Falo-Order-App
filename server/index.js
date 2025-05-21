@@ -1,9 +1,9 @@
-const express    = require('express');
-const cors       = require('cors');
-const connectDB  = require('./config/db');
-const http       = require('http');
-const socketIo   = require('socket.io');
-const path       = require('path');
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const http = require('http');
+const socketIo = require('socket.io');
+const path = require('path');
 require('dotenv').config();
 
 // Initialize express app
@@ -13,8 +13,8 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: '*',
-    methods: ['GET','POST','PUT','DELETE'],
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }
 });
@@ -22,18 +22,24 @@ const io = socketIo(server, {
 // Connect to Database
 connectDB();
 
-// Middleware
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Modular socket handlers
 require('./sockets/index')(io);
 
 // Define Routes
-app.use('/api/auth',    require('./routes/api/auth'));
-app.use('/api/tables',  require('./routes/api/tables'));
-app.use('/api/menu',    require('./routes/api/menu'));
-app.use('/api/orders',  require('./routes/api/orders'));
+app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/tables', require('./routes/api/tables'));
+app.use('/api/menu', require('./routes/api/menu'));
+app.use('/api/orders', require('./routes/api/orders'));
 app.use('/api/reports', require('./routes/api/reports'));
 
 // Serve static assets in production
@@ -41,7 +47,6 @@ if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '..', 'client', 'build');
   app.use(express.static(clientBuildPath));
 
-  // **Fixed**: use '*' not '*path'
   app.get('*', (req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
@@ -62,4 +67,3 @@ server.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 
 // Export io instance if needed elsewhere
 module.exports = { io };
-
