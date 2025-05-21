@@ -7,6 +7,9 @@ import { SocketContext } from '../../contexts/SocketContext';
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const TableGrid = ({ tables, onSelectTable }) => {
+  // Ensure tables is always an array
+  const safeTable = Array.isArray(tables) ? tables : [];
+  
   // Table status colors
   const getStatusClass = (status) => {
     switch (status) {
@@ -41,7 +44,7 @@ const TableGrid = ({ tables, onSelectTable }) => {
   
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      {tables.map((table) => (
+      {safeTable.map((table) => (
         <div
           key={table._id}
           className={`border-2 rounded-lg p-4 text-center cursor-pointer shadow hover:shadow-lg transition-shadow duration-300 ${getStatusClass(table.status)}`}
@@ -72,70 +75,109 @@ const WaiterDashboard = () => {
   // Fetch data: tables, active orders, and menu items
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) {
+        console.log('❌ No token available');
+        setError('No token available');
+        navigate('/login');
+        return;
+      }
+
       try {
         setLoading(true);
+        console.log('🔑 Using token:', token);
         
-        // Include token in request headers
         const config = {
           headers: {
             'x-auth-token': token
           }
         };
         
-        // Fetch menu items first to get product names
+        // Test menu API
+        console.log('📱 Fetching menu...');
         const menuRes = await axios.get(`${API_URL}/menu`, config);
-        setMenuItems(menuRes.data);
+        console.log('📱 Menu response:', menuRes.data);
+        console.log('📱 Menu is array?', Array.isArray(menuRes.data));
+        setMenuItems(Array.isArray(menuRes.data) ? menuRes.data : []);
         
-        // Fetch tables
+        // Test tables API
+        console.log('🪑 Fetching tables...');
         const tablesRes = await axios.get(`${API_URL}/tables`, config);
-        setTables(tablesRes.data.sort((a, b) => a.number - b.number));
+        console.log('🪑 Tables response:', tablesRes.data);
+        console.log('🪑 Tables is array?', Array.isArray(tablesRes.data));
+        const tablesData = Array.isArray(tablesRes.data) ? tablesRes.data : [];
+        setTables(tablesData.sort((a, b) => a.number - b.number));
         
-        // Fetch active orders
+        // Test orders API
+        console.log('📋 Fetching orders...');
         const ordersRes = await axios.get(`${API_URL}/orders/active`, config);
-        setActiveOrders(ordersRes.data);
+        console.log('📋 Orders response:', ordersRes.data);
+        console.log('📋 Orders is array?', Array.isArray(ordersRes.data));
+        setActiveOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
         
+        console.log('✅ All data fetched successfully');
         setLoading(false);
       } catch (err) {
-        setError('Gabim gjatë marrjes së të dhënave');
+        console.error('❌ Fetch error:', err);
+        console.error('❌ Error response:', err.response?.data);
+        console.error('❌ Error status:', err.response?.status);
+        setError('API Error: ' + (err.response?.data?.message || err.message));
         setLoading(false);
-        console.error(err);
+        
+        if (err.response?.status === 401) {
+          navigate('/login');
+        }
       }
     };
     
     fetchData();
-  }, [token]);
+  }, [token, navigate]);
+  
+  // Debug logging for state changes
+  useEffect(() => {
+    console.log('📊 Tables state changed:', tables, 'Is array?', Array.isArray(tables));
+  }, [tables]);
+
+  useEffect(() => {
+    console.log('📊 Orders state changed:', activeOrders, 'Is array?', Array.isArray(activeOrders));
+  }, [activeOrders]);
+
+  useEffect(() => {
+    console.log('📊 Menu state changed:', menuItems, 'Is array?', Array.isArray(menuItems));
+  }, [menuItems]);
   
   // Listen for socket events
   useEffect(() => {
     if (socket && connected) {
       // Listen for table updates
       socket.on('table-updated', (data) => {
-        setTables((prevTables) =>
-          prevTables.map((table) =>
+        setTables((prevTables) => {
+          const safePrevTables = Array.isArray(prevTables) ? prevTables : [];
+          return safePrevTables.map((table) =>
             table._id === data.tableId
               ? { ...table, status: data.status }
               : table
-          )
-        );
+          );
+        });
       });
       
       // Listen for new orders
       socket.on('order-received', (orderData) => {
-        // Update active orders if needed
         setActiveOrders((prevOrders) => {
-          const orderExists = prevOrders.some((order) => order._id === orderData._id);
+          const safePrevOrders = Array.isArray(prevOrders) ? prevOrders : [];
+          const orderExists = safePrevOrders.some((order) => order._id === orderData._id);
           if (!orderExists) {
-            return [...prevOrders, orderData];
+            return [...safePrevOrders, orderData];
           }
-          return prevOrders;
+          return safePrevOrders;
         });
       });
       
       // Listen for order completion
       socket.on('order-completed', ({ orderId }) => {
-        setActiveOrders((prevOrders) =>
-          prevOrders.filter((order) => order._id !== orderId)
-        );
+        setActiveOrders((prevOrders) => {
+          const safePrevOrders = Array.isArray(prevOrders) ? prevOrders : [];
+          return safePrevOrders.filter((order) => order._id !== orderId);
+        });
       });
       
       // Cleanup on unmount
@@ -171,19 +213,20 @@ const WaiterDashboard = () => {
   // Get item name from menuItems
   const getItemName = (item) => {
     // First try direct name if it exists
-    if (item.name) {
+    if (item && item.name) {
       return item.name;
     }
     
     // If menuItem is an object with a name
-    if (item.menuItem && typeof item.menuItem === 'object') {
+    if (item && item.menuItem && typeof item.menuItem === 'object') {
       if (item.menuItem.albanianName) return item.menuItem.albanianName;
       if (item.menuItem.name) return item.menuItem.name;
     }
     
     // If menuItem is just an ID string, look it up in our menuItems state
-    if (item.menuItem && typeof item.menuItem === 'string') {
-      const menuItem = menuItems.find(m => m._id === item.menuItem);
+    if (item && item.menuItem && typeof item.menuItem === 'string') {
+      const safeMenuItems = Array.isArray(menuItems) ? menuItems : [];
+      const menuItem = safeMenuItems.find(m => m._id === item.menuItem);
       if (menuItem) {
         // Prefer Albanian name
         if (menuItem.albanianName) return menuItem.albanianName;
@@ -293,7 +336,8 @@ const WaiterDashboard = () => {
     `);
     
     // Add each item to the bill with proper name display
-    order.items.forEach(item => {
+    const safeItems = Array.isArray(order.items) ? order.items : [];
+    safeItems.forEach(item => {
       // Look up the item name in our menu items
       const itemName = getItemName(item);
       const itemTotal = item.price * item.quantity;
@@ -347,8 +391,9 @@ const WaiterDashboard = () => {
         status: newStatus
       }, config);
       
-      // Update local state
-      setTables(tables.map(table => 
+      // Update local state with safety check
+      const safeTables = Array.isArray(tables) ? tables : [];
+      setTables(safeTables.map(table => 
         table._id === tableId ? updateResponse.data : table
       ));
       
@@ -373,6 +418,21 @@ const WaiterDashboard = () => {
   const navigateToTableManagement = () => {
     navigate('/waiter/tables');
   };
+  
+  // Debug before render
+  console.log('🔍 Debug before render:');
+  console.log('tables:', tables, 'is array?', Array.isArray(tables));
+  console.log('activeOrders:', activeOrders, 'is array?', Array.isArray(activeOrders));
+  console.log('menuItems:', menuItems, 'is array?', Array.isArray(menuItems));
+
+  // Ensure safe arrays for rendering (declare once here)
+  const safeTables = Array.isArray(tables) ? tables : [];
+  const safeActiveOrders = Array.isArray(activeOrders) ? activeOrders : [];
+
+  // Also check each order's items
+  safeActiveOrders.forEach((order, index) => {
+    console.log(`Order ${index} items:`, order.items, 'is array?', Array.isArray(order.items));
+  });
   
   if (loading) {
     return (
@@ -458,7 +518,7 @@ const WaiterDashboard = () => {
             </div>
             
             <div className="p-6">
-              <TableGrid tables={tables} onSelectTable={handleSelectTable} />
+              <TableGrid tables={safeTables} onSelectTable={handleSelectTable} />
               
               <div className="mt-6 text-right">
                 <button 
@@ -479,7 +539,7 @@ const WaiterDashboard = () => {
           </div>
           
           <div className="p-6">
-            {activeOrders.length === 0 ? (
+            {safeActiveOrders.length === 0 ? (
               <div className="text-center py-8 bg-gray-50 rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -489,61 +549,65 @@ const WaiterDashboard = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {activeOrders.map((order) => (
-                  <div key={order._id} className="border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <div className="bg-gray-50 px-4 py-3 flex justify-between items-center rounded-t-lg border-b">
-                      <div className="font-semibold">Tavolina {order.table?.number || 'N/A'}</div>
-                      <div className="text-sm text-gray-500">
-                        {new Date(order.createdAt).toLocaleTimeString('sq-AL', {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+                {safeActiveOrders.map((order) => {
+                  const safeOrderItems = Array.isArray(order.items) ? order.items : [];
+                  
+                  return (
+                    <div key={order._id} className="border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                      <div className="bg-gray-50 px-4 py-3 flex justify-between items-center rounded-t-lg border-b">
+                        <div className="font-semibold">Tavolina {order.table?.number || 'N/A'}</div>
+                        <div className="text-sm text-gray-500">
+                          {new Date(order.createdAt).toLocaleTimeString('sq-AL', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </div>
                       </div>
-                    </div>
-                    <div className="p-4">
-                      <div className="space-y-2 mb-4">
-                        {order.items.map((item, index) => {
-                          const itemName = getItemName(item);
-                          
-                          return (
-                            <div key={index} className="flex justify-between items-center">
-                              <div>
-                                <span className="font-medium mr-1">{item.quantity}x</span>
-                                <span className="font-medium">{itemName}</span>
-                                {item.notes && (
-                                  <p className="text-sm text-gray-500 ml-5">
-                                    {item.notes}
-                                  </p>
-                                )}
+                      <div className="p-4">
+                        <div className="space-y-2 mb-4">
+                          {safeOrderItems.map((item, index) => {
+                            const itemName = getItemName(item);
+                            
+                            return (
+                              <div key={index} className="flex justify-between items-center">
+                                <div>
+                                  <span className="font-medium mr-1">{item.quantity}x</span>
+                                  <span className="font-medium">{itemName}</span>
+                                  {item.notes && (
+                                    <p className="text-sm text-gray-500 ml-5">
+                                      {item.notes}
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="text-gray-700">
+                                  {formatCurrency(item.price * item.quantity)}
+                                </div>
                               </div>
-                              <div className="text-gray-700">
-                                {formatCurrency(item.price * item.quantity)}
-                              </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
+                        <div className="border-t pt-2 flex justify-between font-semibold">
+                          <div>Total:</div>
+                          <div>{formatCurrency(order.totalAmount)}</div>
+                        </div>
                       </div>
-                      <div className="border-t pt-2 flex justify-between font-semibold">
-                        <div>Total:</div>
-                        <div>{formatCurrency(order.totalAmount)}</div>
+                      <div className="border-t px-4 py-3 bg-gray-50 rounded-b-lg flex justify-between">
+                        <Link
+                          to={`/waiter/table/${order.table?._id}`}
+                          className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+                        >
+                          Shiko detajet
+                        </Link>
+                        <button 
+                          onClick={() => printBill(order)}
+                          className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
+                        >
+                          Printo Faturën
+                        </button>
                       </div>
                     </div>
-                    <div className="border-t px-4 py-3 bg-gray-50 rounded-b-lg flex justify-between">
-                      <Link
-                        to={`/waiter/table/${order.table?._id}`}
-                        className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
-                      >
-                        Shiko detajet
-                      </Link>
-                      <button 
-                        onClick={() => printBill(order)}
-                        className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
-                      >
-                        Printo Faturën
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

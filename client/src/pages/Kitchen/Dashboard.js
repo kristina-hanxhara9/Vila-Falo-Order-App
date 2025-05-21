@@ -20,11 +20,18 @@ const KitchenDashboard = () => {
   // Fetch menu items and orders
   useEffect(() => {
     const fetchData = async () => {
+      if (!token) {
+        console.log('❌ No token available');
+        setError('No token available');
+        navigate('/login');
+        return;
+      }
+
       try {
         setLoading(true);
         setError('');
+        console.log('🔑 Using token:', token);
         
-        // Include token in request headers
         const config = {
           headers: {
             'x-auth-token': token
@@ -32,22 +39,36 @@ const KitchenDashboard = () => {
         };
         
         // First, fetch the menu items to get the names
+        console.log('📱 Fetching menu...');
         const menuRes = await axios.get(`${API_URL}/menu`, config);
-        setMenuItems(menuRes.data);
+        console.log('📱 Menu response:', menuRes.data);
+        console.log('📱 Menu is array?', Array.isArray(menuRes.data));
+        setMenuItems(Array.isArray(menuRes.data) ? menuRes.data : []);
         
         // Then fetch orders
+        console.log('📋 Fetching orders...');
         const ordersRes = await axios.get(`${API_URL}/orders`, config);
+        console.log('📋 Orders response:', ordersRes.data);
+        console.log('📋 Orders is array?', Array.isArray(ordersRes.data));
         
-        // Filter for active orders only
-        const activeOrders = ordersRes.data.filter(order => order.status === 'active');
+        // Filter for active orders only with safety check
+        const safeOrdersData = Array.isArray(ordersRes.data) ? ordersRes.data : [];
+        const activeOrders = safeOrdersData.filter(order => order.status === 'active');
         
         // Sort by oldest first so kitchen can prioritize
         setOrders(activeOrders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
+        console.log('✅ All data fetched successfully');
         setLoading(false);
       } catch (err) {
-        setError('Gabim gjatë marrjes së të dhënave');
+        console.error('❌ Fetch error:', err);
+        console.error('❌ Error response:', err.response?.data);
+        console.error('❌ Error status:', err.response?.status);
+        setError('API Error: ' + (err.response?.data?.message || err.message));
         setLoading(false);
-        console.error('Dashboard error:', err);
+        
+        if (err.response?.status === 401) {
+          navigate('/login');
+        }
       }
     };
     
@@ -58,36 +79,40 @@ const KitchenDashboard = () => {
       socket.on('order-updated', (updatedOrder) => {
         console.log('Received order update via socket:', updatedOrder);
         setOrders(currentOrders => {
+          const safeCurrentOrders = Array.isArray(currentOrders) ? currentOrders : [];
+          
           // If the order is no longer active, remove it from the list
           if (updatedOrder.status !== 'active') {
-            return currentOrders.filter(order => order._id !== updatedOrder._id);
+            return safeCurrentOrders.filter(order => order._id !== updatedOrder._id);
           }
           
           // If the order is already in the list, update it
-          if (currentOrders.some(order => order._id === updatedOrder._id)) {
-            return currentOrders.map(order => 
+          if (safeCurrentOrders.some(order => order._id === updatedOrder._id)) {
+            return safeCurrentOrders.map(order => 
               order._id === updatedOrder._id ? updatedOrder : order
             );
           }
           
           // If it's a new active order, add it to the list
           if (updatedOrder.status === 'active') {
-            return [...currentOrders, updatedOrder]
+            return [...safeCurrentOrders, updatedOrder]
               .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
           }
           
-          return currentOrders;
+          return safeCurrentOrders;
         });
       });
       
       socket.on('new-order', (newOrder) => {
         console.log('Received new order via socket:', newOrder);
         setOrders(currentOrders => {
+          const safeCurrentOrders = Array.isArray(currentOrders) ? currentOrders : [];
+          
           if (newOrder.status === 'active') {
-            return [...currentOrders, newOrder]
+            return [...safeCurrentOrders, newOrder]
               .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
           }
-          return currentOrders;
+          return safeCurrentOrders;
         });
       });
       
@@ -96,12 +121,20 @@ const KitchenDashboard = () => {
         socket.off('new-order');
       };
     }
-  }, [token, socket]);
+  }, [token, socket, navigate]);
   
+  // Debug logging for state changes
+  useEffect(() => {
+    console.log('📊 Orders state changed:', orders, 'Is array?', Array.isArray(orders));
+  }, [orders]);
+
+  useEffect(() => {
+    console.log('📊 Menu items state changed:', menuItems, 'Is array?', Array.isArray(menuItems));
+  }, [menuItems]);
+
 // Mark item as prepared - Updated to use existing backend API
 const markItemAsPrepared = async (orderId, itemId) => {
   try {
-    // Include token in request headers
     const config = {
       headers: {
         'x-auth-token': token
@@ -109,28 +142,34 @@ const markItemAsPrepared = async (orderId, itemId) => {
     };
     
     // First, update the state locally since we don't have a direct API endpoint
-    setOrders(orders.map(order => {
-      if (order._id === orderId) {
-        return {
-          ...order,
-          items: order.items.map(item => {
-            if (item._id === itemId) {
-              return { ...item, prepared: true };
-            }
-            return item;
-          })
-        };
-      }
-      return order;
-    }));
+    setOrders(currentOrders => {
+      const safeOrders = Array.isArray(currentOrders) ? currentOrders : [];
+      
+      return safeOrders.map(order => {
+        if (order._id === orderId) {
+          const safeItems = Array.isArray(order.items) ? order.items : [];
+          return {
+            ...order,
+            items: safeItems.map(item => {
+              if (item._id === itemId) {
+                return { ...item, prepared: true };
+              }
+              return item;
+            })
+          };
+        }
+        return order;
+      });
+    });
     
     // Show success message
     setSuccess('Artikulli u shënua si i përgatitur');
     setTimeout(() => setSuccess(''), 2000);
     
     // Check if all items are prepared
-    const updatedOrder = orders.find(order => order._id === orderId);
-    if (updatedOrder) {
+    const safeOrders = Array.isArray(orders) ? orders : [];
+    const updatedOrder = safeOrders.find(order => order._id === orderId);
+    if (updatedOrder && Array.isArray(updatedOrder.items)) {
       const allPrepared = updatedOrder.items.every(item => 
         (item._id === itemId || item.prepared === true)
       );
@@ -140,7 +179,10 @@ const markItemAsPrepared = async (orderId, itemId) => {
         await axios.put(`${API_URL}/orders/${orderId}/prepared`, {}, config);
         
         // Remove order from list
-        setOrders(orders.filter(order => order._id !== orderId));
+        setOrders(currentOrders => {
+          const safeCurrentOrders = Array.isArray(currentOrders) ? currentOrders : [];
+          return safeCurrentOrders.filter(order => order._id !== orderId);
+        });
         
         setSuccess('Porosia u shënua si e përgatitur');
         setTimeout(() => setSuccess(''), 2000);
@@ -157,7 +199,6 @@ const markItemAsPrepared = async (orderId, itemId) => {
   // Mark order as prepared
   const markOrderAsPrepared = async (orderId) => {
     try {
-      // Include token in request headers
       const config = {
         headers: {
           'x-auth-token': token
@@ -166,8 +207,11 @@ const markItemAsPrepared = async (orderId, itemId) => {
       
       await axios.put(`${API_URL}/orders/${orderId}/prepared`, {}, config);
       
-      // Remove order from list
-      setOrders(orders.filter(order => order._id !== orderId));
+      // Remove order from list with safety check
+      setOrders(currentOrders => {
+        const safeCurrentOrders = Array.isArray(currentOrders) ? currentOrders : [];
+        return safeCurrentOrders.filter(order => order._id !== orderId);
+      });
       
       setSuccess('Porosia u shënua si e përgatitur');
       setTimeout(() => setSuccess(''), 2000);
@@ -211,22 +255,24 @@ const markItemAsPrepared = async (orderId, itemId) => {
   // Group items by category for easier kitchen processing
   const groupItemsByCategory = (items) => {
     const grouped = {};
+    const safeItems = Array.isArray(items) ? items : [];
+    const safeMenuItems = Array.isArray(menuItems) ? menuItems : [];
     
-    items.forEach(item => {
+    safeItems.forEach(item => {
       // For the category, check all possible sources
       let category = 'Të tjera';
       
       // Try to get category from item directly
-      if (item.category) {
+      if (item && item.category) {
         category = item.category;
       } 
       // Try to get from menuItem if it's an object
-      else if (item.menuItem && typeof item.menuItem === 'object' && item.menuItem.category) {
+      else if (item && item.menuItem && typeof item.menuItem === 'object' && item.menuItem.category) {
         category = item.menuItem.category;
       }
       // Try to find the menu item in our state
-      else if (item.menuItem && typeof item.menuItem === 'string') {
-        const menuItem = menuItems.find(m => m._id === item.menuItem);
+      else if (item && item.menuItem && typeof item.menuItem === 'string') {
+        const menuItem = safeMenuItems.find(m => m._id === item.menuItem);
         if (menuItem && menuItem.category) {
           category = menuItem.category;
         }
@@ -243,20 +289,22 @@ const markItemAsPrepared = async (orderId, itemId) => {
 
   // Get item name - using the menuItems state
   const getItemName = (item) => {
+    const safeMenuItems = Array.isArray(menuItems) ? menuItems : [];
+    
     // First try direct name if it exists
-    if (item.name) {
+    if (item && item.name) {
       return item.name;
     }
     
     // If menuItem is an object with a name
-    if (item.menuItem && typeof item.menuItem === 'object') {
+    if (item && item.menuItem && typeof item.menuItem === 'object') {
       if (item.menuItem.albanianName) return item.menuItem.albanianName;
       if (item.menuItem.name) return item.menuItem.name;
     }
     
     // If menuItem is just an ID string, look it up in our menuItems state
-    if (item.menuItem && typeof item.menuItem === 'string') {
-      const menuItem = menuItems.find(m => m._id === item.menuItem);
+    if (item && item.menuItem && typeof item.menuItem === 'string') {
+      const menuItem = safeMenuItems.find(m => m._id === item.menuItem);
       if (menuItem) {
         // Prefer Albanian name
         if (menuItem.albanianName) return menuItem.albanianName;
@@ -287,13 +335,27 @@ const markItemAsPrepared = async (orderId, itemId) => {
     }
   };
   
+  // Debug before render
+  console.log('🔍 Kitchen Debug before render:');
+  console.log('orders:', orders, 'is array?', Array.isArray(orders));
+  console.log('menuItems:', menuItems, 'is array?', Array.isArray(menuItems));
+
+  // Check each order's items
+  const safeOrders = Array.isArray(orders) ? orders : [];
+  safeOrders.forEach((order, index) => {
+    console.log(`Order ${index} items:`, order.items, 'is array?', Array.isArray(order.items));
+  });
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="loading-spinner"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
+  
+  // Ensure safe arrays for rendering
+  const safeOrdersForRender = Array.isArray(orders) ? orders : [];
   
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -304,7 +366,7 @@ const markItemAsPrepared = async (orderId, itemId) => {
               <h1 className="text-2xl font-bold text-shadow">Kuzhina</h1>
               <p className="text-blue-100 text-shadow">
                 Mirësevini, {user?.name || 'Përdorues'} - Kuzhinier
-                <span className="ml-4 bg-white text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">Porosi aktive: {orders.length}</span>
+                <span className="ml-4 bg-white text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">Porosi aktive: {safeOrdersForRender.length}</span>
               </p>
             </div>
             <button 
@@ -322,7 +384,7 @@ const markItemAsPrepared = async (orderId, itemId) => {
 
       <div className="container mx-auto px-4 py-6">
         {error && (
-          <div className="alert-danger mb-4" role="alert">
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 relative rounded-md shadow" role="alert">
             <p>{error}</p>
             <button 
               className="absolute top-0 right-0 p-4" 
@@ -336,12 +398,12 @@ const markItemAsPrepared = async (orderId, itemId) => {
         )}
         
         {success && (
-          <div className="alert-success mb-4 animate-pulse" role="alert">
+          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 animate-pulse rounded-md shadow" role="alert">
             <p>{success}</p>
           </div>
         )}
         
-        {orders.length === 0 ? (
+        {safeOrdersForRender.length === 0 ? (
           <div className="bg-white rounded-xl shadow-md p-8 text-center">
             <div className="mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -353,9 +415,10 @@ const markItemAsPrepared = async (orderId, itemId) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {orders.map(order => {
-              const allItemsPrepared = order.items.every(item => item.prepared);
-              const groupedItems = groupItemsByCategory(order.items);
+            {safeOrdersForRender.map(order => {
+              const safeOrderItems = Array.isArray(order.items) ? order.items : [];
+              const allItemsPrepared = safeOrderItems.every(item => item.prepared);
+              const groupedItems = groupItemsByCategory(safeOrderItems);
               
               return (
                 <div key={order._id} className={`bg-white rounded-xl shadow-md overflow-hidden border-l-4 ${allItemsPrepared ? 'border-green-500' : 'border-yellow-500'}`}>
@@ -372,42 +435,46 @@ const markItemAsPrepared = async (orderId, itemId) => {
                   </div>
                   
                   <div className="p-4">
-                    {Object.entries(groupedItems).map(([category, items]) => (
-                      <div key={category} className="mb-4">
-                        <h3 className="font-medium text-gray-700 border-b pb-1 mb-2">{getCategoryName(category)}</h3>
-                        <ul className="space-y-3">
-                          {items.map(item => {
-                            const itemName = getItemName(item);
-                            
-                            return (
-                              <li key={item._id} className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                                <div className={`flex-1 ${item.prepared ? 'line-through text-gray-400' : ''}`}>
-                                  <span className="font-medium mr-1">{item.quantity}x</span>
-                                  <span className="font-medium">{itemName}</span>
-                                  {item.notes && (
-                                    <p className="text-sm text-gray-500 ml-5">
-                                      {item.notes}
-                                    </p>
-                                  )}
-                                </div>
-                                
-                                <button
-                                  onClick={() => markItemAsPrepared(order._id, item._id)}
-                                  className={`px-3 py-2 rounded-lg text-sm font-medium ${
-                                    item.prepared 
-                                      ? 'bg-green-500 text-black text-shadow cursor-not-allowed' 
-                                      : 'bg-yellow-500 text-black hover:bg-yellow-600 transition duration-200 text-shadow'
-                                  }`}
-                                  disabled={item.prepared}
-                                >
-                                  {item.prepared ? 'E përgatitur' : 'Shëno si gati'}
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    ))}
+                    {Object.entries(groupedItems).map(([category, items]) => {
+                      const safeCategoryItems = Array.isArray(items) ? items : [];
+                      
+                      return (
+                        <div key={category} className="mb-4">
+                          <h3 className="font-medium text-gray-700 border-b pb-1 mb-2">{getCategoryName(category)}</h3>
+                          <ul className="space-y-3">
+                            {safeCategoryItems.map(item => {
+                              const itemName = getItemName(item);
+                              
+                              return (
+                                <li key={item._id} className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                                  <div className={`flex-1 ${item.prepared ? 'line-through text-gray-400' : ''}`}>
+                                    <span className="font-medium mr-1">{item.quantity}x</span>
+                                    <span className="font-medium">{itemName}</span>
+                                    {item.notes && (
+                                      <p className="text-sm text-gray-500 ml-5">
+                                        {item.notes}
+                                      </p>
+                                    )}
+                                  </div>
+                                  
+                                  <button
+                                    onClick={() => markItemAsPrepared(order._id, item._id)}
+                                    className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                                      item.prepared 
+                                        ? 'bg-green-500 text-black text-shadow cursor-not-allowed' 
+                                        : 'bg-yellow-500 text-black hover:bg-yellow-600 transition duration-200 text-shadow'
+                                    }`}
+                                    disabled={item.prepared}
+                                  >
+                                    {item.prepared ? 'E përgatitur' : 'Shëno si gati'}
+                                  </button>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      );
+                    })}
                   </div>
                   
                   <div className="px-4 py-3 bg-gray-50 border-t">
