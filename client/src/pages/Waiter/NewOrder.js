@@ -342,44 +342,111 @@ const NewOrder = () => {
       setSubmitting(true);
       setError('');
       
-      // Prepare order items
-      const items = orderItems.map(item => ({
-        menuItem: item.custom ? null : item.menuItem,
-        quantity: item.quantity,
-        price: item.price,
-        notes: item.notes,
-        name: item.name
-      }));
+      // Get auth token
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Ju nuk jeni të autentifikuar. Ju lutem hyni sërish.');
+        navigate('/login');
+        return;
+      }
+      
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token
+        }
+      };
+      
+      // Prepare order items with validation
+      const items = orderItems.map(item => {
+        const orderItem = {
+          quantity: parseInt(item.quantity) || 1,
+          price: parseFloat(item.price) || 0,
+          notes: item.notes || ''
+        };
+        
+        if (item.custom) {
+          orderItem.name = item.name;
+          orderItem.custom = true;
+        } else {
+          orderItem.menuItem = item.menuItem;
+          orderItem.name = item.name;
+        }
+        
+        return orderItem;
+      });
+      
+      // Validate items
+      if (items.some(item => item.quantity <= 0 || item.price < 0)) {
+        setError('Të gjitha artikujt duhet të kenë sasi dhe çmim të vlefshëm');
+        setSubmitting(false);
+        return;
+      }
       
       // Create order
       const orderData = {
-        tableId: selectedTableId,
-        items
+        table: selectedTableId,
+        items: items,
+        waiter: user?._id || user?.id,
+        status: 'active'
       };
       
-      // Send to server
-      const response = await axios.post(`${API_URL}/orders`, orderData);
+      console.log('Sending order data:', orderData);
       
-      // Emit socket event
+      // Send to server
+      const response = await axios.post(`${API_URL}/orders`, orderData, config);
+      
+      console.log('Order created successfully:', response.data);
+      
+      // Emit socket event if connected
       if (socket && connected) {
         socket.emit('new-order', {
           ...response.data,
-          table: selectedTableId
+          table: { _id: selectedTableId, number: table?.number }
         });
       }
       
       // Update table status
-      await axios.put(`${API_URL}/tables/${selectedTableId}`, {
-        status: 'ordering',
-        currentOrder: response.data._id
-      });
+      try {
+        await axios.put(`${API_URL}/tables/${selectedTableId}`, {
+          status: 'occupied',
+          currentOrder: response.data._id
+        }, config);
+      } catch (tableErr) {
+        console.warn('Could not update table status:', tableErr);
+        // Don't fail the whole operation if table update fails
+      }
       
-      // Redirect to table view
-      navigate(`/waiter/table/${selectedTableId}`);
+      // Show success message
+      alert('Porosia u dërgua me sukses!');
+      
+      // Redirect based on context
+      if (tableId) {
+        navigate(`/waiter/table/${selectedTableId}`);
+      } else {
+        navigate('/waiter');
+      }
+      
     } catch (err) {
-      setError('Gabim gjatë dërgimit të porosisë');
+      console.error('Error submitting order:', err);
+      console.error('Error response:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      
+      let errorMessage = 'Gabim gjatë dërgimit të porosisë';
+      
+      if (err.response?.status === 401) {
+        errorMessage = 'Ju nuk jeni të autentifikuar. Ju lutem hyni sërish.';
+        navigate('/login');
+      } else if (err.response?.status === 400) {
+        errorMessage = err.response.data?.message || 'Të dhënat e porosisë janë të pavlefshme';
+      } else if (err.response?.status === 500) {
+        errorMessage = 'Gabim në server. Ju lutem provoni përsëri.';
+      } else if (err.message) {
+        errorMessage = `Gabim: ${err.message}`;
+      }
+      
+      setError(errorMessage);
       setSubmitting(false);
-      console.error(err);
     }
   };
   
@@ -420,8 +487,16 @@ const NewOrder = () => {
       </div>
       
       {error && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-          <p>{error}</p>
+        <div className="alert alert-danger" role="alert">
+          <div className="flex items-center">
+            <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <h4 className="font-semibold mb-1">Gabim!</h4>
+              <p>{error}</p>
+            </div>
+          </div>
         </div>
       )}
       
@@ -475,33 +550,54 @@ const NewOrder = () => {
             </div>
             
             <div className="p-6">
-              {/* Category Filter */}
+              {/* Category Filter - Color Coded */}
               <div className="mb-6">
-                <div className="flex flex-wrap gap-2">
+                <h3 className="text-lg font-semibold mb-3 text-gray-800">🏗️ Zgjidhni Kategorinë</h3>
+                <div className="category-filter">
                   <button
-                    className={`px-3 py-1 rounded-full text-sm ${
+                    className={`btn btn-sm ${
                       selectedCategory === 'all'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-700'
+                        ? 'btn-primary'
+                        : 'btn-outline-primary'
                     }`}
                     onClick={() => setSelectedCategory('all')}
                   >
-                    Të Gjitha
+                    🍽️ Të Gjitha
                   </button>
                   
-                  {categories.map(category => (
-                    <button
-                      key={category}
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        selectedCategory === category
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200 text-gray-700'
-                      }`}
-                      onClick={() => setSelectedCategory(category)}
-                    >
-                      {getCategoryName(category)}
-                    </button>
-                  ))}
+                  {categories.map(category => {
+                    const isActive = selectedCategory === category;
+                    let btnClass = 'btn btn-sm ';
+                    let icon = '🍽️';
+                    
+                    switch(category) {
+                      case 'food':
+                        btnClass += isActive ? 'btn-success' : 'btn-outline-success';
+                        icon = '🍴';
+                        break;
+                      case 'drink':
+                        btnClass += isActive ? 'btn-info' : 'btn-outline-info';
+                        icon = '🍹';
+                        break;
+                      case 'dessert':
+                        btnClass += isActive ? 'btn-warning' : 'btn-outline-warning';
+                        icon = '🍰';
+                        break;
+                      default:
+                        btnClass += isActive ? 'btn-secondary' : 'btn-outline-secondary';
+                        icon = '🍽️';
+                    }
+                    
+                    return (
+                      <button
+                        key={category}
+                        className={btnClass}
+                        onClick={() => setSelectedCategory(category)}
+                      >
+                        {icon} {getCategoryName(category)}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
               
@@ -515,61 +611,107 @@ const NewOrder = () => {
                   <p className="text-gray-500">Nuk u gjetën artikuj në këtë kategori</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {filteredMenuItems.map(item => (
-                    <div
-                      key={item._id}
-                      className="border rounded-md p-4 hover:bg-gray-50"
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <div>
-                          <h3 className="font-medium">{item.albanianName}</h3>
-                          <div className="text-sm text-gray-500">
-                            {getCategoryName(item.category)}
+                <div className="grid gap-4">
+                  {filteredMenuItems.map(item => {
+                    const categoryIcon = {
+                      'food': '🍴',
+                      'drink': '🍹',
+                      'dessert': '🍰'
+                    }[item.category] || '🍽️';
+                    
+                    const categoryColor = {
+                      'food': 'border-green-200 bg-green-50',
+                      'drink': 'border-blue-200 bg-blue-50',
+                      'dessert': 'border-orange-200 bg-orange-50'
+                    }[item.category] || 'border-gray-200 bg-gray-50';
+                    
+                    return (
+                      <div
+                        key={item._id}
+                        className={`menu-item-card ${categoryColor} transition-all duration-200`}
+                      >
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center mb-2">
+                              <span className="text-2xl mr-2">{categoryIcon}</span>
+                              <div>
+                                <h3 className="font-bold text-gray-800 text-lg">{item.albanianName}</h3>
+                                <div className="inline-flex items-center px-2 py-1 bg-white rounded-full text-xs font-medium text-gray-600">
+                                  {getCategoryName(item.category)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-xl font-bold text-gray-800">
+                              {item.price.toLocaleString()} LEK
+                            </div>
+                            <div className="text-sm text-gray-500">Çmimi</div>
                           </div>
                         </div>
-                        <div className="text-lg font-semibold">
-                          {item.price.toLocaleString()} LEK
-                        </div>
-                      </div>
-                      
-                      {/* Improved Quantity Controls - in a single line with better styling */}
-                      <div className="flex justify-between items-center mt-3">
-                        <div className="flex items-center">
-                          <div className="flex items-center border rounded-lg shadow-sm overflow-hidden">
-                            <button
-                              className="px-3 py-1 border-r bg-gray-100 hover:bg-gray-200 text-lg font-medium"
-                              onClick={() => handleQuantityChange(item._id, -1)}
-                              disabled={itemQuantities[item._id] <= 0}
-                            >
-                              -
-                            </button>
-                            <div className="w-12 text-center py-1 bg-white">
-                              {itemQuantities[item._id] || 0}
+                        
+                        {/* Enhanced Quantity Controls */}
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center space-x-3">
+                            <div className="quantity-control">
+                              <button
+                                className="btn btn-sm btn-secondary"
+                                onClick={() => handleQuantityChange(item._id, -1)}
+                                disabled={itemQuantities[item._id] <= 0}
+                                title="Pakëso sasinë"
+                              >
+                                -
+                              </button>
+                              <input
+                                type="number"
+                                value={itemQuantities[item._id] || 0}
+                                readOnly
+                                className="text-center font-bold"
+                              />
+                              <button
+                                className="btn btn-sm btn-secondary"
+                                onClick={() => handleQuantityChange(item._id, 1)}
+                                title="Shto sasinë"
+                              >
+                                +
+                              </button>
                             </div>
-                            <button
-                              className="px-3 py-1 border-l bg-gray-100 hover:bg-gray-200 text-lg font-medium"
-                              onClick={() => handleQuantityChange(item._id, 1)}
-                            >
-                              +
-                            </button>
+                            
+                            <div className="text-sm text-gray-600">
+                              Sasia: <span className="font-semibold">{itemQuantities[item._id] || 0}</span>
+                            </div>
                           </div>
                           
                           <button
-                            className={`ml-4 px-4 py-1 rounded-lg shadow-sm ${
+                            className={`btn ${
                               itemQuantities[item._id] > 0
-                                ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                ? 'btn-primary'
+                                : 'btn-secondary'
                             }`}
                             onClick={() => addItemToOrder(item)}
                             disabled={itemQuantities[item._id] <= 0}
+                            title={itemQuantities[item._id] > 0 ? 'Shto në porosi' : 'Zgjidhni sasinë'}
                           >
-                            Shto në Porosi
+                            {itemQuantities[item._id] > 0 ? (
+                              <>
+                                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                </svg>
+                                Shto në Porosi
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                                </svg>
+                                Zgjidhni Sasinë
+                              </>
+                            )}
                           </button>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>

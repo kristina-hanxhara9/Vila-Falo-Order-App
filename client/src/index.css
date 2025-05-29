@@ -1,11 +1,17 @@
-/* Basic project styles */
+/* ===== RESTAURANT ORDER SYSTEM - MAIN STYLES ===== */
+
+/* Import our consolidated, optimized styles */
+@import url('./consolidated-styles.css');
+
+/* Basic reset for React app */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f9fafb;
 }
 
 code {
@@ -13,31 +19,381 @@ code {
     monospace;
 }
 
-/* Import your other styles - Note the ORDER is important */
-@import url('./base-styles.css');
-@import url('./App.css');
-
-/* Add this line to import your custom fixes LAST so they override everything else */
-@import url('./button-fixes.css');
-
-/* Critical button overrides */
-.btn {
-  color: white !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+/* App-specific overrides */
+#root {
+  min-height: 100vh;
 }
 
-/* Force status colors to be visible */
-.bg-green-100, .bg-red-100, .bg-yellow-100, .bg-blue-100 {
-  display: inline-block !important;
-  padding: 0.25rem 0.5rem !important;
+/* Container for the app */
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
 }
 
-/* Override white backgrounds that cause visibility issues */
-.bg-white {
-  background-color: #f9fafb !important; /* Very light gray instead of pure white */
+/* Navigation improvements */
+.nav-link {
+  transition: all 0.15s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
 }
 
-/* Ensure form text is dark */
-input, textarea, select, .form-control {
-  color: #1f2937 !important; /* Dark gray text */
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Table grid improvements for restaurant layout */
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.table-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.table-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.table-card.available {
+  border-color: #059669;
+  background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
+}
+
+.table-card.occupied {
+  border-color: #dc2626;
+  background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
+}
+
+.table-card.cleaning {
+  border-color: #d97706;
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+}
+
+/* Menu item cards */
+.menu-item-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: #ea580c;
+}
+
+/* Order summary improvements */
+.order-summary {
+  position: sticky;
+  top: 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.order-item {
+  padding: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s ease;
+}
+
+.order-item:hover {
+  background-color: #f9fafb;
+}
+
+.order-item:last-child {
+  border-bottom: none;
+}
+
+/* Kitchen display improvements */
+.kitchen-order-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.kitchen-order-card.urgent {
+  border-left: 6px solid #dc2626;
+  animation: pulse 2s infinite;
+}
+
+.kitchen-order-card.warning {
+  border-left: 6px solid #d97706;
+}
+
+.kitchen-order-card.normal {
+  border-left: 6px solid #059669;
+}
+
+/* Quantity controls */
+.quantity-control {
+  display: flex;
+  align-items: center;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.quantity-control button {
+  background: #f3f4f6;
+  color: #374151;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.quantity-control button:hover {
+  background: #e5e7eb;
+}
+
+.quantity-control button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quantity-control input {
+  border: none;
+  text-align: center;
+  font-weight: 600;
+  color: #1f2937;
+  background: white;
+  width: 3rem;
+  padding: 0.5rem 0;
+}
+
+/* Category filter buttons */
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-filter button {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e5e7eb;
+  background: white;
+  color: #374151;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.category-filter button:hover {
+  border-color: #ea580c;
+  color: #ea580c;
+}
+
+.category-filter button.active {
+  background: #ea580c;
+  border-color: #ea580c;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading states */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  flex-direction: column;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Error states */
+.error-container {
+  background: #fee2e2;
+  border: 2px solid #dc2626;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #991b1b;
+}
+
+.error-container .error-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Success states */
+.success-container {
+  background: #d1fae5;
+  border: 2px solid #059669;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #064e3b;
+}
+
+/* Form improvements */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  color: #1f2937;
+  background: white;
+  transition: border-color 0.15s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+}
+
+/* Notification improvements */
+.notification {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-width: 300px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification.success {
+  border-color: #059669;
+  background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
+  color: #064e3b;
+}
+
+.notification.error {
+  border-color: #dc2626;
+  background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
+  color: #991b1b;
+}
+
+.notification.warning {
+  border-color: #d97706;
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
+  color: #92400e;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .table-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+  
+  .kitchen-order-card {
+    margin-bottom: 1rem;
+  }
+  
+  .order-summary {
+    position: static;
+    margin-top: 1rem;
+  }
+  
+  .category-filter {
+    justify-content: center;
+  }
+  
+  .quantity-control {
+    width: 100%;
+    max-width: 120px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn,
+  button {
+    border: 2px solid currentColor;
+  }
+  
+  .card {
+    border: 2px solid #374151;
+  }
+  
+  .table-card {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print optimization */
+@media print {
+  .btn,
+  button,
+  .navigation,
+  .sidebar {
+    display: none !important;
+  }
+  
+  .card {
+    break-inside: avoid;
+    border: 1px solid #000;
+  }
 }

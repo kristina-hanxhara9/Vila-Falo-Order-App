@@ -257,7 +257,7 @@ const markItemAsPrepared = async (orderId, itemId) => {
     const currentItem = currentOrder?.items?.find(item => item._id === itemId);
     const itemName = currentItem ? getItemName(currentItem) : 'Artikull';
     
-    // Update the state locally
+    // Update the state locally first
     setOrders(currentOrders => {
       const safeOrdersList = Array.isArray(currentOrders) ? currentOrders : [];
       
@@ -282,6 +282,9 @@ const markItemAsPrepared = async (orderId, itemId) => {
     addNotification(`✅ ${itemName} u përgatit!`, 'success');
     setSuccess(`${itemName} u shënua si i përgatitur`);
     setTimeout(() => setSuccess(''), 3000);
+    
+    // Send update to server
+    await axios.put(`${API_URL}/orders/${orderId}/item/${itemId}/prepared`, {}, config);
     
     // Check if all items are prepared
     if (currentOrder && Array.isArray(currentOrder.items)) {
