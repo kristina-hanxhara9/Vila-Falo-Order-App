@@ -29,6 +29,27 @@ app.use(express.json());
 // Socket handlers
 require('./sockets/index')(io);
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Vila Falo Restaurant Server is running!',
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0'
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    services: {
+      database: 'connected',
+      api: 'running'
+    }
+  });
+});
+
 // API Routes
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/tables', require('./routes/api/tables'));

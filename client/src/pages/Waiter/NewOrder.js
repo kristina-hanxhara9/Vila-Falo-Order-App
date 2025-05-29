@@ -4,7 +4,21 @@ import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
 
+// Enhanced API URL with fallback and local development support
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+console.log('🌐 API URL being used:', API_URL);
+
+// Test API connectivity
+const testAPIConnection = async () => {
+  try {
+    const response = await fetch(`${API_URL.replace('/api', '')}/`);
+    console.log('🟢 API Connection test:', response.status === 200 ? 'SUCCESS' : 'FAILED');
+    return response.status === 200;
+  } catch (error) {
+    console.error('🔴 API Connection test FAILED:', error.message);
+    return false;
+  }
+};
 
 const NewOrder = () => {
   const { tableId } = useParams();
@@ -19,47 +33,81 @@ const NewOrder = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [itemQuantities, setItemQuantities] = useState({});
   const [isPrinting, setIsPrinting] = useState(false);
   const printRef = useRef(null);
   
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
   const { socket, connected } = useContext(SocketContext);
   const navigate = useNavigate();
+  
+  // Clear messages
+  const clearMessages = () => {
+    setError('');
+    setSuccess('');
+  };
   
   // Fetch data: tables, menu items, and specific table if tableId exists
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setError(''); // Clear any previous errors
+        
+        // Test API connection first
+        console.log('🔍 Testing API connection...');
+        const isConnected = await testAPIConnection();
+        if (!isConnected) {
+          throw new Error('Nuk mund të lidhet me serverin. Ju lutem kontrolloni nëse serveri është aktiv.');
+        }
+        
+        // Setup axios config with better error handling
+        const config = {
+          timeout: 10000, // 10 second timeout
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+        
+        console.log('📊 Fetching data from API...');
         
         // Fetch all tables if no tableId is provided or selected
         if (!tableId) {
-          const tablesRes = await axios.get(`${API_URL}/tables`);
-          setTables(tablesRes.data);
+          console.log('🪑 Fetching tables...');
+          const tablesRes = await axios.get(`${API_URL}/tables`, config);
+          console.log('✅ Tables fetched:', tablesRes.data?.length || 0);
+          setTables(tablesRes.data || []);
         }
         
         // Fetch specific table if tableId is provided
         if (tableId) {
-          const tableRes = await axios.get(`${API_URL}/tables/${tableId}`);
+          console.log(`🎯 Fetching table ${tableId}...`);
+          const tableRes = await axios.get(`${API_URL}/tables/${tableId}`, config);
+          console.log('✅ Table fetched:', tableRes.data);
           setTable(tableRes.data);
           setSelectedTableId(tableId);
         }
         
         // Fetch menu items
-        const menuRes = await axios.get(`${API_URL}/menu`);
-        console.log('Menu API response:', menuRes.data);
-        setMenuItems(menuRes.data);
+        console.log('🍽️ Fetching menu items...');
+        const menuRes = await axios.get(`${API_URL}/menu`, config);
+        console.log('✅ Menu items fetched:', menuRes.data?.length || 0);
+        
+        const menuData = menuRes.data || [];
+        setMenuItems(menuData);
         
         // Initialize item quantities
         const initialQuantities = {};
-        menuRes.data.forEach(item => {
-          initialQuantities[item._id] = 0;
+        menuData.forEach(item => {
+          if (item && item._id) {
+            initialQuantities[item._id] = 0;
+          }
         });
         setItemQuantities(initialQuantities);
         
         // Extract categories and sort them in the desired order
-        const uniqueCategories = [...new Set(menuRes.data.map(item => item.category))];
+        const uniqueCategories = [...new Set(menuData.map(item => item?.category).filter(Boolean))];
         // Sort categories in the specific order: food, drink, dessert
         const sortedCategories = uniqueCategories.sort((a, b) => {
           const order = { 'food': 1, 'drink': 2, 'dessert': 3 };
@@ -67,11 +115,27 @@ const NewOrder = () => {
         });
         setCategories(sortedCategories);
         
+        console.log('🎉 All data loaded successfully');
         setLoading(false);
       } catch (err) {
-        setError('Gabim gjatë marrjes së të dhënave');
+        console.error('❌ Error fetching data:', err);
+        
+        let errorMessage = 'Gabim gjatë marrjes së të dhënave';
+        
+        if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error')) {
+          errorMessage = '🔌 Nuk ka lidhje me serverin. Ju lutem kontrolloni:\n\n1. Nëse serveri është aktiv (npm run dev në dosjen server)\n2. Lidhjen me internet\n3. Konfigurimin e API URL';
+        } else if (err.response?.status === 404) {
+          errorMessage = '❌ API endpoint nuk u gjet. Kontrolloni server-in.';
+        } else if (err.response?.status >= 500) {
+          errorMessage = '⚠️ Gabim në server. Kontrolloni log-et e server-it.';
+        } else if (err.timeout) {
+          errorMessage = '⏱️ Serveri është shumë i ngadalshëm. Provoni përsëri.';
+        } else if (err.message) {
+          errorMessage = `🚨 ${err.message}`;
+        }
+        
+        setError(errorMessage);
         setLoading(false);
-        console.error('Error fetching data:', err);
       }
     };
     
@@ -199,6 +263,9 @@ const NewOrder = () => {
   
   // Add item to order
   const addItemToOrder = (item) => {
+    // Clear any previous messages
+    clearMessages();
+    
     // If quantity is 0, do nothing
     if (itemQuantities[item._id] <= 0) return;
     
@@ -340,24 +407,46 @@ const NewOrder = () => {
     
     try {
       setSubmitting(true);
-      setError('');
+      clearMessages();
       
-      // Get auth token
-      const token = localStorage.getItem('token');
-      if (!token) {
+      // Test server connection first
+      console.log('🔍 Testing server connection before submitting order...');
+      const serverCheck = await testAPIConnection();
+      if (!serverCheck) {
+        throw new Error('Serveri nuk përgjigjet. Ju lutem kontrolloni nëse serveri është aktiv.');
+      }
+      console.log('✅ Server connection OK');
+      
+      // Get auth token from context or localStorage
+      const authToken = token || localStorage.getItem('token');
+      console.log('🔐 Auth token check:', {
+        fromContext: !!token,
+        fromStorage: !!localStorage.getItem('token'),
+        hasToken: !!authToken
+      });
+      
+      if (!authToken) {
         setError('Ju nuk jeni të autentifikuar. Ju lutem hyni sërish.');
-        navigate('/login');
+        setTimeout(() => navigate('/login'), 2000);
         return;
       }
       
       const config = {
+        timeout: 15000, // 15 second timeout
         headers: {
           'Content-Type': 'application/json',
-          'x-auth-token': token
+          'Authorization': `Bearer ${authToken}`,
+          'x-auth-token': authToken
         }
       };
       
-      // Prepare order items with validation
+      console.log('📤 Request config:', {
+        url: `${API_URL}/orders`,
+        headers: config.headers,
+        timeout: config.timeout
+      });
+      
+      // Prepare order items with better validation
       const items = orderItems.map(item => {
         const orderItem = {
           quantity: parseInt(item.quantity) || 1,
@@ -366,11 +455,14 @@ const NewOrder = () => {
         };
         
         if (item.custom) {
+          // For custom items, don't include menuItem field
           orderItem.name = item.name;
           orderItem.custom = true;
         } else {
+          // For regular menu items
           orderItem.menuItem = item.menuItem;
           orderItem.name = item.name;
+          orderItem.custom = false;
         }
         
         return orderItem;
@@ -383,30 +475,31 @@ const NewOrder = () => {
         return;
       }
       
-      // Create order
-      const orderData = {
+      // Simplified payload - use the format the server expects
+      const payload = {
         table: selectedTableId,
-        items: items,
-        waiter: user?._id || user?.id,
-        status: 'active'
+        items: items
       };
       
-      console.log('Sending order data:', orderData);
+      console.log('Sending order payload:', payload);
       
-      // Send to server
-      const response = await axios.post(`${API_URL}/orders`, orderData, config);
-      
+      const response = await axios.post(`${API_URL}/orders`, payload, config);
       console.log('Order created successfully:', response.data);
       
       // Emit socket event if connected
       if (socket && connected) {
-        socket.emit('new-order', {
-          ...response.data,
-          table: { _id: selectedTableId, number: table?.number }
-        });
+        try {
+          socket.emit('new-order', {
+            ...response.data,
+            table: { _id: selectedTableId, number: table?.number }
+          });
+        } catch (socketErr) {
+          console.warn('Socket emit failed:', socketErr);
+          // Don't fail the whole operation for socket issues
+        }
       }
       
-      // Update table status
+      // Try to update table status (non-critical)
       try {
         await axios.put(`${API_URL}/tables/${selectedTableId}`, {
           status: 'occupied',
@@ -418,14 +511,25 @@ const NewOrder = () => {
       }
       
       // Show success message
-      alert('Porosia u dërgua me sukses!');
+      setSuccess('Porosia u dërgua me sukses!');
       
-      // Redirect based on context
-      if (tableId) {
-        navigate(`/waiter/table/${selectedTableId}`);
-      } else {
-        navigate('/waiter');
-      }
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess('');
+      }, 3000);
+      
+      // Clear form
+      setOrderItems([]);
+      setItemQuantities({});
+      
+      // Redirect based on context after a short delay
+      setTimeout(() => {
+        if (tableId) {
+          navigate(`/waiter/table/${selectedTableId}`);
+        } else {
+          navigate('/waiter');
+        }
+      }, 1500);
       
     } catch (err) {
       console.error('Error submitting order:', err);
@@ -434,13 +538,35 @@ const NewOrder = () => {
       
       let errorMessage = 'Gabim gjatë dërgimit të porosisë';
       
+      console.log('🚨 Full error details:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data,
+        code: err.code,
+        config: {
+          url: err.config?.url,
+          method: err.config?.method,
+          timeout: err.config?.timeout
+        }
+      });
+      
       if (err.response?.status === 401) {
         errorMessage = 'Ju nuk jeni të autentifikuar. Ju lutem hyni sërish.';
-        navigate('/login');
+        setTimeout(() => navigate('/login'), 2000);
       } else if (err.response?.status === 400) {
         errorMessage = err.response.data?.message || 'Të dhënat e porosisë janë të pavlefshme';
+        console.log('Validation error details:', err.response.data);
+      } else if (err.response?.status === 404) {
+        errorMessage = 'Tavolina ose artikulli nuk u gjet.';
       } else if (err.response?.status === 500) {
-        errorMessage = 'Gabim në server. Ju lutem provoni përsëri.';
+        const serverError = err.response.data?.error || err.response.data?.message || 'Gabim i panjohur në server';
+        errorMessage = `Gabim në server: ${serverError}`;
+      } else if (err.code === 'ECONNREFUSED') {
+        errorMessage = '🔌 Serveri nuk është aktiv. Ju lutem:\n\n1. Kontrolloni nëse serveri është duke punuar\n2. Drejtoni: npm run dev në dosjen server\n3. Kontrolloni portin 5000';
+      } else if (err.code === 'NETWORK_ERROR' || err.message.includes('Network Error')) {
+        errorMessage = '🌐 Gabim në rrjet. Kontrolloni lidhjen me internet dhe serverin.';
+      } else if (err.code === 'ECONNABORTED') {
+        errorMessage = '⏱️ Kërkesa ka dalë jashtë kohe. Serveri është shumë i ngadalshëm.';
       } else if (err.message) {
         errorMessage = `Gabim: ${err.message}`;
       }
@@ -485,6 +611,20 @@ const NewOrder = () => {
           <p className="text-gray-600">Kamarieri: {user?.name}</p>
         </div>
       </div>
+      
+      {success && (
+        <div className="alert alert-success" role="alert">
+          <div className="flex items-center">
+            <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <h4 className="font-semibold mb-1">Sukses!</h4>
+              <p>{success}</p>
+            </div>
+          </div>
+        </div>
+      )}
       
       {error && (
         <div className="alert alert-danger" role="alert">

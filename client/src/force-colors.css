@@ -1,0 +1,377 @@
+/* FORCE DASHBOARD COLORS - HIGH PRIORITY OVERRIDES */
+
+/* FORCE COLORFUL GRADIENTS FOR MAIN CONTAINERS */
+.bg-gradient-to-br,
+.bg-gradient-to-r,
+[class*="gradient"],
+.dashboard-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
+/* WAITER DASHBOARD - Pink/Red Gradient */
+.waiter-dashboard,
+.bg-gradient-to-br.from-slate-50.via-blue-50.to-indigo-50 {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+  color: white !important;
+}
+
+/* FORCE BUTTON COLORS WITH HIGH CONTRAST */
+.btn-primary,
+button[class*="bg-blue"],
+.bg-blue-500,
+.bg-blue-600,
+.bg-blue-700 {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
+}
+
+.btn-success,
+button[class*="bg-green"],
+.bg-green-500,
+.bg-green-600,
+.bg-green-700,
+.bg-emerald-500,
+.bg-emerald-600 {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
+}
+
+.btn-danger,
+button[class*="bg-red"],
+.bg-red-500,
+.bg-red-600,
+.bg-red-700,
+.bg-rose-500,
+.bg-rose-600 {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
+}
+
+.bg-amber-600,
+.bg-yellow-600,
+.bg-orange-600,
+button[class*="bg-amber"],
+button[class*="bg-yellow"],
+button[class*="bg-orange"] {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
+}
+
+.bg-purple-600,
+.bg-purple-500,
+button[class*="bg-purple"] {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
+}
+
+.bg-indigo-600,
+.bg-indigo-500,
+button[class*="bg-indigo"] {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  border: none !important;
+}
+
+/* FORCE TABLE STATUS COLORS - VIBRANT BACKGROUNDS */
+.bg-emerald-50,
+.border-emerald-400 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 3px solid #10b981 !important;
+  color: #047857 !important;
+}
+
+.bg-amber-50,
+.border-amber-400 {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  border: 3px solid #f59e0b !important;
+  color: #b45309 !important;
+}
+
+.bg-rose-50,
+.border-rose-400 {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  border: 3px solid #ef4444 !important;
+  color: #dc2626 !important;
+}
+
+.bg-blue-50,
+.border-blue-400 {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border: 3px solid #3b82f6 !important;
+  color: #1d4ed8 !important;
+}
+
+/* FORCE HEADER COLORS - GLASSMORPHISM EFFECT */
+.from-slate-50,
+.to-blue-50,
+.from-blue-600,
+.to-indigo-800,
+.backdrop-blur-sm.bg-white\/10 {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+  color: white !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* FORCE CARD BACKGROUNDS - ELEGANT GRADIENTS */
+.bg-white.rounded-lg,
+.bg-white.shadow,
+.card,
+.bg-white\/70 {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 1rem !important;
+}
+
+/* FORCE TEXT COLORS FOR READABILITY */
+.text-emerald-700 { color: #047857 !important; font-weight: 600 !important; }
+.text-amber-700 { color: #b45309 !important; font-weight: 600 !important; }
+.text-rose-700 { color: #be123c !important; font-weight: 600 !important; }
+.text-blue-700 { color: #1d4ed8 !important; font-weight: 600 !important; }
+.text-gray-800 { color: #1f2937 !important; font-weight: 600 !important; }
+.text-gray-600 { color: #4b5563 !important; }
+.text-gray-700 { color: #374151 !important; }
+
+/* FORCE HOVER EFFECTS - INTERACTIVE FEEDBACK */
+button:hover,
+.btn:hover,
+[role="button"]:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* FORCE CATEGORY BUTTON COLORS */
+.btn-outline-primary {
+  border: 2px solid #3b82f6 !important;
+  color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-primary:hover {
+  background: #3b82f6 !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-outline-success {
+  border: 2px solid #10b981 !important;
+  color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-success:hover {
+  background: #10b981 !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-outline-info {
+  border: 2px solid #3b82f6 !important;
+  color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-info:hover {
+  background: #3b82f6 !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-outline-warning {
+  border: 2px solid #f59e0b !important;
+  color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-warning:hover {
+  background: #f59e0b !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* FORCE RING/GLOW EFFECTS */
+.ring-emerald-400\/20 { 
+  box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.3) !important; 
+}
+.ring-amber-400\/20 { 
+  box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.3) !important; 
+}
+.ring-rose-400\/20 { 
+  box-shadow: 0 0 0 6px rgba(251, 113, 133, 0.3) !important; 
+}
+.ring-blue-400\/20 { 
+  box-shadow: 0 0 0 6px rgba(96, 165, 250, 0.3) !important; 
+}
+
+/* FORCE MENU ITEM CARD COLORS */
+.menu-item-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 1rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+.border-green-200.bg-green-50 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 2px solid #10b981 !important;
+}
+
+.border-blue-200.bg-blue-50 {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+.border-orange-200.bg-orange-50 {
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%) !important;
+  border: 2px solid #f97316 !important;
+}
+
+/* FORCE QUANTITY CONTROL COLORS */
+.quantity-control {
+  background: white !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.quantity-control button {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+  color: #374151 !important;
+  font-weight: 700 !important;
+}
+
+.quantity-control button:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  color: white !important;
+  transform: scale(1.1) !important;
+}
+
+/* FORCE ORDER SUMMARY COLORS */
+.order-summary,
+.bg-white.rounded-lg.shadow.sticky {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* FORCE GLASSMORPHISM BACKGROUNDS */
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* FORCE GRADIENT TEXT */
+.bg-gradient-to-r.from-white.to-blue-100.bg-clip-text.text-transparent {
+  background: linear-gradient(90deg, #ffffff 0%, #dbeafe 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* FORCE STATUS INDICATOR COLORS */
+.status-dot-success {
+  background: #10b981 !important;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3) !important;
+  animation: pulse 2s infinite !important;
+}
+
+.status-dot-warning {
+  background: #f59e0b !important;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3) !important;
+  animation: pulse 2s infinite !important;
+}
+
+.status-dot-danger {
+  background: #ef4444 !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3) !important;
+  animation: pulse 2s infinite !important;
+}
+
+/* FORCE ALERT COLORS */
+.alert-danger,
+.bg-red-50 {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  border: 3px solid #ef4444 !important;
+  color: #991b1b !important;
+}
+
+.alert-success,
+.bg-green-50 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 3px solid #10b981 !important;
+  color: #065f46 !important;
+}
+
+/* FORCE VIBRANT BACKGROUND FOR BODY */
+body,
+#root {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  min-height: 100vh !important;
+}
+
+/* FORCE ALL DISABLED BUTTONS TO BE VISIBLE */
+button:disabled,
+.btn:disabled {
+  opacity: 0.7 !important;
+  background: #9ca3af !important;
+  color: white !important;
+  cursor: not-allowed !important;
+}
+
+/* FORCE LOADING SPINNER COLORS */
+.animate-spin {
+  border-color: #e5e7eb !important;
+  border-top-color: #3b82f6 !important;
+}
+
+/* FORCE HIGH CONTRAST FOR ALL TEXT */
+h1, h2, h3, h4, h5, h6 {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+}
+
+p, span, div:not([class*="bg-"]) {
+  color: #374151 !important;
+}
+
+/* FORCE FOCUS STATES */
+*:focus {
+  outline: 3px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* FORCE TABLE HOVER EFFECTS */
+.table-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ENSURE ALL ICONS ARE VISIBLE */
+svg {
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1)) !important;
+}

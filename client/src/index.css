@@ -1,7 +1,19 @@
 /* ===== RESTAURANT ORDER SYSTEM - MAIN STYLES ===== */
 
+/* Import Google Fonts for better typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 /* Import our consolidated, optimized styles */
 @import url('./consolidated-styles.css');
+
+/* FORCE COLORFUL STYLING - HIGH PRIORITY */
+@import url('./force-colors.css');
+
+/* ENHANCED DASHBOARD COLORS */
+@import url('./dashboard-colors.css');
+
+/* SUPER VIBRANT ENHANCED COLORS */
+@import url('./enhanced-dashboard-colors.css');
 
 /* Basic reset for React app */
 body {
@@ -11,7 +23,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f9fafb;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 code {
@@ -19,9 +31,213 @@ code {
     monospace;
 }
 
+/* FORCE COLOR APPLICATION - Override any white backgrounds */
+.bg-white,
+[class*="bg-white"] {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Force dashboard cards to be more colorful */
+.dashboard-container .bg-white,
+.manager-dashboard .bg-white,
+.waiter-dashboard .bg-white,
+.kitchen-dashboard .bg-white {
+  background: linear-gradient(145deg, #ffffff 0%, #fafbff 100%) !important;
+  border: 3px solid #e0e7ff !important;
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15) !important;
+}
+
+/* Dashboard specific styling */
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.waiter-dashboard {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.kitchen-dashboard {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.manager-dashboard {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+/* Card styling with vibrant colors */
+.card,
+.bg-white.rounded-lg,
+.bg-white.shadow {
+  background: linear-gradient(145deg, #ffffff, #f1f5f9) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 1rem !important;
+}
+
+/* Button color fixes - FORCE COLORS */
+.btn-primary,
+.bg-blue-600,
+.bg-blue-500,
+button[class*="bg-blue"] {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  color: white !important;
+  border: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-success,
+.bg-green-600,
+.bg-green-500,
+button[class*="bg-green"] {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+  color: white !important;
+  border: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-danger,
+.bg-red-600,
+.bg-red-500,
+button[class*="bg-red"] {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: white !important;
+  border: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-warning,
+.bg-yellow-600,
+.bg-amber-600,
+button[class*="bg-yellow"],
+button[class*="bg-amber"] {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: white !important;
+  border: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Status badges with bright colors */
+.status-badge,
+.bg-green-100,
+.bg-red-100,
+.bg-yellow-100,
+.bg-blue-100 {
+  padding: 0.5rem 1rem !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.bg-green-100 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  color: #065f46 !important;
+  border: 2px solid #10b981 !important;
+}
+
+.bg-red-100 {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  color: #991b1b !important;
+  border: 2px solid #ef4444 !important;
+}
+
+.bg-yellow-100 {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  color: #92400e !important;
+  border: 2px solid #f59e0b !important;
+}
+
+.bg-blue-100 {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  color: #1e40af !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+/* Header gradients */
+.header-gradient,
+.bg-gradient-to-r {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
+.header-gradient * {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Kitchen specific colors */
+.kitchen-header {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%) !important;
+}
+
+/* Waiter specific colors */
+.waiter-header {
+  background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%) !important;
+}
+
+/* Manager specific colors */
+.manager-header {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%) !important;
+  color: #374151 !important;
+}
+
+.manager-header * {
+  color: #374151 !important;
+}
+
+/* Force text contrast */
+.text-gray-800,
+.text-gray-900 {
+  color: #1f2937 !important;
+}
+
+.text-gray-600,
+.text-gray-700 {
+  color: #4b5563 !important;
+}
+
+/* Order priority colors */
+.order-urgent {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  border-left: 6px solid #ef4444 !important;
+  animation: pulse 2s infinite;
+}
+
+.order-warning {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  border-left: 6px solid #f59e0b !important;
+}
+
+.order-normal {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border-left: 6px solid #10b981 !important;
+}
+
+/* Menu category colors */
+.category-food {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 2px solid #10b981 !important;
+}
+
+.category-drink {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+.category-dessert {
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%) !important;
+  border: 2px solid #f59e0b !important;
+}
+
 /* App-specific overrides */
 #root {
   min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
 /* Container for the app */
@@ -36,11 +252,14 @@ code {
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-weight: 500;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.2) !important;
   transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Table grid improvements for restaurant layout */
@@ -52,69 +271,69 @@ code {
 }
 
 .table-card {
-  background: white;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
   border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   border: 2px solid transparent;
   cursor: pointer;
 }
 
 .table-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .table-card.available {
-  border-color: #059669;
+  border-color: #10b981;
   background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
 }
 
 .table-card.occupied {
-  border-color: #dc2626;
+  border-color: #ef4444;
   background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
 }
 
 .table-card.cleaning {
-  border-color: #d97706;
+  border-color: #f59e0b;
   background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
 }
 
 /* Menu item cards */
 .menu-item-card {
-  background: white;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
   border-radius: 1rem;
   padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #e2e8f0;
 }
 
 .menu-item-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-color: #ea580c;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  border-color: #3b82f6;
 }
 
 /* Order summary improvements */
 .order-summary {
   position: sticky;
   top: 2rem;
-  background: white;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
   border-radius: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e2e8f0;
 }
 
 .order-item {
   padding: 0.75rem;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f1f5f9;
   transition: background-color 0.15s ease;
 }
 
 .order-item:hover {
-  background-color: #f9fafb;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .order-item:last-child {
@@ -123,94 +342,108 @@ code {
 
 /* Kitchen display improvements */
 .kitchen-order-card {
-  background: white;
+  background: linear-gradient(145deg, #ffffff, #f8fafc);
   border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
+  border: 2px solid #e2e8f0;
 }
 
 .kitchen-order-card.urgent {
-  border-left: 6px solid #dc2626;
+  border-left: 6px solid #ef4444;
+  background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
   animation: pulse 2s infinite;
 }
 
 .kitchen-order-card.warning {
-  border-left: 6px solid #d97706;
+  border-left: 6px solid #f59e0b;
+  background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
 }
 
 .kitchen-order-card.normal {
-  border-left: 6px solid #059669;
+  border-left: 6px solid #10b981;
+  background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
 }
 
 /* Quantity controls */
 .quantity-control {
   display: flex;
   align-items: center;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
   overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: white;
 }
 
 .quantity-control button {
-  background: #f3f4f6;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   color: #374151;
   border: none;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem;
   font-weight: 600;
   transition: all 0.15s ease;
   cursor: pointer;
 }
 
 .quantity-control button:hover {
-  background: #e5e7eb;
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  transform: scale(1.05);
 }
 
 .quantity-control button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .quantity-control input {
   border: none;
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
   color: #1f2937;
   background: white;
-  width: 3rem;
-  padding: 0.5rem 0;
+  width: 4rem;
+  padding: 0.75rem 0;
+  font-size: 1.1rem;
 }
 
 /* Category filter buttons */
 .category-filter {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-bottom: 1.5rem;
+  justify-content: center;
 }
 
 .category-filter button {
-  padding: 0.5rem 1rem;
-  border: 2px solid #e5e7eb;
-  background: white;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #e2e8f0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   color: #374151;
   border-radius: 9999px;
-  font-weight: 500;
-  transition: all 0.15s ease;
+  font-weight: 600;
+  transition: all 0.2s ease;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-filter button:hover {
-  border-color: #ea580c;
-  color: #ea580c;
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .category-filter button.active {
-  background: #ea580c;
-  border-color: #ea580c;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-color: #3b82f6;
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
 }
 
 /* Loading states */
@@ -220,6 +453,9 @@ code {
   justify-content: center;
   min-height: 200px;
   flex-direction: column;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 1rem;
+  padding: 2rem;
 }
 
 .loading-text {
@@ -229,13 +465,15 @@ code {
 }
 
 /* Error states */
-.error-container {
-  background: #fee2e2;
-  border: 2px solid #dc2626;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 1rem 0;
-  color: #991b1b;
+.error-container,
+.alert-danger {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  border: 2px solid #ef4444 !important;
+  border-radius: 0.75rem !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  color: #991b1b !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2) !important;
 }
 
 .error-container .error-title {
@@ -244,13 +482,15 @@ code {
 }
 
 /* Success states */
-.success-container {
-  background: #d1fae5;
-  border: 2px solid #059669;
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 1rem 0;
-  color: #064e3b;
+.success-container,
+.alert-success {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 2px solid #10b981 !important;
+  border-radius: 0.75rem !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  color: #065f46 !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2) !important;
 }
 
 /* Form improvements */
@@ -260,7 +500,7 @@ code {
 
 .form-group label {
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   font-weight: 600;
   color: #374151;
 }
@@ -270,19 +510,20 @@ code {
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
   color: #1f2937;
   background: white;
   transition: border-color 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #ea580c;
-  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Notification improvements */
@@ -290,11 +531,11 @@ code {
   position: fixed;
   top: 1rem;
   right: 1rem;
-  background: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e2e8f0;
+  border-radius: 0.75rem;
   padding: 1rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   max-width: 300px;
   animation: slideIn 0.3s ease-out;
@@ -312,19 +553,19 @@ code {
 }
 
 .notification.success {
-  border-color: #059669;
+  border-color: #10b981;
   background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
-  color: #064e3b;
+  color: #065f46;
 }
 
 .notification.error {
-  border-color: #dc2626;
+  border-color: #ef4444;
   background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
   color: #991b1b;
 }
 
 .notification.warning {
-  border-color: #d97706;
+  border-color: #f59e0b;
   background: linear-gradient(135deg, #fef3c7 0%, #fffbeb 100%);
   color: #92400e;
 }
@@ -352,7 +593,7 @@ code {
   
   .quantity-control {
     width: 100%;
-    max-width: 120px;
+    max-width: 140px;
   }
 }
 
@@ -360,15 +601,15 @@ code {
 @media (prefers-contrast: high) {
   .btn,
   button {
-    border: 2px solid currentColor;
+    border: 3px solid currentColor !important;
   }
   
   .card {
-    border: 2px solid #374151;
+    border: 3px solid #374151 !important;
   }
   
   .table-card {
-    border-width: 3px;
+    border-width: 3px !important;
   }
 }
 
@@ -394,6 +635,73 @@ code {
   
   .card {
     break-inside: avoid;
-    border: 1px solid #000;
+    border: 1px solid #000 !important;
   }
+}
+
+/* FINAL FORCE OVERRIDES - Make sure colors are applied */
+body * {
+  transition: all 0.2s ease;
+}
+
+/* ENHANCED DASHBOARD STYLING - Make everything more colorful */
+.bg-gradient-to-br.from-slate-50.via-blue-50.to-indigo-50,
+.from-slate-50.via-blue-50.to-indigo-50 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Manager dashboard specific colors */
+.manager-dashboard {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Make all dashboard cards colorful */
+.bg-white\/70.backdrop-blur-lg,
+.bg-white\/80.backdrop-blur-lg {
+  background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.85) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 2px solid rgba(59, 130, 246, 0.2) !important;
+  box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Quick action links - make them more vibrant */
+a.group.bg-gradient-to-br {
+  transform: scale(1) !important;
+  transition: all 0.3s ease !important;
+}
+
+a.group.bg-gradient-to-br:hover {
+  transform: scale(1.05) translateY(-8px) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Force all buttons to have proper colors */
+button:not([class*="quantity-control"]) {
+  font-weight: 600 !important;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Force header colors */
+[class*="header"],
+[class*="gradient"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+}
+
+/* Make sure all text is readable */
+h1, h2, h3, h4, h5, h6 {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+}
+
+p, span, div {
+  color: #374151 !important;
+}
+
+/* Override any remaining white backgrounds */
+.bg-white:not(.notification):not(.order-summary):not(.card) {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%) !important;
 }

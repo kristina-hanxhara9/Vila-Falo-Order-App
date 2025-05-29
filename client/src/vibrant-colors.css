@@ -1,0 +1,391 @@
+/* FORCE VIBRANT COLORS FOR RESTAURANT DASHBOARD */
+/* This file forces all dashboard elements to have bright, colorful styling */
+
+/* === BACKGROUND GRADIENTS === */
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  min-height: 100vh;
+}
+
+/* Main dashboard containers */
+.bg-gradient-to-br,
+.bg-gradient-to-r,
+[class*="gradient"] {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+  color: white !important;
+}
+
+/* === BUTTON COLORS === */
+/* Primary buttons - Electric Blue */
+.btn-primary,
+button[class*="bg-blue"],
+.bg-blue-500,
+.bg-blue-600,
+.bg-blue-700 {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+/* Success buttons - Vibrant Green */
+.btn-success,
+button[class*="bg-green"],
+.bg-green-500,
+.bg-green-600,
+.bg-emerald-500,
+.bg-emerald-600 {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+/* Danger buttons - Bright Red */
+.btn-danger,
+button[class*="bg-red"],
+.bg-red-500,
+.bg-red-600,
+.bg-rose-500,
+.bg-rose-600 {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+/* Warning buttons - Bright Orange */
+.bg-amber-600,
+.bg-yellow-600,
+.bg-orange-600,
+button[class*="bg-amber"],
+button[class*="bg-yellow"],
+button[class*="bg-orange"] {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+/* Purple buttons */
+.bg-purple-500,
+.bg-purple-600,
+button[class*="bg-purple"] {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+/* === TABLE STATUS COLORS === */
+/* Free tables - Bright Green */
+.bg-emerald-50 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 3px solid #10b981 !important;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Ordering tables - Bright Yellow */
+.bg-amber-50 {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  border: 3px solid #f59e0b !important;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Unpaid tables - Bright Red */
+.bg-rose-50 {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  border: 3px solid #ef4444 !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Paid tables - Bright Blue */
+.bg-blue-50 {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border: 3px solid #3b82f6 !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* === HEADER COLORS === */
+.from-slate-50,
+.to-blue-50,
+.from-blue-600,
+.to-indigo-800,
+.header-gradient {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+  color: white !important;
+}
+
+.from-blue-600.via-blue-700.to-indigo-800 {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%) !important;
+  color: white !important;
+}
+
+/* === CARD BACKGROUNDS === */
+.bg-white {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 2px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 1rem !important;
+}
+
+/* Card with white backgrounds that need color */
+.bg-white\/70 {
+  background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.8) 100%) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 2px solid rgba(226, 232, 240, 0.5) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* === TEXT COLORS === */
+.text-emerald-700 { color: #047857 !important; font-weight: 600 !important; }
+.text-amber-700 { color: #b45309 !important; font-weight: 600 !important; }
+.text-rose-700 { color: #be123c !important; font-weight: 600 !important; }
+.text-blue-700 { color: #1d4ed8 !important; font-weight: 600 !important; }
+.text-gray-800 { color: #1f2937 !important; font-weight: 600 !important; }
+.text-gray-600 { color: #4b5563 !important; font-weight: 500 !important; }
+.text-white { color: white !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important; }
+
+/* === HOVER EFFECTS === */
+button:hover,
+.btn:hover,
+[class*="hover:"]:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Table cards hover */
+[class*="table-card"]:hover,
+.group:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* === GLASSMORPHISM EFFECTS === */
+.backdrop-blur-sm,
+.backdrop-blur-lg {
+  backdrop-filter: blur(12px) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* === RING EFFECTS === */
+.ring-emerald-400\/20 { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.3) !important; }
+.ring-amber-400\/20 { box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.3) !important; }
+.ring-rose-400\/20 { box-shadow: 0 0 0 6px rgba(251, 113, 133, 0.3) !important; }
+.ring-blue-400\/20 { box-shadow: 0 0 0 6px rgba(96, 165, 250, 0.3) !important; }
+
+/* === OUTLINE BUTTONS === */
+.btn-outline-primary {
+  border: 3px solid #3b82f6 !important;
+  color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-primary:hover {
+  background: #3b82f6 !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-outline-success {
+  border: 3px solid #10b981 !important;
+  color: #10b981 !important;
+  background: rgba(16, 185, 129, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-success:hover {
+  background: #10b981 !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-outline-info {
+  border: 3px solid #3b82f6 !important;
+  color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-info:hover {
+  background: #3b82f6 !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.btn-outline-warning {
+  border: 3px solid #f59e0b !important;
+  color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.btn-outline-warning:hover {
+  background: #f59e0b !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* === CATEGORY FILTER COLORS === */
+.category-filter button {
+  border: 3px solid #e2e8f0 !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  color: #374151 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.category-filter button:hover {
+  border-color: #3b82f6 !important;
+  color: #3b82f6 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+.category-filter button.active,
+.category-filter .btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  border-color: #3b82f6 !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* === MENU ITEM CARDS === */
+.menu-item-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%) !important;
+  border: 3px solid #e2e8f0 !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 1rem !important;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  border-color: #3b82f6 !important;
+}
+
+.category-food,
+.border-green-200.bg-green-50 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 3px solid #10b981 !important;
+}
+
+.category-drink,
+.border-blue-200.bg-blue-50 {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border: 3px solid #3b82f6 !important;
+}
+
+.category-dessert,
+.border-orange-200.bg-orange-50 {
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%) !important;
+  border: 3px solid #f59e0b !important;
+}
+
+/* === QUANTITY CONTROLS === */
+.quantity-control {
+  border: 3px solid #e2e8f0 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  background: white !important;
+}
+
+.quantity-control button {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+  color: #374151 !important;
+  font-weight: 700 !important;
+  transition: all 0.2s ease !important;
+}
+
+.quantity-control button:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: white !important;
+  transform: scale(1.1) !important;
+}
+
+/* === ANIMATION IMPROVEMENTS === */
+.animate-pulse {
+  animation: colorPulse 2s ease-in-out infinite !important;
+}
+
+@keyframes colorPulse {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* === LOADING STATES === */
+.loading-spinner {
+  width: 3rem !important;
+  height: 3rem !important;
+  border: 4px solid #f3f4f6 !important;
+  border-top: 4px solid #3b82f6 !important;
+  border-radius: 50% !important;
+  animation: spin 1s linear infinite !important;
+}
+
+/* === FINAL OVERRIDES === */
+/* Force all interactive elements to be colorful */
+button:not([disabled]),
+.btn:not([disabled]),
+[role="button"]:not([disabled]) {
+  font-weight: 600 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
+
+/* Make sure text is always readable */
+* {
+  transition: all 0.3s ease !important;
+}
+
+/* Fix any remaining visibility issues */
+input, select, textarea {
+  background: white !important;
+  border: 2px solid #e2e8f0 !important;
+  color: #1f2937 !important;
+  font-weight: 500 !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Alert colors */
+.alert-success,
+.bg-green-100 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 3px solid #10b981 !important;
+  color: #065f46 !important;
+}
+
+.alert-danger,
+.bg-red-100 {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  border: 3px solid #ef4444 !important;
+  color: #991b1b !important;
+}
+
+/* Make everything pop! */
+.shadow-xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.shadow-2xl {
+  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.5) !important;
+}
