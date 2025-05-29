@@ -483,6 +483,30 @@ const markItemAsPrepared = async (orderId, itemId) => {
     return 'NORMAL';
   }, []);
   
+  // Enhanced time difference with warnings
+  const getTimeDifferenceInfo = useCallback((createdAt) => {
+    const now = new Date();
+    const created = new Date(createdAt);
+    const diffMinutes = Math.floor((now - created) / (1000 * 60));
+    const priority = getOrderPriority(createdAt);
+    
+    let timeText;
+    if (diffMinutes < 60) {
+      timeText = `${diffMinutes} min`;
+    } else {
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+      timeText = `${hours}h ${minutes}min`;
+    }
+    
+    return {
+      text: timeText,
+      priority,
+      minutes: diffMinutes,
+      class: ORDER_PRIORITY[priority].textClass
+    };
+  }, [getOrderPriority]);
+  
   // Auto-refresh orders every 30 seconds and check for urgent orders
   useEffect(() => {
     const interval = setInterval(() => {
@@ -508,30 +532,6 @@ const markItemAsPrepared = async (orderId, itemId) => {
     
     return () => clearInterval(interval);
   }, [orders, addNotification, getTimeDifferenceInfo]);
-  
-  // Enhanced time difference with warnings
-  const getTimeDifferenceInfo = useCallback((createdAt) => {
-    const now = new Date();
-    const created = new Date(createdAt);
-    const diffMinutes = Math.floor((now - created) / (1000 * 60));
-    const priority = getOrderPriority(createdAt);
-    
-    let timeText;
-    if (diffMinutes < 60) {
-      timeText = `${diffMinutes} min`;
-    } else {
-      const hours = Math.floor(diffMinutes / 60);
-      const minutes = diffMinutes % 60;
-      timeText = `${hours}h ${minutes}min`;
-    }
-    
-    return {
-      text: timeText,
-      priority,
-      minutes: diffMinutes,
-      class: ORDER_PRIORITY[priority].textClass
-    };
-  }, [getOrderPriority]);
   
   if (loading) {
     return (
