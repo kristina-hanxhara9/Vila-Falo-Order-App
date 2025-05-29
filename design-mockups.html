@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vila Falo - Design Mockups</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
+            color: #334155;
+        }
+        
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+        
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .mockup-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .mockup-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        
+        .mockup-description {
+            color: #64748b;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .preview-area {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .mockup1-preview {
+            background: white;
+            padding: 1.5rem;
+        }
+        
+        .mockup2-preview {
+            background: #f8fafc;
+            padding: 1.5rem;
+        }
+        
+        /* Mockup 1 Styles */
+        :root {
+            --m1-primary-blue: #2563eb;
+            --m1-success-green: #059669;
+            --m1-warning-orange: #ea580c;
+            --m1-danger-red: #dc2626;
+            --m1-gray-200: #e2e8f0;
+            --m1-gray-700: #334155;
+            --m1-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        
+        .m1-table-card {
+            background: white;
+            border: 1px solid var(--m1-gray-200);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--m1-shadow);
+            transition: all 0.2s ease;
+        }
+        
+        .m1-table-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        
+        .m1-table-free {
+            background: #f0fdf4;
+            border: 2px solid var(--m1-success-green);
+            color: var(--m1-success-green);
+        }
+        
+        .m1-table-ordering {
+            background: #fff7ed;
+            border: 2px solid var(--m1-warning-orange);
+            color: var(--m1-warning-orange);
+        }
+        
+        .m1-table-unpaid {
+            background: #fef2f2;
+            border: 2px solid var(--m1-danger-red);
+            color: var(--m1-danger-red);
+        }
+        
+        .m1-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin: 0.25rem;
+        }
+        
+        .m1-btn-primary {
+            background: var(--m1-primary-blue);
+            color: white;
+            border: 1px solid var(--m1-primary-blue);
+        }
+        
+        .m1-btn-success {
+            background: var(--m1-success-green);
+            color: white;
+            border: 1px solid var(--m1-success-green);
+        }
+        
+        /* Mockup 2 Styles */
+        :root {
+            --m2-primary-blue: #1e40af;
+            --m2-success-green: #059669;
+            --m2-warning-amber: #d97706;
+            --m2-danger-red: #dc2626;
+            --m2-bg-primary: #f8fafc;
+            --m2-gray-200: #e2e8f0;
+            --m2-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        
+        .m2-table-card {
+            background: white;
+            border: 1px solid var(--m2-gray-200);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--m2-shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .m2-table-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        .m2-table-free {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 2px solid var(--m2-success-green);
+            color: var(--m2-success-green);
+        }
+        
+        .m2-table-free::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--m2-success-green);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .m2-table-ordering {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid var(--m2-warning-amber);
+            color: var(--m2-warning-amber);
+        }
+        
+        .m2-table-ordering::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--m2-warning-amber);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .m2-table-unpaid {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px solid var(--m2-danger-red);
+            color: var(--m2-danger-red);
+        }
+        
+        .m2-table-unpaid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--m2-danger-red);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .m2-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.625rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0.25rem;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .m2-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        
+        .m2-btn-primary {
+            background: var(--m2-primary-blue);
+            color: white;
+            border: 1px solid var(--m2-primary-blue);
+        }
+        
+        .m2-btn-success {
+            background: var(--m2-success-green);
+            color: white;
+            border: 1px solid var(--m2-success-green);
+        }
+        
+        .table-number {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .table-status {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .choice-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .choice-btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .choice-btn-1 {
+            background: white;
+            color: #2563eb;
+            border-color: #2563eb;
+        }
+        
+        .choice-btn-1:hover {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .choice-btn-2 {
+            background: #1e40af;
+            color: white;
+            border-color: #1e40af;
+        }
+        
+        .choice-btn-2:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .mockup-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .choice-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🍽️ Vila Falo Design Options</h1>
+            <p>Choose your preferred professional design style</p>
+        </div>
+        
+        <div class="mockup-grid">
+            <!-- Mockup 1: Clean Professional -->
+            <div class="mockup-card">
+                <h2 class="mockup-title">Option 1: Clean Professional</h2>
+                <p class="mockup-description">
+                    Pure white background with sharp, clean lines. Minimal shadows, clear borders, and straightforward color coding. Perfect for users who prefer simplicity and clarity.
+                </p>
+                <div class="preview-area mockup1-preview">
+                    <div class="m1-table-card m1-table-free">
+                        <div class="table-number">Table 1</div>
+                        <div class="table-status">Available</div>
+                    </div>
+                    <div class="m1-table-card m1-table-ordering">
+                        <div class="table-number">Table 2</div>
+                        <div class="table-status">Ordering</div>
+                    </div>
+                    <div class="m1-table-card m1-table-unpaid">
+                        <div class="table-number">Table 3</div>
+                        <div class="table-status">Unpaid</div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="m1-btn m1-btn-primary">New Order</button>
+                        <button class="m1-btn m1-btn-success">Complete</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mockup 2: Modern Premium -->
+            <div class="mockup-card">
+                <h2 class="mockup-title">Option 2: Modern Premium</h2>
+                <p class="mockup-description">
+                    Light gray background with elevated cards, gradient backgrounds, and colored top borders. Enhanced shadows and hover effects for a more sophisticated feel.
+                </p>
+                <div class="preview-area mockup2-preview">
+                    <div class="m2-table-card m2-table-free">
+                        <div class="table-number">Table 1</div>
+                        <div class="table-status">Available</div>
+                    </div>
+                    <div class="m2-table-card m2-table-ordering">
+                        <div class="table-number">Table 2</div>
+                        <div class="table-status">Ordering</div>
+                    </div>
+                    <div class="m2-table-card m2-table-unpaid">
+                        <div class="table-number">Table 3</div>
+                        <div class="table-status">Unpaid</div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="m2-btn m2-btn-primary">New Order</button>
+                        <button class="m2-btn m2-btn-success">Complete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">
+            <h3 style="margin-bottom: 1rem; color: #1e293b; font-size: 1.25rem; font-weight: 600;">Which style do you prefer?</h3>
+            <div class="choice-buttons">
+                <a href="#" class="choice-btn choice-btn-1" onclick="selectDesign(1)">
+                    Choose Option 1<br>
+                    <small style="opacity: 0.7;">Clean & Simple</small>
+                </a>
+                <a href="#" class="choice-btn choice-btn-2" onclick="selectDesign(2)">
+                    Choose Option 2<br>
+                    <small style="opacity: 0.8;">Modern & Premium</small>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function selectDesign(option) {
+            if (option === 1) {
+                alert('Great choice! Option 1: Clean Professional design will be applied to your restaurant app.');
+            } else if (option === 2) {
+                alert('Excellent! Option 2: Modern Premium design will be applied to your restaurant app.');
+            }
+            
+            // In a real implementation, this would send the choice to the server
+            console.log('Selected design option:', option);
+        }
+    </script>
+</body>
+</html>
