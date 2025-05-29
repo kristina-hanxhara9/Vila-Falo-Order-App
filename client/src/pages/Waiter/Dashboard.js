@@ -3,27 +3,50 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
 import { SocketContext } from '../../contexts/SocketContext';
+import ThermalPrinterService from '../../services/ThermalPrinterService';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
+// Enhanced status colors with better contrast and modern palette
+const STATUS_STYLES = {
+  free: {
+    bg: 'bg-emerald-50 hover:bg-emerald-100',
+    border: 'border-emerald-400 hover:border-emerald-500',
+    text: 'text-emerald-700',
+    ring: 'ring-emerald-400/20'
+  },
+  ordering: {
+    bg: 'bg-amber-50 hover:bg-amber-100', 
+    border: 'border-amber-400 hover:border-amber-500',
+    text: 'text-amber-700',
+    ring: 'ring-amber-400/20'
+  },
+  unpaid: {
+    bg: 'bg-rose-50 hover:bg-rose-100',
+    border: 'border-rose-400 hover:border-rose-500', 
+    text: 'text-rose-700',
+    ring: 'ring-rose-400/20'
+  },
+  paid: {
+    bg: 'bg-blue-50 hover:bg-blue-100',
+    border: 'border-blue-400 hover:border-blue-500',
+    text: 'text-blue-700',
+    ring: 'ring-blue-400/20'
+  }
+};
+
 const TableGrid = ({ tables, onSelectTable }) => {
   // Ensure tables is always an array
-  const safeTable = Array.isArray(tables) ? tables : [];
+  const safeTablesArray = Array.isArray(tables) ? tables : [];
   
-  // Table status colors
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'free':
-        return 'bg-green-100 border-green-500';
-      case 'ordering':
-        return 'bg-yellow-100 border-yellow-500';
-      case 'unpaid':
-        return 'bg-red-100 border-red-500';
-      case 'paid':
-        return 'bg-blue-100 border-blue-500';
-      default:
-        return 'bg-gray-100 border-gray-300';
-    }
+  // Get enhanced status styling
+  const getStatusStyles = (status) => {
+    return STATUS_STYLES[status] || {
+      bg: 'bg-gray-50 hover:bg-gray-100',
+      border: 'border-gray-300 hover:border-gray-400', 
+      text: 'text-gray-600',
+      ring: 'ring-gray-400/20'
+    };
   };
   
   // Table status texts in Albanian
@@ -42,19 +65,71 @@ const TableGrid = ({ tables, onSelectTable }) => {
     }
   };
   
+  // Get status icon
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'free':
+        return (
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'ordering':
+        return (
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'unpaid':
+        return (
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+          </svg>
+        );
+      case 'paid':
+        return (
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+            <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+          </svg>
+        );
+      default:
+        return null;
+    }
+  };
+  
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      {safeTable.map((table) => (
-        <div
-          key={table._id}
-          className={`border-2 rounded-lg p-4 text-center cursor-pointer shadow hover:shadow-lg transition-shadow duration-300 ${getStatusClass(table.status)}`}
-          onClick={() => onSelectTable(table)}
-        >
-          <div className="text-xl font-bold mb-1">Tavolina {table.number}</div>
-          <div className="text-sm font-medium">{getStatusText(table.status)}</div>
-          {table.name && <div className="text-xs text-gray-600 mt-1">{table.name}</div>}
-        </div>
-      ))}
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+      {safeTablesArray.map((table) => {
+        const styles = getStatusStyles(table.status);
+        return (
+          <div
+            key={table._id}
+            className={`relative group border-2 rounded-2xl p-5 text-center cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 ${styles.bg} ${styles.border} ring-2 ${styles.ring}`}
+            onClick={() => onSelectTable(table)}
+          >
+            <div className="flex flex-col items-center space-y-2">
+              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${styles.text} bg-white/50 group-hover:bg-white/80 transition-colors duration-200`}>
+                {getStatusIcon(table.status)}
+              </div>
+              <div className={`text-lg font-bold ${styles.text}`}>
+                Tavolina {table.number}
+              </div>
+              <div className={`text-sm font-medium px-3 py-1 rounded-full bg-white/60 ${styles.text}`}>
+                {getStatusText(table.status)}
+              </div>
+              {table.name && (
+                <div className="text-xs text-gray-500 mt-1 px-2 py-1 bg-white/40 rounded-md">
+                  {table.name}
+                </div>
+              )}
+            </div>
+            
+            {/* Hover effect overlay */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -65,8 +140,19 @@ const WaiterDashboard = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showTableManagement, setShowTableManagement] = useState(false);
-  const [selectedTable, setSelectedTable] = useState(null);
+  const [showTableManagement, setShowTableManagement] = useState(false); // This state is declared but not directly used to show/hide a specific table management UI in this file. It might be for future use or managed differently.
+  const [selectedTable, setSelectedTable] = useState(null); // Used for quick table status change, then set to null.
+  
+  // Thermal Printer State
+  const [thermalPrinter] = useState(new ThermalPrinterService());
+  const [showPrinterConfig, setShowPrinterConfig] = useState(false);
+  const [printerSettings, setPrinterSettings] = useState({
+    interface: 'usb',
+    restaurantName: 'Vila Falo',
+    autoTest: false // This autoTest property is in state but not used in the provided code.
+  });
+  const [printingStatus, setPrintingStatus] = useState('');
+  const [printingOrder, setPrintingOrder] = useState(null);
   
   const { user, logout, token } = useContext(AuthContext);
   const { socket, connected } = useContext(SocketContext);
@@ -205,9 +291,25 @@ const WaiterDashboard = () => {
     navigate('/login');
   };
 
-  // Format currency
+  // Enhanced currency formatting with proper number handling
   const formatCurrency = (amount) => {
-    return amount.toLocaleString() + ' LEK';
+    // Ensure amount is a valid number
+    const numAmount = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
+    return numAmount.toLocaleString('sq-AL', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }) + ' LEK';
+  };
+  
+  // Calculate order total with proper validation
+  const calculateOrderTotal = (items) => {
+    if (!Array.isArray(items)) return 0;
+    
+    return items.reduce((total, item) => {
+      const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+      const quantity = typeof item.quantity === 'number' ? item.quantity : parseInt(item.quantity) || 0;
+      return total + (price * quantity);
+    }, 0);
   };
 
   // Get item name from menuItems
@@ -226,11 +328,11 @@ const WaiterDashboard = () => {
     // If menuItem is just an ID string, look it up in our menuItems state
     if (item && item.menuItem && typeof item.menuItem === 'string') {
       const safeMenuItems = Array.isArray(menuItems) ? menuItems : [];
-      const menuItem = safeMenuItems.find(m => m._id === item.menuItem);
-      if (menuItem) {
+      const menuItemFromState = safeMenuItems.find(m => m._id === item.menuItem); // Renamed variable to avoid conflict
+      if (menuItemFromState) {
         // Prefer Albanian name
-        if (menuItem.albanianName) return menuItem.albanianName;
-        if (menuItem.name) return menuItem.name;
+        if (menuItemFromState.albanianName) return menuItemFromState.albanianName;
+        if (menuItemFromState.name) return menuItemFromState.name;
       }
     }
     
@@ -238,142 +340,76 @@ const WaiterDashboard = () => {
     return 'Artikull pa emër';
   };
 
-  // Print bill functionality
-  const printBill = (order) => {
-    // Create a printable version of the bill
-    const printWindow = window.open('', '_blank');
-    
-    if (!printWindow) {
-      alert('Ju lutem aktivizoni dritaret pop-up për të printuar faturën');
-      return;
-    }
-    
-    // Get current date and time
-    const now = new Date();
-    const dateString = now.toLocaleDateString('sq-AL');
-    const timeString = now.toLocaleTimeString('sq-AL');
-    
-    // Setup the HTML content for the bill
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Fatura - Tavolina ${order.table?.number || 'N/A'}</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 20px;
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 20px;
-              border-bottom: 1px solid #ddd;
-              padding-bottom: 10px;
-            }
-            .info {
-              margin-bottom: 20px;
-            }
-            .info div {
-              margin-bottom: 5px;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin-bottom: 20px;
-            }
-            th, td {
-              border: 1px solid #ddd;
-              padding: 8px;
-              text-align: left;
-            }
-            th {
-              background-color: #f2f2f2;
-            }
-            .total {
-              text-align: right;
-              font-weight: bold;
-              font-size: 18px;
-              margin-top: 20px;
-              border-top: 1px solid #ddd;
-              padding-top: 10px;
-            }
-            .footer {
-              text-align: center;
-              margin-top: 30px;
-              font-size: 12px;
-              color: #666;
-            }
-            @media print {
-              .no-print {
-                display: none;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>Vila Falo</h1>
-            <p>Faturë Fiskale</p>
-          </div>
-          
-          <div class="info">
-            <div><strong>Data:</strong> ${dateString}</div>
-            <div><strong>Ora:</strong> ${timeString}</div>
-            <div><strong>Tavolina:</strong> ${order.table?.number || 'N/A'}</div>
-            <div><strong>Kamarieri:</strong> ${order.waiter?.name || user?.name || 'N/A'}</div>
-          </div>
-          
-          <table>
-            <thead>
-              <tr>
-                <th>Produkti</th>
-                <th>Sasia</th>
-                <th>Çmimi</th>
-                <th>Totali</th>
-              </tr>
-            </thead>
-            <tbody>
-    `);
-    
-    // Add each item to the bill with proper name display
-    const safeItems = Array.isArray(order.items) ? order.items : [];
-    safeItems.forEach(item => {
-      // Look up the item name in our menu items
-      const itemName = getItemName(item);
-      const itemTotal = item.price * item.quantity;
+  // Enhanced thermal receipt printing
+  const printReceipt = async (order, options = {}) => {
+    try {
+      setPrintingOrder(order._id);
+      setPrintingStatus('Duke printuar...');
       
-      printWindow.document.write(`
-        <tr>
-          <td>${itemName}</td>
-          <td>${item.quantity}</td>
-          <td>${item.price.toLocaleString()} LEK</td>
-          <td>${itemTotal.toLocaleString()} LEK</td>
-        </tr>
-      `);
-    });
-    
-    // Complete the HTML content
-    printWindow.document.write(`
-            </tbody>
-          </table>
-          
-          <div class="total">
-            Totali: ${order.totalAmount.toLocaleString()} LEK
-          </div>
-          
-          <div class="footer">
-            <p>Ju faleminderit për vizitën! Mirupafshim!</p>
-            <p>TVSH: 20%</p>
-          </div>
-          
-          <div class="no-print" style="text-align: center; margin-top: 30px;">
-            <button onclick="window.print();" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Print</button>
-          </div>
-        </body>
-      </html>
-    `);
-    
-    printWindow.document.close();
+      // Configure printer with current settings
+      thermalPrinter.configurePrinter({
+        interface: printerSettings.interface,
+        restaurantName: printerSettings.restaurantName
+      });
+      
+      // Print the receipt
+      const result = await thermalPrinter.printReceipt(order, {
+        restaurantName: printerSettings.restaurantName,
+        waiterName: user?.name,
+        ...options
+      });
+      
+      if (result.success) {
+        setPrintingStatus('✅ Fatura u printua me sukses!');
+        // Show success message briefly
+        setTimeout(() => {
+          setPrintingStatus('');
+          setPrintingOrder(null);
+        }, 3000);
+      } else {
+        setPrintingStatus('❌ ' + result.message);
+        setTimeout(() => {
+          setPrintingStatus('');
+          setPrintingOrder(null);
+        }, 5000);
+      }
+      
+    } catch (error) {
+      console.error('Print failed:', error);
+      setPrintingStatus('❌ Gabim në printim: ' + error.message);
+      setTimeout(() => {
+        setPrintingStatus('');
+        setPrintingOrder(null);
+      }, 5000);
+    }
+  };
+  
+  // Test thermal printer
+  const testThermalPrinter = async () => {
+    try {
+      setPrintingStatus('Duke testuar printerin...');
+      thermalPrinter.configurePrinter(printerSettings);
+      
+      const result = await thermalPrinter.testPrinter();
+      
+      if (result.success) {
+        setPrintingStatus('✅ Printeri funksionon mirë!');
+      } else {
+        setPrintingStatus('❌ ' + result.message);
+      }
+      
+      setTimeout(() => setPrintingStatus(''), 3000);
+      
+    } catch (error) {
+      setPrintingStatus('❌ Gabim në testim: ' + error.message);
+      setTimeout(() => setPrintingStatus(''), 5000);
+    }
+  };
+  
+  // Configure printer settings
+  const updatePrinterSettings = (newSettings) => {
+    setPrinterSettings(prev => ({ ...prev, ...newSettings }));
+    thermalPrinter.configurePrinter({ ...printerSettings, ...newSettings }); // Ensure new settings are applied to the service
   };
 
   // Handle table status change (for the quick table management)
@@ -392,8 +428,8 @@ const WaiterDashboard = () => {
       }, config);
       
       // Update local state with safety check
-      const safeTables = Array.isArray(tables) ? tables : [];
-      setTables(safeTables.map(table => 
+      const safeTablesLocal = Array.isArray(tables) ? tables : []; // Renamed to avoid conflict
+      setTables(safeTablesLocal.map(table => 
         table._id === tableId ? updateResponse.data : table
       ));
       
@@ -436,173 +472,491 @@ const WaiterDashboard = () => {
   
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="relative">
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+            <div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-transparent border-r-blue-400 animate-pulse mx-auto"></div>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">Duke ngarkuar...</h2>
+          <p className="text-gray-500">Ju lutem prisni një moment</p>
+        </div>
       </div>
     );
   }
   
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-md">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold">Vila Falo</h1>
-              <p className="text-blue-100 mt-1">
-                Mirësevini, {user?.name || 'Përdorues'} - Kamarier
-              </p>
-            </div>
-            <div className="flex space-x-3">
-              <button 
-                onClick={handleNewOrder} 
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow-md transition duration-300 flex items-center"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-                </svg>
-                Porosi e Re
-              </button>
-              <button 
-                onClick={handleLogout} 
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition duration-300 flex items-center"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-                </svg>
-                Dilni
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-6">
-        {error && (
-          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 relative rounded-md shadow" role="alert">
-            <p>{error}</p>
-            <button 
-              className="absolute top-0 right-0 p-4" 
-              onClick={() => setError('')}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-        )}
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
+      {/* Enhanced Header with glassmorphism effect */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-500/10 to-white/5"></div>
         
-        {/* Table Section */}
-        <div className="mb-8">
-          <div className="bg-white rounded-xl shadow-md overflow-hidden mb-6">
-            <div className="flex justify-between items-center p-6 border-b border-gray-200">
-              <h2 className="text-xl font-semibold">Tavolinat</h2>
-              <div className="flex space-x-4 text-sm">
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-green-100 border border-green-500 rounded-full mr-2"></div>
-                  <span>E lirë</span>
+        <div className="relative backdrop-blur-sm bg-white/10 border-b border-white/20 shadow-2xl">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
+              <div className="text-center lg:text-left">
+                <div className="flex items-center justify-center lg:justify-start space-x-3 mb-2">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                    <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    </svg>
+                  </div>
+                  <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                    Vila Falo
+                  </h1>
                 </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-yellow-100 border border-yellow-500 rounded-full mr-2"></div>
-                  <span>Duke porositur</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-red-100 border border-red-500 rounded-full mr-2"></div>
-                  <span>E papaguar</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-100 border border-blue-500 rounded-full mr-2"></div>
-                  <span>E paguar</span>
+                <p className="text-blue-100 text-lg font-medium">
+                  Mirësevini, <span className="text-white font-semibold">{user?.name || 'Përdorues'}</span>
+                </p>
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/20 text-blue-100 text-sm font-medium mt-2">
+                  <div className="w-2 h-2 bg-emerald-400 rounded-full mr-2 animate-pulse"></div>
+                  {connected ? 'Në linjë' : 'Jo në linjë'} • Kamarier
                 </div>
               </div>
-            </div>
-            
-            <div className="p-6">
-              <TableGrid tables={safeTables} onSelectTable={handleSelectTable} />
               
-              <div className="mt-6 text-right">
+              <div className="flex flex-wrap gap-3 justify-center">
+                <button 
+                  onClick={handleNewOrder} 
+                  className="group px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:-translate-y-1 backdrop-blur-sm"
+                >
+                  <div className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300">
+                    <svg fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span className="font-semibold">Porosi e Re</span>
+                </button>
+                
                 <button 
                   onClick={navigateToTableManagement}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition duration-200"
+                  className="group px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:-translate-y-1 backdrop-blur-sm border border-white/30"
                 >
-                  Menaxho Tavolinat
+                  <svg className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L13.414 13H18v3a2 2 0 01-2 2H4a2 2 0 01-2-2V5zM5 8a1 1 0 011-1h1a1 1 0 110 2H6a1 1 0 01-1-1zm5 0a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-semibold">Tavolinat</span>
+                </button>
+                
+                <button 
+                  onClick={() => setShowPrinterConfig(!showPrinterConfig)}
+                  className="group px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:-translate-y-1 backdrop-blur-sm"
+                >
+                  <svg className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-semibold">🖨️ Printer</span>
+                </button>
+                
+                <button 
+                  onClick={handleLogout} 
+                  className="group px-6 py-3 bg-rose-500/80 hover:bg-rose-600 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:-translate-y-1 backdrop-blur-sm"
+                >
+                  <svg className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-semibold">Dilni</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
-        
-        {/* Active Orders Section */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold">Porositë Aktive</h2>
+      </div>
+      
+      {/* Printing Status Banner */}
+      {printingStatus && (
+        <div className="container mx-auto px-4 pt-4">
+          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border-l-4 border-purple-400 text-purple-800 p-6 relative rounded-2xl shadow-lg backdrop-blur-sm animate-pulse" role="alert">
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 mr-3"></div>
+              <p className="font-semibold text-lg">{printingStatus}</p>
+            </div>
           </div>
-          
-          <div className="p-6">
-            {safeActiveOrders.length === 0 ? (
-              <div className="text-center py-8 bg-gray-50 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </div>
+      )}
+
+      {/* Error Banner */}
+      {error && (
+        <div className="container mx-auto px-4 pt-4"> {/* Added container and pt-4 for consistency if error is shown alone */}
+          <div className="bg-gradient-to-r from-red-50 to-rose-50 border-l-4 border-red-400 text-red-800 p-6 mb-6 relative rounded-2xl shadow-lg backdrop-blur-sm" role="alert">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 mr-4">
+                <svg className="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
-                <p className="text-gray-500 text-lg">Nuk ka porosi aktive</p>
-                <p className="text-sm text-gray-400 mt-2">Porosia e re do të shfaqet automatikisht këtu</p>
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {safeActiveOrders.map((order) => {
-                  const safeOrderItems = Array.isArray(order.items) ? order.items : [];
-                  
-                  return (
-                    <div key={order._id} className="border rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                      <div className="bg-gray-50 px-4 py-3 flex justify-between items-center rounded-t-lg border-b">
-                        <div className="font-semibold">Tavolina {order.table?.number || 'N/A'}</div>
-                        <div className="text-sm text-gray-500">
-                          {new Date(order.createdAt).toLocaleTimeString('sq-AL', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold mb-1">Gabim në sistem</h3>
+                <p className="text-sm">{error}</p>
+              </div>
+              <button 
+                className="flex-shrink-0 ml-4 p-2 rounded-lg hover:bg-red-100 transition-colors duration-200" 
+                onClick={() => setError('')}
+              >
+                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Thermal Printer Configuration Modal */}
+      {showPrinterConfig && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 px-8 py-6 rounded-t-3xl">
+              <div className="flex justify-between items-center">
+                <h2 className="text-3xl font-bold text-white flex items-center">
+                  🖨️ Thermal Printer Configuration
+                </h2>
+                <button 
+                  onClick={() => setShowPrinterConfig(false)}
+                  className="text-white hover:text-gray-200 transition-colors duration-200"
+                >
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div className="p-8 space-y-6">
+              {/* Printer Interface Selection */}
+              <div>
+                <label className="block text-lg font-semibold text-gray-700 mb-3">
+                  Printer Connection Type
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {['usb', 'serial', 'network'].map(type => (
+                    <div 
+                      key={type}
+                      className={`p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 ${
+                        printerSettings.interface === type 
+                          ? 'border-purple-500 bg-purple-50' 
+                          : 'border-gray-200 hover:border-purple-300'
+                      }`}
+                      onClick={() => updatePrinterSettings({ interface: type })}
+                    >
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">
+                          {type === 'usb' ? '🔌' : type === 'serial' ? '📡' : '🌐'}
+                        </div>
+                        <div className="font-semibold capitalize">{type}</div>
+                        <div className="text-sm text-gray-500 mt-1">
+                          {type === 'usb' ? 'USB Connection' : 
+                           type === 'serial' ? 'Serial Port' : 'Network (TCP/IP)'}
                         </div>
                       </div>
-                      <div className="p-4">
-                        <div className="space-y-2 mb-4">
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Restaurant Name */}
+              <div>
+                <label className="block text-lg font-semibold text-gray-700 mb-3">
+                  Restaurant Name for Receipt
+                </label>
+                <input
+                  type="text"
+                  value={printerSettings.restaurantName}
+                  onChange={(e) => updatePrinterSettings({ restaurantName: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-purple-500 focus:outline-none transition-colors duration-200 text-lg"
+                  placeholder="Enter restaurant name..."
+                />
+              </div>
+              
+              {/* Network Settings (if network selected) */}
+              {printerSettings.interface === 'network' && (
+                <div className="bg-blue-50 p-6 rounded-2xl border border-blue-200">
+                  <h3 className="text-xl font-bold text-blue-800 mb-4">🌐 Network Settings</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-blue-700 mb-2">
+                        Printer IP Address
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="192.168.1.100"
+                        className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none"
+                        // value={printerSettings.networkIp || ''} // Example: if you add networkIp to printerSettings
+                        // onChange={(e) => updatePrinterSettings({ networkIp: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-blue-700 mb-2">
+                        Port
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="9100"
+                        className="w-full px-3 py-2 border border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none"
+                        // value={printerSettings.networkPort || ''} // Example: if you add networkPort to printerSettings
+                        // onChange={(e) => updatePrinterSettings({ networkPort: parseInt(e.target.value) || 9100 })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* USB/Serial Info */}
+              {printerSettings.interface !== 'network' && (
+                <div className="bg-green-50 p-6 rounded-2xl border border-green-200">
+                  <h3 className="text-xl font-bold text-green-800 mb-3">
+                    {printerSettings.interface === 'usb' ? '🔌 USB' : '📡 Serial'} Connection Info
+                  </h3>
+                  <div className="text-green-700 space-y-2">
+                    <p>• Make sure your thermal printer is connected via {printerSettings.interface.toUpperCase()}</p>
+                    <p>• Supported printers: Epson, Star, Citizen, and ESC/POS compatible</p>
+                    <p>• Browser will request permission to access the printer</p>
+                    {printerSettings.interface === 'usb' && (
+                      <p>• Requires modern browser with Web USB API support (Chrome, Edge)</p>
+                    )}
+                    {printerSettings.interface === 'serial' && (
+                      <p>• Requires modern browser with Web Serial API support</p>
+                    )}
+                  </div>
+                </div>
+              )}
+              
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <button
+                  onClick={testThermalPrinter}
+                  className="flex-1 px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-2xl font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl flex items-center justify-center"
+                >
+                  <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  🧪 Test Printer
+                </button>
+                
+                <button
+                  onClick={() => setShowPrinterConfig(false)}
+                  className="flex-1 px-6 py-4 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white rounded-2xl font-bold text-lg transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl flex items-center justify-center"
+                >
+                  <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                  ❌ Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Enhanced Table Section */}
+        <div className="mb-10">
+          <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 overflow-hidden mb-8">
+            <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-8 py-6 border-b border-gray-200/50">
+              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-2">Statuset e Tavolinave</h2>
+                  <p className="text-gray-600">Klikoni në tavolinë për të parë detajet ose për të bërë porosi</p>
+                </div>
+                
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <div className="flex items-center bg-white/60 px-3 py-2 rounded-xl">
+                    <div className="w-3 h-3 bg-emerald-400 rounded-full mr-2 ring-2 ring-emerald-400/30"></div>
+                    <span className="font-medium text-emerald-700">E lirë</span>
+                  </div>
+                  <div className="flex items-center bg-white/60 px-3 py-2 rounded-xl">
+                    <div className="w-3 h-3 bg-amber-400 rounded-full mr-2 ring-2 ring-amber-400/30"></div>
+                    <span className="font-medium text-amber-700">Duke porositur</span>
+                  </div>
+                  <div className="flex items-center bg-white/60 px-3 py-2 rounded-xl">
+                    <div className="w-3 h-3 bg-rose-400 rounded-full mr-2 ring-2 ring-rose-400/30"></div>
+                    <span className="font-medium text-rose-700">E papaguar</span>
+                  </div>
+                  <div className="flex items-center bg-white/60 px-3 py-2 rounded-xl">
+                    <div className="w-3 h-3 bg-blue-400 rounded-full mr-2 ring-2 ring-blue-400/30"></div>
+                    <span className="font-medium text-blue-700">E paguar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-8">
+              <TableGrid tables={safeTables} onSelectTable={handleSelectTable} />
+              
+              {safeTables.length === 0 && (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-700 mb-2">Nuk ka tavolina</h3>
+                  <p className="text-gray-500">Tavolinat do të shfaqen këtu pasi të ngarkohen</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Enhanced Active Orders Section */}
+        <div className="bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 overflow-hidden mb-10">
+          <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-8 py-6 border-b border-gray-200/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-1">Porositë Aktive</h2>
+                <p className="text-gray-600">Gjithsej {safeActiveOrders.length} porosi aktive</p>
+              </div>
+              {safeActiveOrders.length > 0 && (
+                <div className="flex items-center space-x-2 text-sm text-gray-500">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span>Live updates</span>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <div className="p-8">
+            {safeActiveOrders.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                  <svg className="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-700 mb-3">Nuk ka porosi aktive</h3>
+                <p className="text-gray-500 mb-6">Porosia e re do të shfaqet automatikisht këtu</p>
+                <button 
+                  onClick={handleNewOrder}
+                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-1 shadow-lg"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                  Krijo Porosi të Re
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {safeActiveOrders.map((order) => {
+                  const safeOrderItems = Array.isArray(order.items) ? order.items : [];
+                  // Calculate and verify the total
+                  const calculatedTotal = calculateOrderTotal(safeOrderItems);
+                  const displayTotal = order.totalAmount || calculatedTotal;
+                  
+                  return (
+                    <div key={order._id} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden">
+                      <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4 flex justify-between items-center border-b border-gray-100">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <div className="font-bold text-gray-800">Tavolina {order.table?.number || 'N/A'}</div>
+                            <div className="text-xs text-gray-500">
+                              {safeOrderItems.length} artikuj
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-gray-600">
+                            {new Date(order.createdAt).toLocaleTimeString('sq-AL', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            {Math.floor((Date.now() - new Date(order.createdAt)) / 60000)}min më parë
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="p-6">
+                        <div className="space-y-3 mb-6">
                           {safeOrderItems.map((item, index) => {
                             const itemName = getItemName(item);
+                            const itemPrice = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+                            const itemQuantity = typeof item.quantity === 'number' ? item.quantity : parseInt(item.quantity) || 0;
+                            const itemTotal = itemPrice * itemQuantity;
                             
                             return (
-                              <div key={index} className="flex justify-between items-center">
-                                <div>
-                                  <span className="font-medium mr-1">{item.quantity}x</span>
-                                  <span className="font-medium">{itemName}</span>
+                              <div key={index} className="flex justify-between items-start group-hover:bg-gray-50 rounded-lg p-3 -m-3 transition-colors duration-200">
+                                <div className="flex-1">
+                                  <div className="flex items-center space-x-2">
+                                    <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">
+                                      {itemQuantity}
+                                    </span>
+                                    <span className="font-semibold text-gray-800">{itemName}</span>
+                                  </div>
                                   {item.notes && (
-                                    <p className="text-sm text-gray-500 ml-5">
-                                      {item.notes}
+                                    <p className="text-sm text-gray-500 mt-1 ml-8 italic">
+                                      "{item.notes}"
                                     </p>
                                   )}
                                 </div>
-                                <div className="text-gray-700">
-                                  {formatCurrency(item.price * item.quantity)}
+                                <div className="text-right ml-4">
+                                  <div className="font-bold text-gray-800">
+                                    {formatCurrency(itemTotal)}
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    {formatCurrency(itemPrice)} × {itemQuantity}
+                                  </div>
                                 </div>
                               </div>
                             );
                           })}
                         </div>
-                        <div className="border-t pt-2 flex justify-between font-semibold">
-                          <div>Total:</div>
-                          <div>{formatCurrency(order.totalAmount)}</div>
+                        
+                        <div className="border-t-2 border-gray-100 pt-4 mb-6">
+                          <div className="flex justify-between items-center">
+                            <span className="text-lg font-bold text-gray-800">Total:</span>
+                            <span className="text-xl font-bold text-blue-600">
+                              {formatCurrency(displayTotal)}
+                            </span>
+                          </div>
+                          {order.totalAmount !== null && order.totalAmount !== undefined && calculatedTotal !== order.totalAmount && (
+                            <div className="text-xs text-amber-600 mt-1">
+                              ⚠️ Totali i ri-llogaritur: {formatCurrency(calculatedTotal)}
+                            </div>
+                          )}
                         </div>
                       </div>
-                      <div className="border-t px-4 py-3 bg-gray-50 rounded-b-lg flex justify-between">
+                      
+                      <div className="bg-gray-50 px-6 py-4 flex justify-between space-x-3">
                         <Link
                           to={`/waiter/table/${order.table?._id}`}
-                          className="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+                          className="flex-1 inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors duration-200 font-medium"
                         >
-                          Shiko detajet
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                          </svg>
+                          Detajet
                         </Link>
                         <button 
-                          onClick={() => printBill(order)}
-                          className="px-3 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
+                          onClick={() => printReceipt(order)}
+                          disabled={printingOrder === order._id}
+                          className={`flex-1 inline-flex items-center justify-center px-4 py-2 rounded-xl transition-colors duration-200 font-medium ${
+                            printingOrder === order._id 
+                              ? 'bg-gray-400 text-white cursor-not-allowed' 
+                              : 'bg-emerald-600 text-white hover:bg-emerald-700'
+                          }`}
                         >
-                          Printo Faturën
+                          {printingOrder === order._id ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Printing...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
+                              </svg>
+                              🧾 Print
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -613,47 +967,78 @@ const WaiterDashboard = () => {
           </div>
         </div>
         
-        {/* Quick Actions Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <Link to="/waiter/order/new" className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 border-t-4 border-blue-500">
-            <div className="flex items-center mb-3">
-              <div className="rounded-full bg-blue-100 p-3 mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+        {/* Enhanced Quick Actions Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <Link to="/waiter/order/new" className="group bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-blue-200 overflow-hidden">
+            <div className="p-8">
+              <div className="flex items-center mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <svg className="h-7 w-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-700 transition-colors duration-200">Porosi e Re</h3>
+                  <p className="text-blue-600 text-sm font-medium">Krijo porosi</p>
+                </div>
               </div>
-              <div className="text-xl font-semibold text-gray-800">Porosi e Re</div>
+              <p className="text-gray-600 leading-relaxed">Filloni një porosi të re për klientët tuaj</p>
             </div>
-            <p className="text-gray-600 ml-16">Krijoni një porosi të re</p>
+            <div className="h-1 bg-gradient-to-r from-blue-500 to-indigo-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
           </Link>
 
           <Link 
             to="/waiter/tables"
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 border-t-4 border-green-500"
+            className="group bg-gradient-to-br from-emerald-50 to-green-100 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-emerald-200 overflow-hidden"
           >
-            <div className="flex items-center mb-3">
-              <div className="rounded-full bg-green-100 p-3 mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
+            <div className="p-8">
+              <div className="flex items-center mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <svg className="h-7 w-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v6h-4.586l1.293-1.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L13.414 13H18v3a2 2 0 01-2 2H4a2 2 0 01-2-2V5zM5 8a1 1 0 011-1h1a1 1 0 110 2H6a1 1 0 01-1-1zm5 0a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-emerald-700 transition-colors duration-200">Menaxho Tavolinat</h3>
+                  <p className="text-emerald-600 text-sm font-medium">Kontrollo statuset</p>
+                </div>
               </div>
-              <div className="text-xl font-semibold text-gray-800">Menaxho Tavolinat</div>
+              <p className="text-gray-600 leading-relaxed">Ndrysho statuset dhe menaxho tavolinat</p>
             </div>
-            <p className="text-gray-600 ml-16">Ndrysho statuset e tavolinave</p>
+            <div className="h-1 bg-gradient-to-r from-emerald-500 to-green-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
           </Link>
 
-          <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition duration-300 transform hover:-translate-y-1 border-t-4 border-purple-500">
-            <div className="flex items-center mb-3">
-              <div className="rounded-full bg-purple-100 p-3 mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          <div className="group bg-gradient-to-br from-purple-50 to-violet-100 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-purple-200 overflow-hidden cursor-pointer">
+            <div className="p-8">
+              <div className="flex items-center mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                  <svg className="h-7 w-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-purple-700 transition-colors duration-200">Statistikat</h3>
+                  <p className="text-purple-600 text-sm font-medium">Performanca</p>
+                </div>
               </div>
-              <div className="text-xl font-semibold text-gray-800">Ndihma</div>
+              <p className="text-gray-600 leading-relaxed">Shiko statistikat e porosive dhe performancës</p>
             </div>
-            <p className="text-gray-600 ml-16">Udhëzime përdorimi</p>
+            <div className="h-1 bg-gradient-to-r from-purple-500 to-violet-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
           </div>
         </div>
+      </div>
+      
+      {/* Floating Action Button for Mobile */}
+      <div className="fixed bottom-6 right-6 lg:hidden">
+        <button 
+          onClick={handleNewOrder}
+          className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center"
+        >
+          <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+        </button>
       </div>
     </div>
   );

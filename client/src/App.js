@@ -23,6 +23,7 @@ import WaiterTableManagement from './pages/Waiter/TableManagement';
 
 // Kitchen Pages
 import KitchenDashboard from './pages/Kitchen/Dashboard';
+import KitchenDisplay from './components/KitchenDisplay/KitchenDisplay';
 
 
 // Protected Route Component - Updated for the new AuthContext
@@ -134,6 +135,10 @@ function AppContent() {
         <Route 
           path="/kitchen" 
           element={<ProtectedRoute element={<KitchenDashboard />} allowedRoles={['kitchen']} />} 
+        />
+        <Route 
+          path="/kitchen/display" 
+          element={<ProtectedRoute element={<KitchenDisplay />} allowedRoles={['kitchen', 'manager']} />} 
         />
         
         {/* Default redirect based on user role */}
