@@ -1,10 +1,10 @@
-/* ===== RESTAURANT ORDER SYSTEM - MAIN STYLES ===== */
+/* ===== RESTAURANT ORDER SYSTEM - BEAUTIFUL UI ===== */
 
 /* Import Google Fonts for better typography */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* PROFESSIONAL THEME - Clean, Modern, Mobile-First */
-@import url('./professional-theme.css');
+/* BEAUTIFUL THEME - Stunning gradients, glass effects & animations */
+@import url('./beautiful-theme.css');
 
 /* Basic reset for React app */
 body {
@@ -14,10 +14,172 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f8fafc;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* === ADDITIONAL STUNNING EFFECTS === */
+
+/* Animate elements on load */
+.container > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Beautiful table status hover effects */
+.table-card:hover {
+  transform: translateY(-8px) scale(1.05) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Enhanced order cards */
+.order-card {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.order-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Beautiful status badges */
+.status-badge {
+  backdrop-filter: blur(10px) !important;
+  border-radius: 20px !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Enhanced metric cards animation */
+.metric-card {
+  animation: fadeInUp 0.8s ease-out;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.metric-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+}
+
+/* Make text more readable on gradient backgrounds */
+.text-gray-600,
+.text-gray-700,
+.text-gray-800 {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Enhanced navigation */
+.nav-link {
+  backdrop-filter: blur(15px) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Beautiful footer effects */
+.footer {
+  background: rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* === KEYFRAME ANIMATIONS === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+/* Apply animations */
+.animate-slide-in {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* === STUNNING TABLE GRID === */
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* === MOBILE ENHANCEMENTS === */
+@media (max-width: 768px) {
+  .table-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .bg-white {
+    border-radius: 16px !important;
+  }
+  
+  .menu-item-card {
+    border-radius: 16px !important;
+  }
+}
+
+/* === BEAUTIFUL LOADING SCREEN === */
+.loading-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  flex-direction: column !important;
+}
+
+.loading-text {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 600 !important;
+  margin-top: 1rem !important;
 }

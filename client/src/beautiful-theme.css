@@ -1,0 +1,625 @@
+/* ========================================= */
+/* MODERN RESTAURANT SYSTEM - BEAUTIFUL UI */
+/* Stunning gradients, colors & animations  */
+/* ========================================= */
+
+/* === CORE VARIABLES === */
+:root {
+  /* Beautiful Color Palette */
+  --primary-navy: #1e293b;
+  --primary-blue: #3b82f6;
+  --success-green: #10b981;
+  --warning-amber: #f59e0b;
+  --danger-red: #ef4444;
+  --info-cyan: #06b6d4;
+  --purple: #8b5cf6;
+  
+  /* Rich Gradients */
+  --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-warning: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --gradient-danger: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  --gradient-card: linear-gradient(145deg, #ffffff 0%, #f0f4f8 100%);
+  
+  /* Modern Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 15px 35px rgba(0, 0, 0, 0.2);
+  --shadow-colored: 0 8px 25px rgba(102, 126, 234, 0.25);
+  
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+/* === GLOBAL STYLES === */
+* {
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background: var(--gradient-main) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  color: #1f2937 !important;
+  line-height: 1.6 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  min-height: 100vh !important;
+}
+
+/* === BEAUTIFUL BACKGROUNDS === */
+.dashboard-container,
+.manager-dashboard,
+.waiter-dashboard,
+.kitchen-dashboard {
+  background: var(--gradient-main) !important;
+  min-height: 100vh !important;
+  position: relative !important;
+}
+
+/* Add animated background particles */
+.dashboard-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === HEADER STYLING === */
+.bg-gradient-to-r.from-blue-600.via-blue-700.to-indigo-800,
+.bg-gradient-to-r.from-indigo-600.via-blue-700.to-purple-800 {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%) !important;
+  color: white !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  box-shadow: var(--shadow-xl) !important;
+}
+
+/* === STUNNING CARD SYSTEM === */
+.bg-white,
+.bg-white\/70,
+.bg-white\/80 {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-lg) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.bg-white::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+}
+
+.bg-white:hover {
+  box-shadow: var(--shadow-xl) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-4px) !important;
+}
+
+/* Enhanced glassmorphism cards */
+.backdrop-blur-lg {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-xl) !important;
+}
+
+/* === BEAUTIFUL BUTTON SYSTEM === */
+.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  font-size: 0.875rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+/* Primary Button - Beautiful Blue */
+.btn-primary,
+.bg-blue-600,
+.bg-blue-500,
+.bg-gradient-to-r.from-blue-600.to-indigo-600 {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4) !important;
+}
+
+.btn-primary:hover,
+.bg-blue-600:hover,
+.bg-blue-500:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* Success Button - Beautiful Green */
+.btn-success,
+.bg-green-600,
+.bg-emerald-600,
+.bg-gradient-to-r.from-emerald-500.to-emerald-600 {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+}
+
+.btn-success:hover,
+.bg-green-600:hover,
+.bg-emerald-600:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* Warning Button - Beautiful Orange */
+.btn-warning,
+.bg-amber-600,
+.bg-yellow-600 {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4) !important;
+}
+
+.btn-warning:hover,
+.bg-amber-600:hover,
+.bg-yellow-600:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* Danger Button - Beautiful Red */
+.btn-danger,
+.bg-red-600,
+.bg-rose-600 {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4) !important;
+}
+
+.btn-danger:hover,
+.bg-red-600:hover,
+.bg-rose-600:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+
+/* === STUNNING STATUS INDICATORS === */
+.bg-emerald-50 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+  border: 2px solid #10b981 !important;
+  color: #065f46 !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2) !important;
+  border-radius: 16px !important;
+}
+
+.bg-amber-50 {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+  border: 2px solid #f59e0b !important;
+  color: #92400e !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2) !important;
+  border-radius: 16px !important;
+}
+
+.bg-rose-50 {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+  border: 2px solid #ef4444 !important;
+  color: #991b1b !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2) !important;
+  border-radius: 16px !important;
+}
+
+.bg-blue-50 {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+  border: 2px solid #3b82f6 !important;
+  color: #1e40af !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2) !important;
+  border-radius: 16px !important;
+}
+
+/* === BEAUTIFUL METRIC CARDS === */
+.bg-gradient-to-br.from-emerald-50.to-green-100 {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.bg-gradient-to-br.from-blue-50.to-indigo-100 {
+  background: linear-gradient(135deg, #dbeafe 0%, #c7d2fe 50%, #a5b4fc 100%) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.bg-gradient-to-br.from-amber-50.to-orange-100 {
+  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 50%, #fdba74 100%) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.bg-gradient-to-br.from-purple-50.to-violet-100 {
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #ddd6fe 100%) !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+/* === STUNNING ICON BACKGROUNDS === */
+.bg-gradient-to-br.from-emerald-500.to-emerald-600 {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4) !important;
+  border-radius: 16px !important;
+}
+
+.bg-gradient-to-br.from-blue-500.to-blue-600 {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4) !important;
+  border-radius: 16px !important;
+}
+
+.bg-gradient-to-br.from-amber-500.to-amber-600 {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4) !important;
+  border-radius: 16px !important;
+}
+
+.bg-gradient-to-br.from-purple-500.to-purple-600 {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4) !important;
+  border-radius: 16px !important;
+}
+
+/* === BEAUTIFUL FORM CONTROLS === */
+.input,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  display: block !important;
+  width: 100% !important;
+  padding: 0.875rem 1rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  color: #1f2937 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.input:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 4px 15px rgba(59, 130, 246, 0.2) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* === STUNNING MENU CARDS === */
+.menu-item-card {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  padding: 1.5rem !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.menu-item-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+}
+
+.menu-item-card:hover {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-8px) scale(1.02) !important;
+}
+
+.menu-item-card.border-green-200.bg-green-50 {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+.menu-item-card.border-blue-200.bg-blue-50 {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.menu-item-card.border-orange-200.bg-orange-50 {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+/* === BEAUTIFUL QUANTITY CONTROLS === */
+.quantity-control {
+  display: flex !important;
+  align-items: center !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.quantity-control button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #1f2937 !important;
+  border: none !important;
+  padding: 0.75rem 1rem !important;
+  font-weight: 700 !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.quantity-control button:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #1e40af !important;
+  transform: scale(1.1) !important;
+}
+
+.quantity-control input {
+  border: none !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  background: transparent !important;
+  width: 3.5rem !important;
+  padding: 0.75rem 0.5rem !important;
+  font-size: 1rem !important;
+}
+
+/* === STUNNING CATEGORY FILTER === */
+.category-filter {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem !important;
+  margin-bottom: 2rem !important;
+  justify-content: center !important;
+}
+
+.category-filter button {
+  padding: 0.75rem 1.5rem !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border-radius: 25px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+  font-size: 0.875rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.category-filter button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.category-filter button:hover::before {
+  left: 100%;
+}
+
+.category-filter button:hover {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+}
+
+.category-filter button.active,
+.category-filter .btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+  color: white !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* === STUNNING HOVER EFFECTS === */
+.group:hover {
+  transform: translateY(-6px) scale(1.03) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+a.group:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* === BEAUTIFUL LOADING SPINNER === */
+.loading-spinner {
+  width: 3rem !important;
+  height: 3rem !important;
+  border: 3px solid rgba(255, 255, 255, 0.2) !important;
+  border-top: 3px solid #3b82f6 !important;
+  border-radius: 50% !important;
+  animation: spin 1s linear infinite !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* === STUNNING ALERTS === */
+.alert-success {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  border-left: 4px solid #10b981 !important;
+  color: #065f46 !important;
+  padding: 1.25rem !important;
+  border-radius: 16px !important;
+  margin: 1rem 0 !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15) !important;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  border-left: 4px solid #ef4444 !important;
+  color: #991b1b !important;
+  padding: 1.25rem !important;
+  border-radius: 16px !important;
+  margin: 1rem 0 !important;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15) !important;
+}
+
+/* === MOBILE RESPONSIVENESS === */
+@media (max-width: 768px) {
+  .btn {
+    padding: 0.875rem 1.25rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .menu-item-card {
+    padding: 1.25rem !important;
+  }
+  
+  .quantity-control {
+    width: 100% !important;
+    max-width: 160px !important;
+  }
+  
+  .category-filter button {
+    padding: 0.625rem 1rem !important;
+    font-size: 0.8125rem !important;
+  }
+}
+
+/* === STUNNING ANIMATIONS === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* === BEAUTIFUL SCROLLBARS === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* === TEXT ENHANCEMENTS === */
+.text-white {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 700 !important;
+}
+
+/* === SPECIAL EFFECTS === */
+.bg-gradient-to-r.from-white.to-gray-50 {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 20px !important;
+}
+
+/* Make everything beautiful and engaging */
+* {
+  max-width: 100%;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+}
