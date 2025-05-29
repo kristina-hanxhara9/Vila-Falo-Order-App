@@ -66,7 +66,8 @@ const NewOrder = () => {
         const config = {
           timeout: 10000, // 10 second timeout
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-auth-token': token || localStorage.getItem('token')
           }
         };
         

@@ -43,6 +43,34 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/orders/active
+// @desc    Get only active orders
+// @access  Private
+router.get('/active', auth, async (req, res) => {
+  try {
+    console.log('GET /api/orders/active - Fetching active orders for user:', req.user.role);
+    
+    let query = { status: 'active' };
+    
+    // Waiter only sees their own orders
+    if (req.user.role === 'waiter') {
+      query.waiter = req.user.id;
+    }
+    
+    const orders = await Order.find(query)
+      .populate('table', 'number status')
+      .populate('waiter', 'name')
+      .populate('items.menuItem', 'name albanianName category')
+      .sort({ createdAt: -1 });
+    
+    console.log(`Found ${orders.length} active orders`);
+    res.json(orders);
+  } catch (err) {
+    console.error('Error fetching active orders:', err.message);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
 // @route   GET /api/orders/:id
 // @desc    Get single order
 // @access  Private
