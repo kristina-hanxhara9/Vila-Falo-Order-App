@@ -409,6 +409,8 @@ select,
   background-color: #f9fafb !important; /* Very light gray */
   border: 1px solid #e5e7eb !important;
   color: #1f2937 !important; /* Dark gray, almost black */
+  box-shadow: var(--shadow-sm) !important;
+  transition: all 0.2s ease !important;
 }
 
 /* Ensure text in forms is black/dark gray */
@@ -484,4 +486,150 @@ a[href="/logout"] {
 .text-gray-700,
 .text-gray-600 {
   color: #374151 !important; /* Dark gray */
+}
+
+/* ========================================= */
+/* OPTION 2: MODERN PREMIUM DESIGN STYLES  */
+/* ========================================= */
+
+/* === CORE VARIABLES === */
+:root {
+  /* Professional Colors */
+  --primary-blue: #1e40af;
+  --secondary-indigo: #4338ca;
+  --success-green: #059669;
+  --warning-amber: #d97706;
+  --danger-red: #dc2626;
+  --info-cyan: #0891b2;
+  
+  /* Background Palette */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  
+  /* Enhanced Shadows */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* === GLOBAL STYLES - OPTION 2 === */
+body {
+  background: var(--bg-primary) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  color: var(--gray-800) !important;
+  line-height: 1.6 !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+/* === LAYOUT === */
+.dashboard-container,
+.manager-dashboard,
+.waiter-dashboard,
+.kitchen-dashboard {
+  background: var(--bg-primary) !important;
+  min-height: 100vh !important;
+}
+
+/* === PREMIUM CARD SYSTEM === */
+.bg-white,
+.bg-white\/70,
+.bg-white\/80 {
+  background: var(--white) !important;
+  border: 1px solid var(--gray-200) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.bg-white:hover {
+  box-shadow: var(--shadow-lg) !important;
+  border-color: var(--gray-300) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* === PREMIUM TABLE STATUS CARDS === */
+/* Free Tables - Professional Green */
+.bg-emerald-50 {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
+  border: 2px solid var(--success-green) !important;
+  border-radius: 12px !important;
+  color: var(--success-green) !important;
+  box-shadow: var(--shadow-md) !important;
+  position: relative !important;
+}
+
+.bg-emerald-50::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--success-green);
+  border-radius: 12px 12px 0 0;
+}
+
+/* Ordering Tables - Professional Amber */
+.bg-amber-50 {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+  border: 2px solid var(--warning-amber) !important;
+  border-radius: 12px !important;
+  color: var(--warning-amber) !important;
+  box-shadow: var(--shadow-md) !important;
+  position: relative !important;
+}
+
+.bg-amber-50::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--warning-amber);
+  border-radius: 12px 12px 0 0;
+}
+
+/* Unpaid Tables - Professional Red */
+.bg-rose-50 {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%) !important;
+  border: 2px solid var(--danger-red) !important;
+  border-radius: 12px !important;
+  color: var(--danger-red) !important;
+  box-shadow: var(--shadow-md) !important;
+  position: relative !important;
+}
+
+.bg-rose-50::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--danger-red);
+  border-radius: 12px 12px 0 0;
+}
+
+/* === PREMIUM HOVER EFFECTS === */
+.group:hover {
+  transform: translateY(-3px) !important;
+  transition: all 0.3s ease !important;
+}
+
+a.group:hover {
+  box-shadow: var(--shadow-xl) !important;
 }

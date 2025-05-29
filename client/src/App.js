@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, AuthContext } from './contexts/AuthContext';
 import { SocketProvider } from './contexts/SocketContext';
 import './App.css';
-import './mockup2-premium.css';
 
 // Login Page
 import Login from './pages/Login';
