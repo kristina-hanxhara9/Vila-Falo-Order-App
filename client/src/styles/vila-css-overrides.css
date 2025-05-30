@@ -1,0 +1,201 @@
+/* 
+ * 🔧 VILA FALO CSS OVERRIDES
+ * Final overrides to ensure professional consistency
+ * This file ensures all components follow the design system
+ */
+
+/* === GLOBAL OVERRIDES === */
+
+/* Remove all forced gradients from Tailwind */
+[class*="bg-gradient-"],
+[class*="from-"],
+[class*="via-"],
+[class*="to-"] {
+  background-image: none !important;
+}
+
+/* Ensure consistent shadows */
+[class*="shadow-"] {
+  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+  box-shadow: var(--tw-shadow) !important;
+}
+
+/* Professional hover states */
+[class*="hover\:shadow-"]:hover {
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  box-shadow: var(--tw-shadow) !important;
+}
+
+/* Remove excessive transforms */
+[class*="hover\:scale-"]:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Consistent border radius */
+.rounded-full { border-radius: 9999px !important; }
+.rounded-3xl { border-radius: 1rem !important; }
+.rounded-2xl { border-radius: 0.75rem !important; }
+.rounded-xl { border-radius: 0.5rem !important; }
+.rounded-lg { border-radius: 0.375rem !important; }
+.rounded-md { border-radius: 0.25rem !important; }
+.rounded { border-radius: 0.25rem !important; }
+
+/* Professional text colors */
+.text-gray-900 { color: #111827 !important; }
+.text-gray-800 { color: #1f2937 !important; }
+.text-gray-700 { color: #374151 !important; }
+.text-gray-600 { color: #4b5563 !important; }
+.text-gray-500 { color: #6b7280 !important; }
+
+/* Ensure readable link colors */
+a:not(.vila-btn):not(.group) {
+  color: #2563eb !important;
+  text-decoration: none !important;
+}
+
+a:not(.vila-btn):not(.group):hover {
+  color: #1d4ed8 !important;
+  text-decoration: underline !important;
+}
+
+/* Professional input styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+  border: 1px solid #d1d5db !important;
+  border-radius: 0.375rem !important;
+  background-color: #ffffff !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  transition: all 150ms ease !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  border-color: #3b82f6 !important;
+}
+
+/* Ensure consistent spacing */
+.p-8 { padding: 2rem !important; }
+.p-6 { padding: 1.5rem !important; }
+.p-4 { padding: 1rem !important; }
+.p-2 { padding: 0.5rem !important; }
+
+.px-8 { padding-left: 2rem !important; padding-right: 2rem !important; }
+.px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+.px-4 { padding-left: 1rem !important; padding-right: 1rem !important; }
+
+.py-8 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+.py-6 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+.py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+
+/* Remove forced animations */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-pulse {
+    animation: subtle-pulse 3s ease-in-out infinite !important;
+  }
+  
+  .animate-spin {
+    animation: spin 1s linear infinite !important;
+  }
+}
+
+/* Professional animation definitions */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Ensure professional backgrounds */
+body {
+  background-color: #fafbfc !important;
+}
+
+.bg-gray-50 { background-color: #f9fafb !important; }
+.bg-gray-100 { background-color: #f3f4f6 !important; }
+.bg-white { background-color: #ffffff !important; }
+
+/* Professional card styling for all card-like elements */
+.border {
+  border-color: #e5e7eb !important;
+}
+
+.border-2 {
+  border-width: 1px !important;
+  border-color: #e5e7eb !important;
+}
+
+/* Ensure buttons have consistent styling */
+button:not(.vila-btn) {
+  transition: all 200ms ease !important;
+  font-weight: 500 !important;
+}
+
+button:not(.vila-btn):hover {
+  transform: translateY(-1px) !important;
+}
+
+/* Remove excessive focus rings */
+*:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* Professional table styling */
+table {
+  border-collapse: collapse !important;
+}
+
+th {
+  background-color: #f9fafb !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+}
+
+td {
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+tr:hover {
+  background-color: #f9fafb !important;
+}
+
+/* Ensure modals and overlays are professional */
+.fixed.inset-0 {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Professional loading states */
+.animate-spin {
+  animation: spin 1s linear infinite !important;
+}
+
+/* Final override for any missed gradients */
+* {
+  background-image: none !important;
+}
+
+/* Allow specific professional gradients */
+.vila-header,
+.vila-btn-primary,
+.vila-btn-secondary,
+.vila-btn-success,
+.vila-btn-warning,
+.vila-btn-danger,
+.vila-btn-info {
+  background-image: initial !important;
+}

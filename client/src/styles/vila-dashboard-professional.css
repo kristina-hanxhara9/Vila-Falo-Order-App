@@ -1,0 +1,505 @@
+/* 
+ * 🎨 VILA FALO DASHBOARD PROFESSIONAL COLORS 
+ * Clean, elegant, and consistent styling for all dashboards
+ * Replaces dashboard-colors.css and enhanced-dashboard-colors.css
+ */
+
+/* Import the main design system */
+@import './vila-falo-design-system.css';
+
+/* 🎯 Dashboard-Specific Professional Overrides */
+
+/* === GLOBAL DASHBOARD STYLING === */
+.manager-dashboard,
+.waiter-dashboard,
+.kitchen-dashboard {
+  background-color: var(--bg-base) !important;
+  min-height: 100vh;
+}
+
+/* === CARD STYLING - Consistent Light Gray === */
+.bg-white,
+.bg-white\/80,
+.bg-white\/70,
+.backdrop-blur-lg {
+  background-color: #ffffff !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+  border-radius: 0.75rem !important;
+}
+
+.bg-white:hover,
+.bg-white\/80:hover,
+.bg-white\/70:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  transform: translateY(-1px);
+  transition: all 200ms ease;
+}
+
+/* === METRIC CARDS - Professional Styling === */
+/* Revenue Card - Subtle Green */
+.bg-gradient-to-br.from-emerald-50.to-green-100 {
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  box-shadow: 0 1px 3px 0 rgb(34 197 94 / 0.1) !important;
+}
+
+/* Orders Card - Subtle Blue */
+.bg-gradient-to-br.from-blue-50.to-indigo-100 {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  box-shadow: 0 1px 3px 0 rgb(59 130 246 / 0.1) !important;
+}
+
+/* Active Orders Card - Subtle Orange */
+.bg-gradient-to-br.from-amber-50.to-orange-100 {
+  background: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  box-shadow: 0 1px 3px 0 rgb(245 158 11 / 0.1) !important;
+}
+
+/* Tables Card - Subtle Purple */
+.bg-gradient-to-br.from-purple-50.to-violet-100 {
+  background: #faf5ff !important;
+  border: 1px solid #e9d5ff !important;
+  box-shadow: 0 1px 3px 0 rgb(147 51 234 / 0.1) !important;
+}
+
+/* === ICON BACKGROUNDS - Professional Colors === */
+.bg-gradient-to-br.from-emerald-500.to-emerald-600 {
+  background: #16a34a !important;
+  box-shadow: 0 2px 4px 0 rgb(34 197 94 / 0.2) !important;
+}
+
+.bg-gradient-to-br.from-blue-500.to-blue-600 {
+  background: #2563eb !important;
+  box-shadow: 0 2px 4px 0 rgb(59 130 246 / 0.2) !important;
+}
+
+.bg-gradient-to-br.from-amber-500.to-amber-600 {
+  background: #d97706 !important;
+  box-shadow: 0 2px 4px 0 rgb(245 158 11 / 0.2) !important;
+}
+
+.bg-gradient-to-br.from-purple-500.to-purple-600 {
+  background: #7c3aed !important;
+  box-shadow: 0 2px 4px 0 rgb(147 51 234 / 0.2) !important;
+}
+
+/* === TABLE STATUS COLORS - Clean & Professional === */
+/* Free Tables - Soft Green */
+.bg-emerald-50 {
+  background: #f0fdf4 !important;
+  border: 2px solid #86efac !important;
+  box-shadow: none !important;
+}
+
+.bg-emerald-50:hover {
+  background: #dcfce7 !important;
+  border-color: #4ade80 !important;
+  box-shadow: 0 1px 3px 0 rgb(34 197 94 / 0.1) !important;
+  transform: translateY(-1px);
+}
+
+/* Ordering Tables - Soft Yellow */
+.bg-amber-50 {
+  background: #fffbeb !important;
+  border: 2px solid #fcd34d !important;
+  box-shadow: none !important;
+}
+
+.bg-amber-50:hover {
+  background: #fef3c7 !important;
+  border-color: #fbbf24 !important;
+  box-shadow: 0 1px 3px 0 rgb(245 158 11 / 0.1) !important;
+  transform: translateY(-1px);
+}
+
+/* Unpaid Tables - Soft Red */
+.bg-rose-50 {
+  background: #fef2f2 !important;
+  border: 2px solid #fca5a5 !important;
+  box-shadow: none !important;
+}
+
+.bg-rose-50:hover {
+  background: #fee2e2 !important;
+  border-color: #f87171 !important;
+  box-shadow: 0 1px 3px 0 rgb(239 68 68 / 0.1) !important;
+  transform: translateY(-1px);
+}
+
+/* Paid Tables - Soft Blue */
+.bg-blue-50 {
+  background: #eff6ff !important;
+  border: 2px solid #93c5fd !important;
+  box-shadow: none !important;
+}
+
+.bg-blue-50:hover {
+  background: #dbeafe !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 1px 3px 0 rgb(59 130 246 / 0.1) !important;
+  transform: translateY(-1px);
+}
+
+/* === HEADER STYLING - Professional Dark === */
+.bg-gradient-to-r.from-indigo-600.via-blue-700.to-purple-800,
+.bg-gradient-to-r.from-blue-600.via-blue-700.to-indigo-800 {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 100%) !important;
+  color: white !important;
+}
+
+/* === QUICK ACTION CARDS - Subtle Professional Colors === */
+/* Menu Management - Light Blue */
+a[href="/manager/menu"].group.bg-gradient-to-br.from-blue-50.to-indigo-100 {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  box-shadow: 0 1px 3px 0 rgb(59 130 246 / 0.1) !important;
+}
+
+/* Table Management - Light Green */
+a[href="/manager/tables"].group.bg-gradient-to-br.from-emerald-50.to-green-100 {
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0 !important;
+  box-shadow: 0 1px 3px 0 rgb(34 197 94 / 0.1) !important;
+}
+
+/* User Management - Light Purple */
+a[href="/manager/users"].group.bg-gradient-to-br.from-purple-50.to-violet-100 {
+  background: #faf5ff !important;
+  border: 1px solid #e9d5ff !important;
+  box-shadow: 0 1px 3px 0 rgb(147 51 234 / 0.1) !important;
+}
+
+/* Reports - Light Amber */
+a[href="/manager/reports"].group.bg-gradient-to-br.from-amber-50.to-yellow-100 {
+  background: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  box-shadow: 0 1px 3px 0 rgb(245 158 11 / 0.1) !important;
+}
+
+/* Settings - Light Rose */
+a[href="/manager/settings"].group.bg-gradient-to-br.from-rose-50.to-red-100 {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  box-shadow: 0 1px 3px 0 rgb(239 68 68 / 0.1) !important;
+}
+
+/* Client Ordering - Light Pink */
+a[href="/manager/client-ordering"].group.bg-gradient-to-br.from-pink-50.to-fuchsia-100 {
+  background: #fdf4ff !important;
+  border: 1px solid #f5d0fe !important;
+  box-shadow: 0 1px 3px 0 rgb(236 72 153 / 0.1) !important;
+}
+
+/* === HOVER EFFECTS - Subtle & Professional === */
+.group:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+a.group:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+}
+
+/* === BUTTON STYLING - Consistent Professional Look === */
+.bg-gradient-to-r.from-emerald-500.to-emerald-600,
+button.bg-emerald-600,
+button.bg-emerald-500 {
+  background: #16a34a !important;
+  color: white !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+}
+
+.bg-gradient-to-r.from-emerald-500.to-emerald-600:hover,
+button.bg-emerald-600:hover,
+button.bg-emerald-500:hover {
+  background: #15803d !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+.bg-gradient-to-r.from-blue-600.to-indigo-600,
+button.bg-blue-600,
+button.bg-blue-500 {
+  background: #2563eb !important;
+  color: white !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+}
+
+.bg-gradient-to-r.from-blue-600.to-indigo-600:hover,
+button.bg-blue-600:hover,
+button.bg-blue-500:hover {
+  background: #1d4ed8 !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+.bg-gradient-to-r.from-purple-500.to-purple-600,
+button.bg-purple-600,
+button.bg-purple-500 {
+  background: #7c3aed !important;
+  color: white !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+}
+
+.bg-gradient-to-r.from-purple-500.to-purple-600:hover,
+button.bg-purple-600:hover,
+button.bg-purple-500:hover {
+  background: #6d28d9 !important;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+/* === STATUS BADGES - Clean Design === */
+.bg-emerald-100.text-emerald-800 {
+  background: #dcfce7 !important;
+  color: #14532d !important;
+  font-weight: 500 !important;
+  border: 1px solid #86efac !important;
+}
+
+.bg-blue-100.text-blue-800 {
+  background: #dbeafe !important;
+  color: #1e3a8a !important;
+  font-weight: 500 !important;
+  border: 1px solid #93c5fd !important;
+}
+
+.bg-amber-100.text-amber-800 {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+  font-weight: 500 !important;
+  border: 1px solid #fcd34d !important;
+}
+
+.bg-rose-100.text-rose-800 {
+  background: #fee2e2 !important;
+  color: #7f1d1d !important;
+  font-weight: 500 !important;
+  border: 1px solid #fca5a5 !important;
+}
+
+/* === PROGRESS BARS - Simple & Clean === */
+.bg-gradient-to-r.from-emerald-500.to-green-500 {
+  background: #16a34a !important;
+  box-shadow: none !important;
+}
+
+.bg-gradient-to-r.from-blue-500.to-indigo-500 {
+  background: #2563eb !important;
+  box-shadow: none !important;
+}
+
+.bg-gradient-to-r.from-amber-500.to-orange-500 {
+  background: #d97706 !important;
+  box-shadow: none !important;
+}
+
+.bg-gradient-to-r.from-purple-500.to-violet-500 {
+  background: #7c3aed !important;
+  box-shadow: none !important;
+}
+
+/* === TEXT COLORS - Professional Tones === */
+.text-emerald-700 { color: #15803d !important; font-weight: 500 !important; }
+.text-blue-700 { color: #1d4ed8 !important; font-weight: 500 !important; }
+.text-amber-700 { color: #b45309 !important; font-weight: 500 !important; }
+.text-purple-700 { color: #6d28d9 !important; font-weight: 500 !important; }
+.text-rose-700 { color: #b91c1c !important; font-weight: 500 !important; }
+.text-pink-700 { color: #be185d !important; font-weight: 500 !important; }
+
+/* === RECENT ORDERS CARDS === */
+.bg-gradient-to-r.from-white.to-gray-50 {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+}
+
+.bg-gradient-to-r.from-white.to-gray-50:hover {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+  transform: translateY(-1px);
+}
+
+/* === LOADING STATES === */
+.animate-spin {
+  border-top-color: #2563eb !important;
+  border-right-color: #dbeafe !important;
+  border-bottom-color: #dbeafe !important;
+  border-left-color: #dbeafe !important;
+}
+
+/* === FORCE PROFESSIONAL STYLING === */
+* {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Ensure no element has extreme styling */
+.bg-white:not(.notification):not(.modal) {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+}
+
+/* === ANIMATIONS - Subtle === */
+@keyframes subtle-pulse {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.95;
+    transform: scale(1.01);
+  }
+}
+
+.animate-pulse {
+  animation: subtle-pulse 3s ease-in-out infinite !important;
+}
+
+/* === OVERRIDE TAILWIND EXTREMES === */
+/* Remove all forced gradients and extreme colors */
+[class*="from-"][class*="to-"] {
+  background-image: none !important;
+}
+
+/* Ensure body background stays professional */
+body {
+  background: #fafbfc !important;
+}
+
+/* === KITCHEN DISPLAY PROFESSIONAL MODE === */
+.vila-kitchen-display {
+  background: #1f2937 !important;
+}
+
+.vila-kitchen-card {
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3) !important;
+}
+
+.vila-kitchen-card-urgent {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.3) !important;
+  animation: subtle-pulse 2s ease-in-out infinite !important;
+}
+
+.vila-kitchen-card-warning {
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3) !important;
+}
+
+.vila-kitchen-card-normal {
+  border-color: #22c55e !important;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.3) !important;
+}
+
+/* === MENU CATEGORY COLORS - Subtle === */
+.border-emerald-200.bg-emerald-50 {
+  background: #f0fdf4 !important;
+  border: 2px solid #bbf7d0 !important;
+}
+
+.border-blue-200.bg-blue-50 {
+  background: #eff6ff !important;
+  border: 2px solid #bfdbfe !important;
+}
+
+.border-orange-200.bg-orange-50 {
+  background: #fff7ed !important;
+  border: 2px solid #fed7aa !important;
+}
+
+/* === REMOVE EXCESSIVE SHADOWS === */
+[class*="shadow-"] {
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
+}
+
+[class*="shadow-"]:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+}
+
+/* === PROFESSIONAL FOCUS STATES === */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
+}
+
+/* === ENSURE READABILITY === */
+.text-gray-600 { color: #4b5563 !important; }
+.text-gray-700 { color: #374151 !important; }
+.text-gray-800 { color: #1f2937 !important; }
+.text-gray-900 { color: #111827 !important; }
+
+/* === PROFESSIONAL BORDER RADIUS === */
+.rounded-2xl { border-radius: 0.75rem !important; }
+.rounded-3xl { border-radius: 1rem !important; }
+.rounded-xl { border-radius: 0.5rem !important; }
+.rounded-lg { border-radius: 0.375rem !important; }
+
+/* === FINAL OVERRIDES FOR CONSISTENCY === */
+/* Ensure all backgrounds are subtle */
+[class*="bg-gradient-"] {
+  background-image: none !important;
+}
+
+/* Professional link colors */
+a {
+  color: #2563eb !important;
+  text-decoration: none !important;
+}
+
+a:hover {
+  color: #1d4ed8 !important;
+}
+
+/* Ensure buttons have consistent styling */
+button {
+  font-weight: 500 !important;
+  transition: all 200ms ease !important;
+  border-radius: 0.375rem !important;
+}
+
+button:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* === RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 768px) {
+  .vila-card {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+  }
+  
+  .group:hover {
+    transform: none !important;
+  }
+}
+
+/* === DARK MODE PREPARATION === */
+@media (prefers-color-scheme: dark) {
+  /* Future dark mode styles */
+}
+
+/* === HIGH CONTRAST MODE === */
+@media (prefers-contrast: high) {
+  * {
+    border-width: 2px !important;
+  }
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
