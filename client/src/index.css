@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import './styles/vila-falo-design-system.css';
 @import './styles/vila-dashboard-professional.css';
+@import './styles/vila-kitchen-buttons.css';
 @import './styles/vila-css-overrides.css';
 
 /* Reset and Base Styles */

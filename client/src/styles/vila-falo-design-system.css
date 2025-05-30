@@ -170,136 +170,7 @@ body {
   background-color: var(--color-gray-50);
 }
 
-/* 🎯 Professional Buttons */
-.vila-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border-radius: var(--radius-md);
-  font-weight: var(--font-weight-medium);
-  text-decoration: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: all var(--transition-normal);
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  white-space: nowrap;
-}
-
-.vila-btn:hover {
-  transform: translateY(-1px);
-}
-
-.vila-btn:active {
-  transform: translateY(0);
-}
-
-.vila-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Button Variants - Professional Colors */
-.vila-btn-primary {
-  background-color: var(--color-primary-700);
-  color: white;
-  border-color: var(--color-primary-700);
-}
-
-.vila-btn-primary:hover {
-  background-color: var(--color-primary-800);
-  border-color: var(--color-primary-800);
-  box-shadow: var(--shadow-sm);
-}
-
-.vila-btn-secondary {
-  background-color: var(--color-brand-primary);
-  color: white;
-  border-color: var(--color-brand-primary);
-}
-
-.vila-btn-secondary:hover {
-  background-color: var(--color-brand-dark);
-  border-color: var(--color-brand-dark);
-  box-shadow: var(--shadow-sm);
-}
-
-.vila-btn-success {
-  background-color: var(--color-success-600);
-  color: white;
-  border-color: var(--color-success-600);
-}
-
-.vila-btn-success:hover {
-  background-color: var(--color-success-700);
-  border-color: var(--color-success-700);
-  box-shadow: var(--shadow-sm);
-}
-
-.vila-btn-warning {
-  background-color: var(--color-warning-600);
-  color: white;
-  border-color: var(--color-warning-600);
-}
-
-.vila-btn-warning:hover {
-  background-color: var(--color-warning-700);
-  border-color: var(--color-warning-700);
-  box-shadow: var(--shadow-sm);
-}
-
-.vila-btn-danger {
-  background-color: var(--color-danger-600);
-  color: white;
-  border-color: var(--color-danger-600);
-}
-
-.vila-btn-danger:hover {
-  background-color: var(--color-danger-700);
-  border-color: var(--color-danger-700);
-  box-shadow: var(--shadow-sm);
-}
-
-.vila-btn-info {
-  background-color: var(--color-info-600);
-  color: white;
-  border-color: var(--color-info-600);
-}
-
-.vila-btn-info:hover {
-  background-color: var(--color-info-700);
-  border-color: var(--color-info-700);
-  box-shadow: var(--shadow-sm);
-}
-
-.vila-btn-outline {
-  background-color: transparent;
-  color: var(--color-primary-700);
-  border: 1px solid var(--color-gray-300);
-}
-
-.vila-btn-outline:hover {
-  background-color: var(--color-gray-50);
-  border-color: var(--color-gray-400);
-}
-
-/* Button Sizes */
-.vila-btn-sm {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: 0.75rem;
-}
-
-.vila-btn-lg {
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-size: 1rem;
-}
-
-.vila-btn-xl {
-  padding: var(--spacing-lg) var(--spacing-2xl);
-  font-size: 1.125rem;
-}
+/* 🎯 Button styles moved to vila-kitchen-buttons.css for enhanced styling */
 
 /* 🏷️ Professional Badges */
 .vila-badge {
@@ -778,14 +649,7 @@ body {
 .vila-rounded-2xl { border-radius: var(--radius-2xl); }
 .vila-rounded-full { border-radius: var(--radius-full); }
 
-/* 🎯 Professional Focus - Remove extreme colors */
-button {
-  transition: all var(--transition-normal);
-}
-
-button:hover {
-  transform: translateY(-1px);
-}
+/* 🎯 Button styles are now in vila-kitchen-buttons.css */
 
 /* 🎯 Remove forced vibrant backgrounds */
 body {

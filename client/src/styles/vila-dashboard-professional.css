@@ -205,54 +205,7 @@ a.group:hover {
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
 }
 
-/* === BUTTON STYLING - Consistent Professional Look === */
-.bg-gradient-to-r.from-emerald-500.to-emerald-600,
-button.bg-emerald-600,
-button.bg-emerald-500 {
-  background: #16a34a !important;
-  color: white !important;
-  font-weight: 500 !important;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
-}
-
-.bg-gradient-to-r.from-emerald-500.to-emerald-600:hover,
-button.bg-emerald-600:hover,
-button.bg-emerald-500:hover {
-  background: #15803d !important;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
-}
-
-.bg-gradient-to-r.from-blue-600.to-indigo-600,
-button.bg-blue-600,
-button.bg-blue-500 {
-  background: #2563eb !important;
-  color: white !important;
-  font-weight: 500 !important;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
-}
-
-.bg-gradient-to-r.from-blue-600.to-indigo-600:hover,
-button.bg-blue-600:hover,
-button.bg-blue-500:hover {
-  background: #1d4ed8 !important;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
-}
-
-.bg-gradient-to-r.from-purple-500.to-purple-600,
-button.bg-purple-600,
-button.bg-purple-500 {
-  background: #7c3aed !important;
-  color: white !important;
-  font-weight: 500 !important;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
-}
-
-.bg-gradient-to-r.from-purple-500.to-purple-600:hover,
-button.bg-purple-600:hover,
-button.bg-purple-500:hover {
-  background: #6d28d9 !important;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1) !important;
-}
+/* === BUTTON STYLING - See vila-kitchen-buttons.css for enhanced styling === */
 
 /* === STATUS BADGES - Clean Design === */
 .bg-emerald-100.text-emerald-800 {
@@ -283,23 +236,23 @@ button.bg-purple-500:hover {
   border: 1px solid #fca5a5 !important;
 }
 
-/* === PROGRESS BARS - Simple & Clean === */
-.bg-gradient-to-r.from-emerald-500.to-green-500 {
+/* === PROGRESS BARS - Progress bars use solid colors === */
+progress .bg-gradient-to-r.from-emerald-500.to-green-500 {
   background: #16a34a !important;
   box-shadow: none !important;
 }
 
-.bg-gradient-to-r.from-blue-500.to-indigo-500 {
+progress .bg-gradient-to-r.from-blue-500.to-indigo-500 {
   background: #2563eb !important;
   box-shadow: none !important;
 }
 
-.bg-gradient-to-r.from-amber-500.to-orange-500 {
+progress .bg-gradient-to-r.from-amber-500.to-orange-500 {
   background: #d97706 !important;
   box-shadow: none !important;
 }
 
-.bg-gradient-to-r.from-purple-500.to-violet-500 {
+progress .bg-gradient-to-r.from-purple-500.to-violet-500 {
   background: #7c3aed !important;
   box-shadow: none !important;
 }

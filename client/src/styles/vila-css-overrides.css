@@ -6,11 +6,11 @@
 
 /* === GLOBAL OVERRIDES === */
 
-/* Remove all forced gradients from Tailwind */
-[class*="bg-gradient-"],
-[class*="from-"],
-[class*="via-"],
-[class*="to-"] {
+/* Remove forced gradients from non-button elements */
+:not(button):not(a):not(.vila-btn)[class*="bg-gradient-"],
+:not(button):not(a):not(.vila-btn)[class*="from-"],
+:not(button):not(a):not(.vila-btn)[class*="via-"],
+:not(button):not(a):not(.vila-btn)[class*="to-"] {
   background-image: none !important;
 }
 
@@ -139,15 +139,7 @@ body {
   border-color: #e5e7eb !important;
 }
 
-/* Ensure buttons have consistent styling */
-button:not(.vila-btn) {
-  transition: all 200ms ease !important;
-  font-weight: 500 !important;
-}
-
-button:not(.vila-btn):hover {
-  transform: translateY(-1px) !important;
-}
+/* Button styling moved to vila-kitchen-buttons.css */
 
 /* Remove excessive focus rings */
 *:focus {
@@ -184,18 +176,23 @@ tr:hover {
   animation: spin 1s linear infinite !important;
 }
 
-/* Final override for any missed gradients */
-* {
+/* Final override for any missed gradients (excluding buttons) */
+*:not(button):not(a):not(.vila-btn):not([class*="vila-btn-"]) {
   background-image: none !important;
 }
 
 /* Allow specific professional gradients */
 .vila-header,
+.vila-btn,
 .vila-btn-primary,
 .vila-btn-secondary,
 .vila-btn-success,
 .vila-btn-warning,
 .vila-btn-danger,
-.vila-btn-info {
+.vila-btn-info,
+button.vila-btn,
+button[class*="bg-"],
+a.vila-btn,
+a[class*="bg-"] {
   background-image: initial !important;
 }
