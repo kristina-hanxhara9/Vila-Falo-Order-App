@@ -1,1 +1,160 @@
-import React, { useState, useEffect } from 'react';\n\nconst PWADebugger = () => {\n  const [debugInfo, setDebugInfo] = useState({});\n  const [showDetails, setShowDetails] = useState(false);\n\n  useEffect(() => {\n    const checkPWAStatus = () => {\n      const info = {\n        // Basic environment\n        url: window.location.href,\n        protocol: window.location.protocol,\n        isLocalhost: window.location.hostname === 'localhost',\n        isHTTPS: window.location.protocol === 'https:',\n        \n        // Browser detection\n        userAgent: navigator.userAgent,\n        isChrome: navigator.userAgent.includes('Chrome'),\n        isEdge: navigator.userAgent.includes('Edge'),\n        isSafari: navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome'),\n        isFirefox: navigator.userAgent.includes('Firefox'),\n        \n        // PWA features\n        hasServiceWorker: 'serviceWorker' in navigator,\n        isStandalone: window.matchMedia('(display-mode: standalone)').matches,\n        hasNotifications: 'Notification' in window,\n        isOnline: navigator.onLine,\n        \n        // PWA state\n        swRegistration: null,\n        manifestData: null,\n        installPromptAvailable: false\n      };\n      \n      // Check service worker\n      if ('serviceWorker' in navigator) {\n        navigator.serviceWorker.getRegistration().then(registration => {\n          setDebugInfo(prev => ({\n            ...prev,\n            swRegistration: registration ? {\n              scope: registration.scope,\n              state: registration.active?.state,\n              scriptURL: registration.active?.scriptURL\n            } : null\n          }));\n        });\n      }\n      \n      // Check manifest\n      fetch('/manifest.json')\n        .then(response => response.json())\n        .then(manifest => {\n          setDebugInfo(prev => ({ ...prev, manifestData: manifest }));\n        })\n        .catch(err => {\n          setDebugInfo(prev => ({ ...prev, manifestError: err.message }));\n        });\n      \n      setDebugInfo(info);\n    };\n    \n    checkPWAStatus();\n    \n    // Listen for PWA events\n    const handleInstallPrompt = (e) => {\n      setDebugInfo(prev => ({ ...prev, installPromptAvailable: true }));\n    };\n    \n    const handleAppInstalled = () => {\n      setDebugInfo(prev => ({ ...prev, isInstalled: true }));\n    };\n    \n    window.addEventListener('beforeinstallprompt', handleInstallPrompt);\n    window.addEventListener('appinstalled', handleAppInstalled);\n    \n    return () => {\n      window.removeEventListener('beforeinstallprompt', handleInstallPrompt);\n      window.removeEventListener('appinstalled', handleAppInstalled);\n    };\n  }, []);\n  \n  const getStatusIcon = (condition) => condition ? '✅' : '❌';\n  const getWarningIcon = (condition) => condition ? '✅' : '⚠️';\n  \n  return (\n    <div className=\"fixed bottom-4 right-4 bg-white border-2 border-gray-300 rounded-xl shadow-2xl p-4 max-w-sm z-50\">\n      <div className=\"flex items-center justify-between mb-3\">\n        <h3 className=\"font-bold text-lg flex items-center\">\n          🔧 PWA Status\n        </h3>\n        <button\n          onClick={() => setShowDetails(!showDetails)}\n          className=\"text-gray-500 hover:text-gray-700\"\n        >\n          {showDetails ? '🔽' : '▶️'}\n        </button>\n      </div>\n      \n      {/* Quick Status */}\n      <div className=\"space-y-2 text-sm\">\n        <div className=\"flex justify-between\">\n          <span>Secure (HTTPS):</span>\n          <span>{getStatusIcon(debugInfo.isHTTPS || debugInfo.isLocalhost)}</span>\n        </div>\n        <div className=\"flex justify-between\">\n          <span>PWA Browser:</span>\n          <span>{getStatusIcon(debugInfo.isChrome || debugInfo.isEdge)}</span>\n        </div>\n        <div className=\"flex justify-between\">\n          <span>Service Worker:</span>\n          <span>{getStatusIcon(debugInfo.hasServiceWorker)}</span>\n        </div>\n        <div className=\"flex justify-between\">\n          <span>Install Available:</span>\n          <span>{getStatusIcon(debugInfo.installPromptAvailable)}</span>\n        </div>\n        <div className=\"flex justify-between\">\n          <span>Already Installed:</span>\n          <span>{getStatusIcon(debugInfo.isStandalone)}</span>\n        </div>\n      </div>\n      \n      {/* Detailed Info */}\n      {showDetails && (\n        <div className=\"mt-4 pt-4 border-t border-gray-200 space-y-3\">\n          <div>\n            <h4 className=\"font-semibold text-xs text-gray-600 mb-1\">ENVIRONMENT</h4>\n            <div className=\"text-xs space-y-1 bg-gray-50 p-2 rounded\">\n              <div>URL: {debugInfo.url}</div>\n              <div>Protocol: {debugInfo.protocol}</div>\n              <div>Browser: {debugInfo.isChrome ? 'Chrome' : debugInfo.isEdge ? 'Edge' : debugInfo.isSafari ? 'Safari' : debugInfo.isFirefox ? 'Firefox' : 'Other'}</div>\n            </div>\n          </div>\n          \n          {debugInfo.manifestData && (\n            <div>\n              <h4 className=\"font-semibold text-xs text-gray-600 mb-1\">MANIFEST</h4>\n              <div className=\"text-xs space-y-1 bg-gray-50 p-2 rounded\">\n                <div>Name: {debugInfo.manifestData.name}</div>\n                <div>Icons: {debugInfo.manifestData.icons?.length || 0}</div>\n                <div>Display: {debugInfo.manifestData.display}</div>\n                <div>Start URL: {debugInfo.manifestData.start_url}</div>\n              </div>\n            </div>\n          )}\n          \n          {debugInfo.swRegistration && (\n            <div>\n              <h4 className=\"font-semibold text-xs text-gray-600 mb-1\">SERVICE WORKER</h4>\n              <div className=\"text-xs space-y-1 bg-gray-50 p-2 rounded\">\n                <div>State: {debugInfo.swRegistration.state}</div>\n                <div>Scope: {debugInfo.swRegistration.scope}</div>\n              </div>\n            </div>\n          )}\n          \n          <div className=\"pt-2 border-t\">\n            <h4 className=\"font-semibold text-xs text-gray-600 mb-2\">MANUAL INSTALL</h4>\n            <div className=\"text-xs text-gray-600\">\n              {debugInfo.isChrome && (\n                <div>Chrome: Menu → \"Install Vila Falo\"</div>\n              )}\n              {debugInfo.isEdge && (\n                <div>Edge: Address bar → Install icon</div>\n              )}\n              {debugInfo.isSafari && (\n                <div>Safari: Share → \"Add to Home Screen\"</div>\n              )}\n              <div className=\"mt-1 text-xs text-blue-600\">Or look for ⊕ in address bar</div>\n            </div>\n          </div>\n        </div>\n      )}\n      \n      {/* Quick Actions */}\n      <div className=\"mt-4 pt-3 border-t border-gray-200 space-y-2\">\n        <button\n          onClick={() => window.location.reload()}\n          className=\"w-full bg-blue-500 text-white px-3 py-2 rounded text-sm font-semibold hover:bg-blue-600\"\n        >\n          🔄 Refresh Page\n        </button>\n        \n        <div className=\"grid grid-cols-2 gap-2\">\n          <button\n            onClick={() => {\n              if ('caches' in window) {\n                caches.keys().then(names => {\n                  names.forEach(name => caches.delete(name));\n                  alert('Cache cleared! Refresh the page.');\n                });\n              }\n            }}\n            className=\"bg-yellow-500 text-white px-2 py-1 rounded text-xs hover:bg-yellow-600\"\n          >\n            🗑️ Clear Cache\n          </button>\n          \n          <button\n            onClick={() => {\n              const info = `PWA Debug Info:\\n\\nHTTPS: ${debugInfo.isHTTPS}\\nBrowser: ${debugInfo.isChrome ? 'Chrome' : 'Other'}\\nSW: ${debugInfo.hasServiceWorker}\\nStandalone: ${debugInfo.isStandalone}\\nInstall Available: ${debugInfo.installPromptAvailable}`;\n              alert(info);\n            }}\n            className=\"bg-gray-500 text-white px-2 py-1 rounded text-xs hover:bg-gray-600\"\n          >\n            📋 Copy Info\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport default PWADebugger;
+import React, { useState, useEffect } from 'react';
+
+const PWADebugger = () => {
+  const [debugInfo, setDebugInfo] = useState({});
+  const [showDetails, setShowDetails] = useState(false);
+
+  useEffect(() => {
+    const checkPWAStatus = () => {
+      const info = {
+        // Basic environment
+        url: window.location.href,
+        protocol: window.location.protocol,
+        isLocalhost: window.location.hostname === 'localhost',
+        isHTTPS: window.location.protocol === 'https:',
+        
+        // Browser detection
+        userAgent: navigator.userAgent,
+        isChrome: navigator.userAgent.includes('Chrome'),
+        isEdge: navigator.userAgent.includes('Edge'),
+        isSafari: navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome'),
+        isFirefox: navigator.userAgent.includes('Firefox'),
+        
+        // PWA features
+        hasServiceWorker: 'serviceWorker' in navigator,
+        isStandalone: window.matchMedia('(display-mode: standalone)').matches,
+        hasNotifications: 'Notification' in window,
+        isOnline: navigator.onLine,
+        
+        // PWA state
+        swRegistration: null,
+        manifestData: null,
+        installPromptAvailable: false
+      };
+      
+      // Check service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+          setDebugInfo(prev => ({
+            ...prev,
+            swRegistration: registration ? {
+              scope: registration.scope,
+              state: registration.active?.state,
+              scriptURL: registration.active?.scriptURL
+            } : null
+          }));
+        });
+      }
+      
+      // Check manifest
+      fetch('/manifest.json')
+        .then(response => response.json())
+        .then(manifest => {
+          setDebugInfo(prev => ({ ...prev, manifestData: manifest }));
+        })
+        .catch(err => {
+          setDebugInfo(prev => ({ ...prev, manifestError: err.message }));
+        });
+      
+      setDebugInfo(info);
+    };
+    
+    checkPWAStatus();
+    
+    // Listen for PWA events
+    const handleInstallPrompt = (e) => {
+      setDebugInfo(prev => ({ ...prev, installPromptAvailable: true }));
+    };
+    
+    const handleAppInstalled = () => {
+      setDebugInfo(prev => ({ ...prev, isInstalled: true }));
+    };
+    
+    window.addEventListener('beforeinstallprompt', handleInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+    
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+  
+  const getStatusIcon = (condition) => condition ? 'OK' : 'NO';
+  
+  return (
+    <div className="fixed bottom-4 right-4 bg-white border-2 border-gray-300 rounded-xl shadow-2xl p-4 max-w-sm z-50">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-bold text-lg">PWA Status</h3>
+        <button
+          onClick={() => setShowDetails(!showDetails)}
+          className="text-gray-500 hover:text-gray-700 text-sm"
+        >
+          {showDetails ? 'Hide' : 'Show'}
+        </button>
+      </div>
+      
+      <div className="space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span>HTTPS:</span>
+          <span className={debugInfo.isHTTPS || debugInfo.isLocalhost ? 'text-green-600' : 'text-red-600'}>
+            {getStatusIcon(debugInfo.isHTTPS || debugInfo.isLocalhost)}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>Browser:</span>
+          <span className={debugInfo.isChrome || debugInfo.isEdge ? 'text-green-600' : 'text-red-600'}>
+            {getStatusIcon(debugInfo.isChrome || debugInfo.isEdge)}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>Service Worker:</span>
+          <span className={debugInfo.hasServiceWorker ? 'text-green-600' : 'text-red-600'}>
+            {getStatusIcon(debugInfo.hasServiceWorker)}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>Install Ready:</span>
+          <span className={debugInfo.installPromptAvailable ? 'text-green-600' : 'text-red-600'}>
+            {getStatusIcon(debugInfo.installPromptAvailable)}
+          </span>
+        </div>
+      </div>
+      
+      {showDetails && (
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="text-xs text-gray-600 space-y-1">
+            <div>Browser: {debugInfo.isChrome ? 'Chrome' : debugInfo.isEdge ? 'Edge' : 'Other'}</div>
+            <div>URL: {debugInfo.protocol}</div>
+            {debugInfo.manifestData && (
+              <div>Manifest: {debugInfo.manifestData.name}</div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      <div className="mt-4 pt-3 border-t border-gray-200 space-y-2">
+        <button
+          onClick={() => window.location.reload()}
+          className="w-full bg-blue-500 text-white px-3 py-2 rounded text-sm font-semibold hover:bg-blue-600"
+        >
+          Refresh Page
+        </button>
+        <button
+          onClick={() => {
+            if ('caches' in window) {
+              caches.keys().then(names => {
+                names.forEach(name => caches.delete(name));
+                alert('Cache cleared!');
+              });
+            }
+          }}
+          className="w-full bg-yellow-500 text-white px-3 py-2 rounded text-sm font-semibold hover:bg-yellow-600"
+        >
+          Clear Cache
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default PWADebugger;

@@ -8,8 +8,8 @@
   ],
   "description": "Restaurant order system for Vila Falo",
  "engines": {
-  "node": ">=22.15.1 <23.0.0",
-  "npm":  "11.4.0"
+  "node": ">=18.0.0 <23.0.0",
+  "npm":  ">=8.0.0"
 },
   "scripts": {
     "install-all": "npm install",
