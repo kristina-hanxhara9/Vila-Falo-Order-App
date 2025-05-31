@@ -748,15 +748,15 @@ const NewOrder = () => {
                 <h3 className="text-sm font-medium mb-2 text-gray-800">📱 Zgjidhni Kategorinë</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
                   <button
-                    className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors ${
+                    className={`flex items-center justify-center rounded font-medium transition-colors ${
                       selectedCategory === 'all'
                         ? 'bg-indigo-600 text-white'
                         : 'bg-white border border-indigo-200 text-indigo-600 hover:border-indigo-400'
                     }`}
                     onClick={() => setSelectedCategory('all')}
-                    style={{fontSize: '0.6rem'}}
+                    style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
                   >
-                    <span className="mr-1" style={{fontSize: '0.6rem'}}>🍽️</span>
+                    <span className="mr-1" style={{fontSize: '8px !important'}}>🍽️</span>
                     <span>Të Gjitha</span>
                   </button>
                   
@@ -797,11 +797,11 @@ const NewOrder = () => {
                     return (
                       <button
                         key={category}
-                        className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors ${bgClass}`}
+                        className={`flex items-center justify-center rounded font-medium transition-colors ${bgClass}`}
                         onClick={() => setSelectedCategory(category)}
-                        style={{fontSize: '0.6rem'}}
+                        style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
                       >
-                        <span className="mr-1" style={{fontSize: '0.6rem'}}>{icon}</span>
+                        <span className="mr-1" style={{fontSize: '8px !important'}}>{icon}</span>
                         <span>{name}</span>
                       </button>
                     );
@@ -836,52 +836,53 @@ const NewOrder = () => {
                     return (
                       <div
                         key={item._id}
-                        className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow p-2`}
+                        className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow`}
+                        style={{padding: '4px', fontSize: '10px !important'}}
                       >
                         {/* Ultra compact single line layout */}
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between" style={{minHeight: '20px'}}>
                           <div className="flex items-center flex-1 min-w-0">
-                            <span className="mr-1" style={{fontSize: '0.625rem'}}>{categoryIcon}</span>
+                            <span className="mr-1" style={{fontSize: '8px !important', lineHeight: '1'}}>{categoryIcon}</span>
                             <div className="flex-1 min-w-0 mr-2">
-                              <h3 className="font-medium text-gray-900 leading-tight truncate" style={{fontSize: '0.625rem', lineHeight: '1.2'}}>{item.albanianName}</h3>
+                              <h3 className="font-medium text-gray-900 leading-tight truncate" style={{fontSize: '9px !important', lineHeight: '1.1 !important', fontWeight: '500 !important'}}>{item.albanianName}</h3>
                             </div>
                             <div className="text-right mr-2 flex-shrink-0">
-                              <span className="font-semibold text-gray-900" style={{fontSize: '0.625rem'}}>{item.price.toLocaleString()}</span>
+                              <span className="font-semibold text-gray-900" style={{fontSize: '8px !important', fontWeight: '600 !important'}}>{item.price.toLocaleString()}</span>
                             </div>
                           </div>
                           
                           {/* Ultra compact controls */}
-                          <div className="flex items-center space-x-1 flex-shrink-0">
+                          <div className="flex items-center flex-shrink-0" style={{gap: '2px'}}>
                             {/* Quantity Controls */}
                             <button
-                              className="w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded font-bold flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
+                              className="bg-red-600 hover:bg-red-700 text-white rounded font-bold flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
                               onClick={() => handleQuantityChange(item._id, -1)}
                               disabled={itemQuantities[item._id] <= 0}
-                              style={{fontSize: '0.5rem'}}
+                              style={{width: '16px', height: '16px', fontSize: '8px !important', lineHeight: '1', padding: '0'}}
                             >
                               −
                             </button>
-                            <div className="w-7 h-6 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
-                              <span className="font-semibold text-gray-900" style={{fontSize: '0.5rem'}}>{itemQuantities[item._id] || 0}</span>
+                            <div className="bg-gray-100 border border-gray-300 rounded flex items-center justify-center" style={{width: '20px', height: '16px'}}>
+                              <span className="font-semibold text-gray-900" style={{fontSize: '8px !important', lineHeight: '1'}}>{itemQuantities[item._id] || 0}</span>
                             </div>
                             <button
-                              className="w-6 h-6 bg-green-600 hover:bg-green-700 text-white rounded font-bold flex items-center justify-center transition-colors"
+                              className="bg-green-600 hover:bg-green-700 text-white rounded font-bold flex items-center justify-center transition-colors"
                               onClick={() => handleQuantityChange(item._id, 1)}
-                              style={{fontSize: '0.5rem'}}
+                              style={{width: '16px', height: '16px', fontSize: '8px !important', lineHeight: '1', padding: '0'}}
                             >
                               +
                             </button>
                             
                             {/* Add Button */}
                             <button
-                              className={`px-2 py-1 rounded font-medium transition-all ml-1 ${
+                              className={`rounded font-medium transition-all ${
                                 itemQuantities[item._id] > 0
                                   ? 'bg-blue-600 hover:bg-blue-700 text-white'
                                   : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                               }`}
                               onClick={() => addItemToOrder(item)}
                               disabled={itemQuantities[item._id] <= 0}
-                              style={{fontSize: '0.6rem'}}
+                              style={{fontSize: '7px !important', padding: '2px 4px', lineHeight: '1', height: '16px'}}
                             >
                               {itemQuantities[item._id] > 0 ? 'Shto' : 'Zgjedh'}
                             </button>
@@ -993,19 +994,19 @@ const NewOrder = () => {
                     <div key={index} className="border-b pb-1 last:border-b-0">
                       <div className="flex justify-between items-center">
                         <div className="flex-1">
-                          <div className="font-medium" style={{fontSize: '0.625rem'}}>{item.name}</div>
-                          <div className="text-gray-600" style={{fontSize: '0.5rem'}}>
+                          <div className="font-medium" style={{fontSize: '8px !important', lineHeight: '1.1'}}>{item.name}</div>
+                          <div className="text-gray-600" style={{fontSize: '7px !important', lineHeight: '1'}}>
                             {item.price.toLocaleString()} LEK x {item.quantity}
                           </div>
                         </div>
                         <div className="text-right ml-2">
-                          <div className="font-semibold" style={{fontSize: '0.625rem'}}>
+                          <div className="font-semibold" style={{fontSize: '8px !important', lineHeight: '1.1'}}>
                             {(item.price * item.quantity).toLocaleString()} LEK
                           </div>
                           <button
                             className="text-red-600 hover:text-red-800"
                             onClick={() => removeItemFromOrder(index)}
-                            style={{fontSize: '0.5rem'}}
+                            style={{fontSize: '7px !important', lineHeight: '1'}}
                           >
                             Hiq
                           </button>
@@ -1014,26 +1015,26 @@ const NewOrder = () => {
                       
                       {/* Ultra compact order item controls */}
                       <div className="mt-1 flex items-center space-x-1">
-                        <div className="flex items-center border rounded overflow-hidden">
+                        <div className="flex items-center border rounded overflow-hidden" style={{height: '16px'}}>
                           <button
-                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200"
+                            className="bg-gray-100 hover:bg-gray-200"
                             onClick={() => updateItemQuantity(index, item.quantity - 1)}
-                            style={{fontSize: '0.5rem'}}
+                            style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
                           >
                             -
                           </button>
                           <input
                             type="number"
-                            className="w-6 text-center border-0"
+                            className="text-center border-0"
                             value={item.quantity}
                             onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 1)}
                             min="1"
-                            style={{fontSize: '0.5rem'}}
+                            style={{fontSize: '7px !important', width: '20px', height: '16px', lineHeight: '1', padding: '0'}}
                           />
                           <button
-                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200"
+                            className="bg-gray-100 hover:bg-gray-200"
                             onClick={() => updateItemQuantity(index, item.quantity + 1)}
-                            style={{fontSize: '0.5rem'}}
+                            style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
                           >
                             +
                           </button>
@@ -1041,11 +1042,11 @@ const NewOrder = () => {
                         
                         <input
                           type="text"
-                          className="flex-1 px-1 py-0.5 border rounded"
+                          className="flex-1 border rounded"
                           placeholder="Shënime"
                           value={item.notes}
                           onChange={(e) => updateItemNotes(index, e.target.value)}
-                          style={{fontSize: '0.5rem'}}
+                          style={{fontSize: '7px !important', padding: '1px 2px', height: '16px', lineHeight: '1'}}
                         />
                       </div>
                     </div>
