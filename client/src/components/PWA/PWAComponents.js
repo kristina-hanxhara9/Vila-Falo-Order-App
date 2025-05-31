@@ -4,17 +4,61 @@ import { usePWA } from './PWAHooks';
 export const PWAInstallButton = ({ className = '' }) => {
   const { isInstallable, isInstalled, installApp } = usePWA();
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log('🔍 PWA Install Button Debug:', {
+      isInstallable,
+      isInstalled,
+      userAgent: navigator.userAgent,
+      standalone: window.matchMedia('(display-mode: standalone)').matches,
+      location: window.location.href
+    });
+  }, [isInstallable, isInstalled]);
+
+  const handleInstall = async () => {
+    console.log('🚀 Install button clicked');
+    const success = await installApp();
+    if (success) {
+      console.log('✅ App installed successfully!');
+    } else {
+      console.log('❌ App installation failed or cancelled');
+    }
+  };
+
+  // Show debug info in development
+  if (process.env.NODE_ENV === 'development') {
+    return (
+      <div className={`fixed top-4 right-4 z-50 ${className}`}>
+        <div className="bg-white border-2 border-blue-500 rounded-xl p-4 shadow-lg max-w-xs">
+          <h3 className="font-bold text-sm mb-2">🔧 PWA Debug</h3>
+          <div className="text-xs space-y-1">
+            <div>Installable: {isInstallable ? '✅' : '❌'}</div>
+            <div>Installed: {isInstalled ? '✅' : '❌'}</div>
+            <div>Browser: {navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Other'}</div>
+            <div>HTTPS: {window.location.protocol === 'https:' ? '✅' : '❌'}</div>
+          </div>
+          {isInstallable && (
+            <button
+              onClick={handleInstall}
+              className="mt-3 w-full bg-blue-500 text-white px-3 py-2 rounded-lg text-sm font-semibold"
+            >
+              📱 Install App
+            </button>
+          )}
+          {!isInstallable && (
+            <div className="mt-2 text-xs text-gray-600">
+              {isInstalled ? 'Already installed' : 'Not installable yet'}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   // Don't show if already installed or not installable
   if (isInstalled || !isInstallable) {
     return null;
   }
-
-  const handleInstall = async () => {
-    const success = await installApp();
-    if (success) {
-      console.log('App installed successfully!');
-    }
-  };
 
   return (
     <button
@@ -45,6 +89,85 @@ export const PWAOfflineIndicator = () => {
     <div className="fixed top-0 left-0 right-0 bg-yellow-500 text-white px-4 py-2 text-center text-sm z-50">
       <span className="mr-2">📱</span>
       You're offline. Orders will sync when connection is restored.
+    </div>
+  );
+};
+
+// Add a simple install prompt for testing
+export const PWAInstallPrompt = () => {
+  const [showPrompt, setShowPrompt] = React.useState(false);
+  const [deferredPrompt, setDeferredPrompt] = React.useState(null);
+
+  React.useEffect(() => {
+    const handler = (e) => {
+      console.log('📱 beforeinstallprompt triggered');
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowPrompt(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    
+    // For testing - show prompt after 5 seconds if not already shown
+    const timer = setTimeout(() => {
+      if (!showPrompt && !window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('🔧 Forcing install prompt for testing');
+        setShowPrompt(true);
+      }
+    }, 5000);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      clearTimeout(timer);
+    };
+  }, [showPrompt]);
+
+  const handleInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`Install ${outcome}`);
+      setDeferredPrompt(null);
+    } else {
+      // Fallback instructions
+      alert('To install Vila Falo app:\n\n📱 Mobile: Use "Add to Home Screen" from browser menu\n💻 Desktop: Look for install icon in address bar');
+    }
+    setShowPrompt(false);
+  };
+
+  if (!showPrompt) return null;
+
+  return (
+    <div className="fixed bottom-4 left-4 right-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-4 rounded-2xl shadow-2xl z-50 md:max-w-sm md:left-auto">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <span className="text-2xl">🍽️</span>
+          <div>
+            <h3 className="font-bold">Install Vila Falo</h3>
+            <p className="text-sm opacity-90">Get the app for better experience</p>
+          </div>
+        </div>
+        <button
+          onClick={() => setShowPrompt(false)}
+          className="text-white/70 hover:text-white text-xl"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="flex space-x-3 mt-3">
+        <button
+          onClick={handleInstall}
+          className="flex-1 bg-white text-blue-600 font-semibold py-2 px-4 rounded-xl hover:bg-gray-100 transition-colors"
+        >
+          📱 Install
+        </button>
+        <button
+          onClick={() => setShowPrompt(false)}
+          className="px-4 py-2 text-white/90 hover:text-white transition-colors"
+        >
+          Later
+        </button>
+      </div>
     </div>
   );
 };
@@ -89,5 +212,6 @@ export const PWANotificationSetup = () => {
 export default {
   PWAInstallButton,
   PWAOfflineIndicator,
-  PWANotificationSetup
+  PWANotificationSetup,
+  PWAInstallPrompt
 };

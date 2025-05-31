@@ -1,7 +1,7 @@
 {
   "short_name": "Vila Falo",
   "name": "Vila Falo Restaurant Orders",
-  "description": "Professional restaurant order management system for Vila Falo staff",
+  "description": "Professional restaurant order management system for Vila Falo staff in Voskopojë, Korçë",
   "icons": [
     {
       "src": "favicon.ico",
@@ -12,25 +12,33 @@
       "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "theme_color": "#1f2937",
   "background_color": "#ffffff",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "scope": "/",
   "categories": ["business", "productivity", "food"],
-  "launch_handler": {
-    "client_mode": "navigate-existing"
-  },
-  "display_override": ["window-controls-overlay", "standalone"],
   "prefer_related_applications": false
 }
