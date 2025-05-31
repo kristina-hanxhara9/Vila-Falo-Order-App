@@ -748,15 +748,16 @@ const NewOrder = () => {
                 <h3 className="text-sm font-medium mb-2 text-gray-800">📱 Zgjidhni Kategorinë</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
                   <button
-                    className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors text-xs ${
+                    className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors ${
                       selectedCategory === 'all'
                         ? 'bg-indigo-600 text-white'
                         : 'bg-white border border-indigo-200 text-indigo-600 hover:border-indigo-400'
                     }`}
                     onClick={() => setSelectedCategory('all')}
+                    style={{fontSize: '0.6rem'}}
                   >
-                    <span className="text-xs mr-1">🍽️</span>
-                    <span className="text-xs">Të Gjitha</span>
+                    <span className="mr-1" style={{fontSize: '0.6rem'}}>🍽️</span>
+                    <span>Të Gjitha</span>
                   </button>
                   
                   {categories.map(category => {
@@ -796,11 +797,12 @@ const NewOrder = () => {
                     return (
                       <button
                         key={category}
-                        className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors text-xs ${bgClass}`}
+                        className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors ${bgClass}`}
                         onClick={() => setSelectedCategory(category)}
+                        style={{fontSize: '0.6rem'}}
                       >
-                        <span className="text-xs mr-1">{icon}</span>
-                        <span className="text-xs">{name}</span>
+                        <span className="mr-1" style={{fontSize: '0.6rem'}}>{icon}</span>
+                        <span>{name}</span>
                       </button>
                     );
                   })}
@@ -839,12 +841,12 @@ const NewOrder = () => {
                         {/* Ultra compact single line layout */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center flex-1 min-w-0">
-                            <span className="text-sm mr-1">{categoryIcon}</span>
+                            <span className="mr-1" style={{fontSize: '0.625rem'}}>{categoryIcon}</span>
                             <div className="flex-1 min-w-0 mr-2">
-                              <h3 className="font-medium text-gray-900 text-xs leading-tight truncate">{item.albanianName}</h3>
+                              <h3 className="font-medium text-gray-900 leading-tight truncate" style={{fontSize: '0.625rem', lineHeight: '1.2'}}>{item.albanianName}</h3>
                             </div>
                             <div className="text-right mr-2 flex-shrink-0">
-                              <span className="font-semibold text-gray-900 text-xs">{item.price.toLocaleString()}</span>
+                              <span className="font-semibold text-gray-900" style={{fontSize: '0.625rem'}}>{item.price.toLocaleString()}</span>
                             </div>
                           </div>
                           
@@ -852,31 +854,34 @@ const NewOrder = () => {
                           <div className="flex items-center space-x-1 flex-shrink-0">
                             {/* Quantity Controls */}
                             <button
-                              className="w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-sm flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
+                              className="w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded font-bold flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
                               onClick={() => handleQuantityChange(item._id, -1)}
                               disabled={itemQuantities[item._id] <= 0}
+                              style={{fontSize: '0.5rem'}}
                             >
                               −
                             </button>
                             <div className="w-7 h-6 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
-                              <span className="text-xs font-semibold text-gray-900">{itemQuantities[item._id] || 0}</span>
+                              <span className="font-semibold text-gray-900" style={{fontSize: '0.5rem'}}>{itemQuantities[item._id] || 0}</span>
                             </div>
                             <button
-                              className="w-6 h-6 bg-green-600 hover:bg-green-700 text-white rounded font-bold text-sm flex items-center justify-center transition-colors"
+                              className="w-6 h-6 bg-green-600 hover:bg-green-700 text-white rounded font-bold flex items-center justify-center transition-colors"
                               onClick={() => handleQuantityChange(item._id, 1)}
+                              style={{fontSize: '0.5rem'}}
                             >
                               +
                             </button>
                             
                             {/* Add Button */}
                             <button
-                              className={`px-2 py-1 rounded font-medium text-xs transition-all ml-1 ${
+                              className={`px-2 py-1 rounded font-medium transition-all ml-1 ${
                                 itemQuantities[item._id] > 0
                                   ? 'bg-blue-600 hover:bg-blue-700 text-white'
                                   : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                               }`}
                               onClick={() => addItemToOrder(item)}
                               disabled={itemQuantities[item._id] <= 0}
+                              style={{fontSize: '0.6rem'}}
                             >
                               {itemQuantities[item._id] > 0 ? 'Shto' : 'Zgjedh'}
                             </button>
@@ -988,18 +993,19 @@ const NewOrder = () => {
                     <div key={index} className="border-b pb-1 last:border-b-0">
                       <div className="flex justify-between items-center">
                         <div className="flex-1">
-                          <div className="font-medium text-xs">{item.name}</div>
-                          <div className="text-xs text-gray-600">
+                          <div className="font-medium" style={{fontSize: '0.625rem'}}>{item.name}</div>
+                          <div className="text-gray-600" style={{fontSize: '0.5rem'}}>
                             {item.price.toLocaleString()} LEK x {item.quantity}
                           </div>
                         </div>
                         <div className="text-right ml-2">
-                          <div className="font-semibold text-xs">
+                          <div className="font-semibold" style={{fontSize: '0.625rem'}}>
                             {(item.price * item.quantity).toLocaleString()} LEK
                           </div>
                           <button
-                            className="text-xs text-red-600 hover:text-red-800"
+                            className="text-red-600 hover:text-red-800"
                             onClick={() => removeItemFromOrder(index)}
+                            style={{fontSize: '0.5rem'}}
                           >
                             Hiq
                           </button>
@@ -1010,21 +1016,24 @@ const NewOrder = () => {
                       <div className="mt-1 flex items-center space-x-1">
                         <div className="flex items-center border rounded overflow-hidden">
                           <button
-                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200 text-xs"
+                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200"
                             onClick={() => updateItemQuantity(index, item.quantity - 1)}
+                            style={{fontSize: '0.5rem'}}
                           >
                             -
                           </button>
                           <input
                             type="number"
-                            className="w-6 text-center border-0 text-xs"
+                            className="w-6 text-center border-0"
                             value={item.quantity}
                             onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 1)}
                             min="1"
+                            style={{fontSize: '0.5rem'}}
                           />
                           <button
-                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200 text-xs"
+                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200"
                             onClick={() => updateItemQuantity(index, item.quantity + 1)}
+                            style={{fontSize: '0.5rem'}}
                           >
                             +
                           </button>
@@ -1032,10 +1041,11 @@ const NewOrder = () => {
                         
                         <input
                           type="text"
-                          className="flex-1 px-1 py-0.5 border rounded text-xs"
+                          className="flex-1 px-1 py-0.5 border rounded"
                           placeholder="Shënime"
                           value={item.notes}
                           onChange={(e) => updateItemNotes(index, e.target.value)}
+                          style={{fontSize: '0.5rem'}}
                         />
                       </div>
                     </div>
