@@ -20,12 +20,15 @@ export const PWAInstallButton = ({ className = '' }) => {
     <button
       onClick={handleInstall}
       className={`
-        bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg
-        flex items-center space-x-2 transition-colors duration-200
+        bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 
+        text-white px-4 py-3 rounded-2xl shadow-lg hover:shadow-xl
+        flex items-center space-x-2 transition-all duration-300 transform hover:-translate-y-1
+        font-semibold border-2 border-white/20 backdrop-blur-sm
         ${className}
       `}
+      title="Install Vila Falo app for better experience"
     >
-      <span>📱</span>
+      <span className="text-lg">📱</span>
       <span>Install App</span>
     </button>
   );

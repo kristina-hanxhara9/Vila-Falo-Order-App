@@ -28,28 +28,13 @@ serviceWorker.register({
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-// PWA Install prompt handling
+// PWA Install prompt handling - now handled by React components
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
   console.log('💾 PWA install prompt triggered');
   e.preventDefault();
   deferredPrompt = e;
-  
-  // Show custom install button/banner
-  const installButton = document.getElementById('pwa-install-btn');
-  if (installButton) {
-    installButton.style.display = 'block';
-    installButton.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`PWA install ${outcome}`);
-        deferredPrompt = null;
-        installButton.style.display = 'none';
-      }
-    });
-  }
 });
 
 window.addEventListener('appinstalled', (evt) => {
