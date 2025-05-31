@@ -744,19 +744,19 @@ const NewOrder = () => {
             
             <div className="p-6">
               {/* Mobile-Friendly Category Filter */}
-              <div className="mb-4">
-                <h3 className="text-base font-semibold mb-3 text-gray-800">📱 Zgjidhni Kategorinë</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              <div className="mb-3">
+                <h3 className="text-sm font-medium mb-2 text-gray-800">📱 Zgjidhni Kategorinë</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
                   <button
-                    className={`flex items-center justify-center px-3 py-2 rounded-lg font-semibold transition-colors ${
+                    className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors text-xs ${
                       selectedCategory === 'all'
                         ? 'bg-indigo-600 text-white'
                         : 'bg-white border border-indigo-200 text-indigo-600 hover:border-indigo-400'
                     }`}
                     onClick={() => setSelectedCategory('all')}
                   >
-                    <span className="text-sm mr-1">🍽️</span>
-                    <span className="text-xs font-semibold">Të Gjitha</span>
+                    <span className="text-xs mr-1">🍽️</span>
+                    <span className="text-xs">Të Gjitha</span>
                   </button>
                   
                   {categories.map(category => {
@@ -796,11 +796,11 @@ const NewOrder = () => {
                     return (
                       <button
                         key={category}
-                        className={`flex items-center justify-center px-3 py-2 rounded-lg font-semibold transition-colors ${bgClass}`}
+                        className={`flex items-center justify-center px-2 py-1 rounded font-medium transition-colors text-xs ${bgClass}`}
                         onClick={() => setSelectedCategory(category)}
                       >
-                        <span className="text-sm mr-1">{icon}</span>
-                        <span className="text-xs font-semibold">{name}</span>
+                        <span className="text-xs mr-1">{icon}</span>
+                        <span className="text-xs">{name}</span>
                       </button>
                     );
                   })}
@@ -817,7 +817,7 @@ const NewOrder = () => {
                   <p className="text-gray-500">Nuk u gjetën artikuj në këtë kategori</p>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-1">
                   {filteredMenuItems.map(item => {
                     const categoryIcon = {
                       'food': '🍴',
@@ -826,63 +826,61 @@ const NewOrder = () => {
                     }[item.category] || '🍽️';
                     
                     const categoryColor = {
-                      'food': 'border-l-4 border-green-500 bg-white',
-                      'drink': 'border-l-4 border-blue-500 bg-white',
-                      'dessert': 'border-l-4 border-yellow-500 bg-white'
-                    }[item.category] || 'border-l-4 border-gray-400 bg-white';
+                      'food': 'border-l-2 border-green-500 bg-white',
+                      'drink': 'border-l-2 border-blue-500 bg-white',
+                      'dessert': 'border-l-2 border-yellow-500 bg-white'
+                    }[item.category] || 'border-l-2 border-gray-400 bg-white';
                     
                     return (
                       <div
                         key={item._id}
-                        className={`${categoryColor} rounded-lg shadow-sm hover:shadow-md transition-shadow p-3`}
+                        className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow p-2`}
                       >
-                        {/* Compact inline layout */}
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center flex-1">
-                            <span className="text-lg mr-2">{categoryIcon}</span>
-                            <div className="flex-1">
-                              <h3 className="font-bold text-gray-900 text-sm leading-tight">{item.albanianName}</h3>
+                        {/* Ultra compact single line layout */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center flex-1 min-w-0">
+                            <span className="text-sm mr-1">{categoryIcon}</span>
+                            <div className="flex-1 min-w-0 mr-2">
+                              <h3 className="font-medium text-gray-900 text-xs leading-tight truncate">{item.albanianName}</h3>
                             </div>
-                            <div className="text-right ml-2">
-                              <span className="font-bold text-gray-900 text-sm">{item.price.toLocaleString()} LEK</span>
+                            <div className="text-right mr-2 flex-shrink-0">
+                              <span className="font-semibold text-gray-900 text-xs">{item.price.toLocaleString()}</span>
                             </div>
                           </div>
-                        </div>
-                        
-                        {/* Mobile-friendly controls */}
-                        <div className="flex items-center justify-between">
-                          {/* Quantity Controls - Smaller and clearer */}
-                          <div className="flex items-center space-x-2">
+                          
+                          {/* Ultra compact controls */}
+                          <div className="flex items-center space-x-1 flex-shrink-0">
+                            {/* Quantity Controls */}
                             <button
-                              className="w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-lg flex items-center justify-center shadow-md transition-colors disabled:opacity-50 disabled:bg-gray-400"
+                              className="w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded font-bold text-sm flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
                               onClick={() => handleQuantityChange(item._id, -1)}
                               disabled={itemQuantities[item._id] <= 0}
                             >
                               −
                             </button>
-                            <div className="w-10 h-8 bg-gray-100 border border-gray-300 rounded-lg flex items-center justify-center">
-                              <span className="text-sm font-bold text-gray-900">{itemQuantities[item._id] || 0}</span>
+                            <div className="w-7 h-6 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
+                              <span className="text-xs font-semibold text-gray-900">{itemQuantities[item._id] || 0}</span>
                             </div>
                             <button
-                              className="w-8 h-8 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold text-lg flex items-center justify-center shadow-md transition-colors"
+                              className="w-6 h-6 bg-green-600 hover:bg-green-700 text-white rounded font-bold text-sm flex items-center justify-center transition-colors"
                               onClick={() => handleQuantityChange(item._id, 1)}
                             >
                               +
                             </button>
+                            
+                            {/* Add Button */}
+                            <button
+                              className={`px-2 py-1 rounded font-medium text-xs transition-all ml-1 ${
+                                itemQuantities[item._id] > 0
+                                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                  : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                              }`}
+                              onClick={() => addItemToOrder(item)}
+                              disabled={itemQuantities[item._id] <= 0}
+                            >
+                              {itemQuantities[item._id] > 0 ? 'Shto' : 'Zgjedh'}
+                            </button>
                           </div>
-                          
-                          {/* Add to Order Button - Compact */}
-                          <button
-                            className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ml-3 ${
-                              itemQuantities[item._id] > 0
-                                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md'
-                                : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                            }`}
-                            onClick={() => addItemToOrder(item)}
-                            disabled={itemQuantities[item._id] <= 0}
-                          >
-                            {itemQuantities[item._id] > 0 ? 'Shto' : 'Zgjedh'}
-                          </button>
                         </div>
                       </div>
                     );
@@ -969,34 +967,34 @@ const NewOrder = () => {
         {/* Order Summary - Fixed position on mobile */}
         <div className="lg:col-span-1 order-1 lg:order-2">
           <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 rounded-lg shadow-xl lg:sticky lg:top-6">
-            <div className="px-6 py-4 border-b border-blue-200">
-              <h2 className="text-xl font-semibold text-blue-900 flex items-center">
-                <span className="mr-2">🧾</span>
+            <div className="px-4 py-3 border-b border-blue-200">
+              <h2 className="text-base font-semibold text-blue-900 flex items-center">
+                <span className="mr-1 text-sm">🧾</span>
                 Përmbledhja e Porosisë
               </h2>
             </div>
             
-            <div className="p-6">
+            <div className="p-4">
               {orderItems.length === 0 ? (
-                <div className="text-center py-4">
-                  <p className="text-gray-500 text-sm">Nuk ka artikuj në porosi</p>
+                <div className="text-center py-3">
+                  <p className="text-gray-500 text-xs">Nuk ka artikuj në porosi</p>
                   <p className="text-xs text-gray-400 mt-1">
-                    Zgjidhni sasinë dhe shtoni artikujt nga menuja
+                    Zgjidhni sasinë dhe shtoni artikujt
                   </p>
                 </div>
               ) : (
-                <div className="mb-4 space-y-2">
+                <div className="mb-3 space-y-1">
                   {orderItems.map((item, index) => (
-                    <div key={index} className="border-b pb-2 last:border-b-0">
+                    <div key={index} className="border-b pb-1 last:border-b-0">
                       <div className="flex justify-between items-center">
                         <div className="flex-1">
-                          <div className="font-medium text-sm">{item.name}</div>
+                          <div className="font-medium text-xs">{item.name}</div>
                           <div className="text-xs text-gray-600">
                             {item.price.toLocaleString()} LEK x {item.quantity}
                           </div>
                         </div>
                         <div className="text-right ml-2">
-                          <div className="font-semibold text-sm">
+                          <div className="font-semibold text-xs">
                             {(item.price * item.quantity).toLocaleString()} LEK
                           </div>
                           <button
@@ -1008,24 +1006,24 @@ const NewOrder = () => {
                         </div>
                       </div>
                       
-                      {/* Compact order item controls */}
-                      <div className="mt-1 flex items-center space-x-2">
+                      {/* Ultra compact order item controls */}
+                      <div className="mt-1 flex items-center space-x-1">
                         <div className="flex items-center border rounded overflow-hidden">
                           <button
-                            className="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-xs"
+                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200 text-xs"
                             onClick={() => updateItemQuantity(index, item.quantity - 1)}
                           >
                             -
                           </button>
                           <input
                             type="number"
-                            className="w-8 text-center border-0 text-xs"
+                            className="w-6 text-center border-0 text-xs"
                             value={item.quantity}
                             onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 1)}
                             min="1"
                           />
                           <button
-                            className="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-xs"
+                            className="px-1 py-0.5 bg-gray-100 hover:bg-gray-200 text-xs"
                             onClick={() => updateItemQuantity(index, item.quantity + 1)}
                           >
                             +
@@ -1034,7 +1032,7 @@ const NewOrder = () => {
                         
                         <input
                           type="text"
-                          className="flex-1 px-2 py-1 border rounded text-xs"
+                          className="flex-1 px-1 py-0.5 border rounded text-xs"
                           placeholder="Shënime"
                           value={item.notes}
                           onChange={(e) => updateItemNotes(index, e.target.value)}
@@ -1045,21 +1043,21 @@ const NewOrder = () => {
                 </div>
               )}
               
-              <div className="border-t pt-4">
-                <div className="flex justify-between items-center text-xl font-bold mb-4">
+              <div className="border-t pt-3">
+                <div className="flex justify-between items-center text-lg font-bold mb-3">
                   <span>Total:</span>
                   <span>{calculateTotal().toLocaleString()} LEK</span>
                 </div>
                 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <button
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
                     onClick={submitOrder}
                     disabled={orderItems.length === 0 || submitting || (!tableId && !selectedTableId)}
                   >
                     {submitting ? (
                       <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -1067,7 +1065,7 @@ const NewOrder = () => {
                       </span>
                     ) : (
                       <>
-                        <span className="mr-2">🚀</span>
+                        <span className="mr-1 text-xs">🚀</span>
                         Dërgo Porosinë
                       </>
                     )}
@@ -1075,13 +1073,13 @@ const NewOrder = () => {
                   
                   {/* Print Bill Button */}
                   <button
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
                     onClick={handlePrintBill}
                     disabled={orderItems.length === 0 || isPrinting}
                   >
                     {isPrinting ? (
                       <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -1089,7 +1087,7 @@ const NewOrder = () => {
                       </span>
                     ) : (
                       <>
-                        <span className="mr-2">🖨️</span>
+                        <span className="mr-1 text-xs">🖨️</span>
                         Printo Faturën
                       </>
                     )}
