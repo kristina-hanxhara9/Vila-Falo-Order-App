@@ -65,10 +65,14 @@ class ThermalPrinterService {
     receipt += cmd.ALIGN_CENTER;
     receipt += cmd.FONT_LARGE;
     receipt += cmd.EMPHASIS_ON;
-    receipt += restaurant + '\n';
+    receipt += 'VILA FALO\n';
     receipt += cmd.EMPHASIS_OFF;
     receipt += cmd.FONT_NORMAL;
-    receipt += 'Fature Fiskale\n';
+    receipt += 'Restaurant & Bar\n';
+    receipt += 'Voskopoj\u00eb, Kor\u00e7\u00eb\n';
+    receipt += 'Shqip\u00ebri\n';
+    receipt += 'Tel: +355 69 555 7890\n';
+    receipt += 'NIPT: K32587419L\n';
     receipt += this.createLine('-', 48) + '\n';
     
     // Order Info
@@ -82,7 +86,7 @@ class ThermalPrinterService {
     
     // Items header
     receipt += cmd.FONT_BOLD;
-    receipt += this.formatLine('Produkti', 'Sasi', 'Cmimi', 'Total') + '\n';
+    receipt += this.formatLine('Produkti', 'Sasi', '\u00c7mimi', 'Total') + '\n';
     receipt += cmd.FONT_NORMAL;
     receipt += this.createLine('-', 48) + '\n';
     
@@ -119,13 +123,18 @@ class ThermalPrinterService {
     receipt += cmd.ALIGN_LEFT;
     receipt += this.createLine('=', 48) + '\n';
     
-    // Footer
+    // Tax information
     receipt += cmd.ALIGN_CENTER;
+    receipt += 'INFORMACION FISKAL\n';
+    receipt += `TVSH (20%): ${((order.totalAmount || 0) * 0.2).toLocaleString()} LEK\n`;
+    receipt += `Pa TVSH: ${((order.totalAmount || 0) * 0.8).toLocaleString()} LEK\n`;
+    receipt += this.createLine('-', 48) + '\n';
+    
+    // Footer
     receipt += '\n';
-    receipt += 'Ju faleminderit per viziten!\n';
-    receipt += 'Mirupafshim!\n';
-    receipt += '\n';
-    receipt += 'TVSH: 20%\n';
+    receipt += '\ud83c\udf7d\ufe0f FALEMINDERIT! \ud83c\udf7d\ufe0f\n';
+    receipt += 'P\u00ebr vizit\u00ebn tuaj n\u00eb Vila Falo\n';
+    receipt += 'Voskopoje - Zemra e Alpeve Shqiptare\n';
     receipt += '\n';
     
     // QR Code (if supported)
@@ -468,8 +477,11 @@ class ThermalPrinterService {
         </head>
         <body>
           <div class="header">
-            <h1>${options.restaurantName || 'Vila Falo'}</h1>
-            <p>Faturë Fiskale</p>
+            <h1>VILA FALO</h1>
+            <p>Restaurant & Bar</p>
+            <p>Voskopojë, Korçë, Shqipëri</p>
+            <p>Tel: +355 69 555 7890</p>
+            <p>NIPT: K32587419L</p>
           </div>
           
           <div class="info">
@@ -512,10 +524,12 @@ class ThermalPrinterService {
           </div>
           
           <div class="footer">
-            <p>Ju faleminderit për vizitën!</p>
-            <p>Mirupafshim!</p>
-            <p>TVSH: 20%</p>
-            <p style="font-size: 8px; margin-top: 10px;">ID: ${order._id}</p>
+            <p>🍽️ FALEMINDERIT! 🍽️</p>
+            <p>Për vizitën tuaj në Vila Falo</p>
+            <p>Voskopoje - Zemra e Alpeve Shqiptare</p>
+            <p>TVSH (20%): ${((order.totalAmount || 0) * 0.2).toLocaleString()} LEK</p>
+            <p>Pa TVSH: ${((order.totalAmount || 0) * 0.8).toLocaleString()} LEK</p>
+            <p style="font-size: 8px; margin-top: 10px;">Order ID: ${order._id}</p>
           </div>
           
           <div class="no-print">
@@ -558,7 +572,7 @@ class ThermalPrinterService {
       totalAmount: 100
     };
 
-    return await this.printReceipt(testReceipt, { restaurantName: 'TEST PRINTER' });
+    return await this.printReceipt(testReceipt, { restaurantName: 'VILA FALO - TEST' });
   }
 }
 

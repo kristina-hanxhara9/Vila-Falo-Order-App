@@ -173,7 +173,8 @@ const ManagerDashboard = () => {
               <div className="flex flex-wrap gap-3 justify-center">
                 <button 
                   onClick={handleLogout} 
-                  className="group px-6 py-3 bg-rose-500/80 hover:bg-rose-600 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:-translate-y-1 backdrop-blur-sm"
+                  className="group px-6 py-3 bg-red-600 text-white rounded-2xl shadow-lg flex items-center backdrop-blur-sm"
+                  style={{background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.4)'}}
                 >
                   <svg className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1H3zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />

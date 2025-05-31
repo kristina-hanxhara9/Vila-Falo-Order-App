@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './contexts/AuthContext';
 import { SocketProvider } from './contexts/SocketContext';
+import { PWAOfflineIndicator, PWANotificationSetup } from './components/PWA/PWAComponents';
 import './App.css';
 
 // Login Page
@@ -76,6 +77,8 @@ function AppContent() {
 
   return (
     <Router>
+      {/* PWA Components */}
+      <PWAOfflineIndicator />
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />

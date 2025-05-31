@@ -13,17 +13,59 @@ const TableView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
   const { socket, connected } = useContext(SocketContext);
   const navigate = useNavigate();
 
-  // Function to get the item name - This was missing in your code
+  // Function to get the item name - Enhanced with better data handling
   const getItemName = (item) => {
-    // Return name based on the available properties
-    if (item.menuItem) {
-      return item.menuItem.albanianName || item.menuItem.name || item.name;
+    // First try direct name if it exists
+    if (item && item.name) {
+      return item.name;
     }
-    return item.name;
+    
+    // If menuItem is an object with a name
+    if (item && item.menuItem && typeof item.menuItem === 'object') {
+      if (item.menuItem.albanianName) return item.menuItem.albanianName;
+      if (item.menuItem.name) return item.menuItem.name;
+    }
+    
+    // Last resort fallback
+    return 'Artikull pa emër';
+  };
+  
+  // Function to safely format date
+  const formatDate = (dateString) => {
+    try {
+      if (!dateString) return 'Data e panjohur';
+      
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        return 'Data e pavlefshme';
+      }
+      
+      return date.toLocaleString('sq-AL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch (error) {
+      console.error('Date formatting error:', error);
+      return 'Data e pavlefshme';
+    }
+  };
+  
+  // Function to calculate order total safely
+  const calculateOrderTotal = (items) => {
+    if (!Array.isArray(items)) return 0;
+    
+    return items.reduce((total, item) => {
+      const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+      const quantity = typeof item.quantity === 'number' ? item.quantity : parseInt(item.quantity) || 0;
+      return total + (price * quantity);
+    }, 0);
   };
 
   // Fetch table and order data
@@ -31,23 +73,53 @@ const TableView = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setError('');
+        
+        const config = {
+          headers: {
+            'x-auth-token': token || localStorage.getItem('token')
+          }
+        };
+
+        console.log('🔍 Fetching table and order data for tableId:', tableId);
 
         // Fetch table details
-        const tableRes = await axios.get(`${API_URL}/tables/${tableId}`);
+        const tableRes = await axios.get(`${API_URL}/tables/${tableId}`, config);
+        console.log('📋 Table data:', tableRes.data);
         setTable(tableRes.data);
 
-        // Fetch active order for this table
-        const orderRes = await axios.get(`${API_URL}/orders/table/${tableId}`);
-        const activeOrder = Array.isArray(orderRes.data)
-          ? orderRes.data.find((o) => o.status === 'active')
-          : orderRes.data;
-        setOrder(activeOrder || null);
+        // Fetch ALL orders and filter for this table's active order
+        const ordersRes = await axios.get(`${API_URL}/orders`, config);
+        console.log('📦 All orders:', ordersRes.data);
+        
+        // Find active order for this table
+        const allOrders = Array.isArray(ordersRes.data) ? ordersRes.data : [];
+        const tableOrder = allOrders.find(order => {
+          // Check if order belongs to this table and is active
+          const orderTableId = order.table?._id || order.table;
+          const isForThisTable = orderTableId === tableId;
+          const isActive = order.status === 'active';
+          
+          console.log('🔍 Checking order:', {
+            orderId: order._id,
+            orderTableId,
+            tableId,
+            isForThisTable,
+            isActive,
+            status: order.status
+          });
+          
+          return isForThisTable && isActive;
+        });
+        
+        console.log('✅ Found table order:', tableOrder);
+        setOrder(tableOrder || null);
 
         setLoading(false);
       } catch (err) {
-        setError('Gabim gjatë marrjes së të dhënave të tavolinës');
+        console.error('❌ Error fetching table data:', err);
+        setError('Gabim gjatë marrjes së të dhënave të tavolinës: ' + (err.response?.data?.message || err.message));
         setLoading(false);
-        console.error(err);
       }
     };
 
@@ -89,9 +161,19 @@ const TableView = () => {
   // Handle mark as paid
   const handleMarkAsPaid = async () => {
     try {
-      if (!order) return;
+      if (!order) {
+        setError('Nuk ka porosi për t’u paguar');
+        return;
+      }
+      
+      const config = {
+        headers: {
+          'x-auth-token': token || localStorage.getItem('token')
+        }
+      };
 
-      await axios.put(`${API_URL}/orders/${order._id}/pay`);
+      console.log('💳 Marking order as paid:', order._id);
+      await axios.put(`${API_URL}/orders/${order._id}/pay`, {}, config);
 
       // Emit socket event
       if (socket && connected) {
@@ -105,11 +187,15 @@ const TableView = () => {
       setOrder((prevOrder) => ({ ...prevOrder, paymentStatus: 'paid' }));
       setTable((prevTable) => ({ ...prevTable, status: 'free', currentOrder: null }));
 
-      // Redirect to waiter dashboard
-      navigate('/waiter');
+      console.log('✅ Payment successful, redirecting to dashboard');
+      // Redirect to waiter dashboard after a short delay
+      setTimeout(() => {
+        navigate('/waiter');
+      }, 1500);
+      
     } catch (err) {
-      setError('Gabim gjatë përditësimit të pagesës');
-      console.error(err);
+      console.error('❌ Error marking as paid:', err);
+      setError('Gabim gjatë përditësimit të pagesës: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -213,13 +299,7 @@ const TableView = () => {
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold">Detajet e Porosisë</h2>
               <div className="text-sm text-gray-600">
-                {new Date(order.createdAt).toLocaleString('sq-AL', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                {formatDate(order.createdAt)}
               </div>
             </div>
           </div>
@@ -231,45 +311,85 @@ const TableView = () => {
                 order.items.map((item, index) => {
                   // Use the getItemName function to get the correct name
                   const itemName = getItemName(item);
+                  const itemPrice = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+                  const itemQuantity = typeof item.quantity === 'number' ? item.quantity : parseInt(item.quantity) || 0;
+                  const itemTotal = itemPrice * itemQuantity;
                   
                   return (
                     <li key={item._id || index} className="py-4">
                       <div className="flex justify-between items-center">
                         <div>
                           <div className="font-medium text-gray-900">
-                            {item.quantity}x {itemName}
+                            {itemQuantity}x {itemName}
                           </div>
-                          {item.notes && <div className="text-sm text-gray-500">{item.notes}</div>}
+                          {item.notes && <div className="text-sm text-gray-500 italic mt-1">"{item.notes}"</div>}
                         </div>
                         <div className="text-right">
-                          <div className="text-gray-900 font-medium">{(item.price * item.quantity).toLocaleString()} LEK</div>
+                          <div className="text-gray-900 font-medium">{itemTotal.toLocaleString()} LEK</div>
+                          <div className="text-xs text-gray-500">{itemPrice.toLocaleString()} LEK × {itemQuantity}</div>
                         </div>
                       </div>
                     </li>
                   );
                 })
               ) : (
-                <li className="text-center text-gray-500">Nuk ka artikuj në këtë porosi</li>
+                <li className="text-center text-gray-500 py-8">
+                  <div className="text-4xl mb-2">🍽️</div>
+                  <div>Nuk ka artikuj në këtë porosi</div>
+                </li>
               )}
             </ul>
           </div>
 
-          <div className="px-6 py-4 border-t">
-            <div className="flex justify-between items-center font-bold text-lg">
+          <div className="px-6 py-4 border-t bg-gray-50">
+            <div className="flex justify-between items-center font-bold text-lg mb-3">
               <span>Totali:</span>
-              <span>{order.totalAmount?.toLocaleString() || 0} LEK</span>
+              <span className="text-blue-600">
+                {order.totalAmount ? order.totalAmount.toLocaleString() : calculateOrderTotal(order.items).toLocaleString()} LEK
+              </span>
             </div>
-            <div className="mt-2 text-sm text-gray-600">
-              Kamarieri: {order.waiter?.name || user?.name || 'N/A'}
-            </div>
-            <div className="mt-1 text-sm text-gray-600">
-              Statusi i pagesës: {order.paymentStatus === 'paid' ? 'E paguar' : 'E papaguar'}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+              <div>
+                <span className="font-medium">Kamarieri:</span> {order.waiter?.name || user?.name || 'N/A'}
+              </div>
+              <div>
+                <span className="font-medium">Statusi i pagesës:</span> 
+                <span className={`ml-1 px-2 py-1 rounded text-xs font-medium ${
+                  order.paymentStatus === 'paid' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                }`}>
+                  {order.paymentStatus === 'paid' ? 'E paguar' : 'E papaguar'}
+                </span>
+              </div>
             </div>
           </div>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow p-8 text-center">
-          <p className="text-gray-600 mb-4">Nuk ka porosi aktive për këtë tavolinë.</p>
+          <div className="text-6xl mb-4">🍽️</div>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Nuk ka porosi aktive</h3>
+          <p className="text-gray-600 mb-6">Nuk ka porosi aktive për këtë tavolinë.</p>
+          
+          {table?.status === 'free' ? (
+            <div className="space-y-4">
+              <p className="text-green-600 font-medium">Tavolina është e lirë dhe gati për klientë të rinj.</p>
+              <Link to={`/waiter/table/${table._id}/order`} className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg">
+                🍴 Fillo Porosi të Re
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <p className="text-yellow-800 text-sm">
+                  ⚠️ Tavolina është "{getStatusText(table?.status)}" por nuk ka porosi aktive.
+                </p>
+              </div>
+              <Link to={`/waiter/table/${table._id}/order`} className="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg">
+                🔄 Shto Porosi
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>

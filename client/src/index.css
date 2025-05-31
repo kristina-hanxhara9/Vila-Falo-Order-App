@@ -4,6 +4,8 @@
 @import './styles/vila-dashboard-professional.css';
 @import './styles/vila-kitchen-buttons.css';
 @import './styles/vila-css-overrides.css';
+@import './styles/global-button-fixes.css';
+@import './styles/kitchen-button-fixes.css';
 
 /* Reset and Base Styles */
 * {

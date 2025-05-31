@@ -691,51 +691,64 @@ const NewOrder = () => {
             </div>
             
             <div className="p-6">
-              {/* Category Filter - Color Coded */}
+              {/* Mobile-Friendly Category Filter */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-3 text-gray-800">🏗️ Zgjidhni Kategorinë</h3>
-                <div className="category-filter">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">📱 Zgjidhni Kategorinë</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <button
-                    className={`btn btn-sm ${
+                    className={`flex items-center justify-center px-4 py-3 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg ${
                       selectedCategory === 'all'
-                        ? 'btn-primary'
-                        : 'btn-outline-primary'
+                        ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-xl'
+                        : 'bg-white border-2 border-indigo-200 text-indigo-600 hover:border-indigo-400'
                     }`}
                     onClick={() => setSelectedCategory('all')}
                   >
-                    🍽️ Të Gjitha
+                    <span className="text-xl mr-2">🍽️</span>
+                    <span className="text-sm font-bold">Të Gjitha</span>
                   </button>
                   
                   {categories.map(category => {
                     const isActive = selectedCategory === category;
-                    let btnClass = 'btn btn-sm ';
-                    let icon = '🍽️';
+                    let bgClass, icon, name;
                     
                     switch(category) {
                       case 'food':
-                        btnClass += isActive ? 'btn-success' : 'btn-outline-success';
+                        bgClass = isActive 
+                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-xl' 
+                          : 'bg-white border-2 border-emerald-200 text-emerald-600 hover:border-emerald-400';
                         icon = '🍴';
+                        name = 'Ushqime';
                         break;
                       case 'drink':
-                        btnClass += isActive ? 'btn-info' : 'btn-outline-info';
+                        bgClass = isActive 
+                          ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-xl' 
+                          : 'bg-white border-2 border-blue-200 text-blue-600 hover:border-blue-400';
                         icon = '🍹';
+                        name = 'Pije';
                         break;
                       case 'dessert':
-                        btnClass += isActive ? 'btn-warning' : 'btn-outline-warning';
+                        bgClass = isActive 
+                          ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-xl' 
+                          : 'bg-white border-2 border-amber-200 text-amber-600 hover:border-amber-400';
                         icon = '🍰';
+                        name = 'Ëmbëlsira';
                         break;
                       default:
-                        btnClass += isActive ? 'btn-secondary' : 'btn-outline-secondary';
+                        bgClass = isActive 
+                          ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-xl' 
+                          : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-gray-400';
                         icon = '🍽️';
+                        name = category;
                     }
                     
                     return (
                       <button
                         key={category}
-                        className={btnClass}
+                        className={`flex items-center justify-center px-4 py-3 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg ${bgClass}`}
                         onClick={() => setSelectedCategory(category)}
                       >
-                        {icon} {getCategoryName(category)}
+                        <span className="text-xl mr-2">{icon}</span>
+                        <span className="text-sm font-bold">{name}</span>
                       </button>
                     );
                   })}
@@ -791,60 +804,46 @@ const NewOrder = () => {
                           </div>
                         </div>
                         
-                        {/* Enhanced Quantity Controls */}
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center space-x-3">
-                            <div className="quantity-control">
-                              <button
-                                className="btn btn-sm btn-secondary"
-                                onClick={() => handleQuantityChange(item._id, -1)}
-                                disabled={itemQuantities[item._id] <= 0}
-                                title="Pakëso sasinë"
-                              >
-                                -
-                              </button>
-                              <input
-                                type="number"
-                                value={itemQuantities[item._id] || 0}
-                                readOnly
-                                className="text-center font-bold"
-                              />
-                              <button
-                                className="btn btn-sm btn-secondary"
-                                onClick={() => handleQuantityChange(item._id, 1)}
-                                title="Shto sasinë"
-                              >
-                                +
-                              </button>
+                        {/* Mobile-First Quantity Controls - One Line Layout */}
+                        <div className="flex items-center justify-between space-x-3">
+                          {/* Quantity Controls - Compact */}
+                          <div className="flex items-center space-x-2">
+                            <button
+                              className="w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-lg flex items-center justify-center transition-all duration-200 shadow-lg"
+                              onClick={() => handleQuantityChange(item._id, -1)}
+                              disabled={itemQuantities[item._id] <= 0}
+                            >
+                              −
+                            </button>
+                            <div className="w-12 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                              <span className="text-lg font-bold text-gray-800">{itemQuantities[item._id] || 0}</span>
                             </div>
-                            
-                            <div className="text-sm text-gray-600">
-                              Sasia: <span className="font-semibold">{itemQuantities[item._id] || 0}</span>
-                            </div>
+                            <button
+                              className="w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-lg flex items-center justify-center transition-all duration-200 shadow-lg"
+                              onClick={() => handleQuantityChange(item._id, 1)}
+                            >
+                              +
+                            </button>
                           </div>
                           
+                          {/* Add to Order Button - Prominent */}
                           <button
-                            className={`btn ${
+                            className={`flex-1 max-w-xs px-4 py-3 rounded-2xl font-bold text-sm transition-all duration-300 transform shadow-lg ${
                               itemQuantities[item._id] > 0
-                                ? 'btn-primary'
-                                : 'btn-secondary'
+                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:-translate-y-1 shadow-xl'
+                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                             }`}
                             onClick={() => addItemToOrder(item)}
                             disabled={itemQuantities[item._id] <= 0}
-                            title={itemQuantities[item._id] > 0 ? 'Shto në porosi' : 'Zgjidhni sasinë'}
                           >
                             {itemQuantities[item._id] > 0 ? (
                               <>
-                                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-                                </svg>
+                                <span className="mr-2">🛒</span>
                                 Shto në Porosi
                               </>
                             ) : (
                               <>
-                                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                                </svg>
+                                <span className="mr-2">📝</span>
                                 Zgjidhni Sasinë
                               </>
                             )}
@@ -1058,10 +1057,12 @@ const NewOrder = () => {
       <div className="hidden">
         <div ref={printRef} className="print-template p-4" style={{ fontFamily: 'monospace', fontSize: '11pt', width: '80mm', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '14pt', marginBottom: '5px' }}>RESTAURANT APP</div>
-            <div>Tel: +355 12 345 6789</div>
-            <div>NIPT: K123456789A</div>
-            <div>Adresa: Rruga e Shqiponjes, Tirana</div>
+            <div style={{ fontWeight: 'bold', fontSize: '16pt', marginBottom: '8px' }}>VILA FALO</div>
+            <div style={{ fontSize: '12pt', marginBottom: '5px' }}>Restaurant & Bar</div>
+            <div style={{ fontSize: '10pt' }}>Voskopoje, Korçë</div>
+            <div style={{ fontSize: '10pt', marginBottom: '5px' }}>Shqipëri</div>
+            <div style={{ fontSize: '9pt' }}>Tel: +355 69 123 4567</div>
+            <div style={{ fontSize: '9pt' }}>NIPT: K12345678A</div>
             <div style={{ marginTop: '10px', borderBottom: '1px dashed #000', paddingBottom: '5px' }}>
               {formatDate(new Date())}
             </div>
@@ -1069,7 +1070,7 @@ const NewOrder = () => {
           
           <div style={{ marginBottom: '10px' }}>
             <div><strong>Kamarier:</strong> {user?.name || 'N/A'}</div>
-            <div><strong>Tavolina:</strong> {table ? table.number : 'N/A'}</div>
+            <div><strong>Tavolina:</strong> {table ? table.number : selectedTableId ? tables.find(t => t._id === selectedTableId)?.number || 'N/A' : 'N/A'}</div>
             <div style={{ borderBottom: '1px dashed #000', paddingBottom: '5px', marginTop: '5px' }}></div>
           </div>
           
@@ -1079,7 +1080,7 @@ const NewOrder = () => {
                 <tr>
                   <th style={{ textAlign: 'left', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Artikulli</th>
                   <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '20%' }}>Sasia</th>
-                  <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Cmimi</th>
+                  <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Çmimi</th>
                 </tr>
               </thead>
               <tbody>
@@ -1092,19 +1093,29 @@ const NewOrder = () => {
                 ))}
               </tbody>
               <tfoot>
-                <tr style={{ borderTop: '1px solid #000' }}>
-                  <th colSpan="2" style={{ textAlign: 'left', paddingTop: '8px' }}>TOTAL:</th>
-                  <th style={{ textAlign: 'right', paddingTop: '8px' }}>{calculateTotal().toLocaleString()} LEK</th>
+                <tr style={{ borderTop: '2px solid #000' }}>
+                  <th colSpan="2" style={{ textAlign: 'left', paddingTop: '8px', fontSize: '12pt' }}>TOTAL:</th>
+                  <th style={{ textAlign: 'right', paddingTop: '8px', fontSize: '12pt' }}>{calculateTotal().toLocaleString()} LEK</th>
                 </tr>
               </tfoot>
             </table>
           </div>
           
-          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '10pt' }}>
-            <div>TVSH: 20%</div>
-            <div>Vlera e TVSH: {(calculateTotal() * 0.2).toLocaleString()} LEK</div>
-            <div style={{ marginTop: '10px', borderTop: '1px dashed #000', paddingTop: '10px' }}>
-              Faleminderit për vizitën tuaj!
+          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '9pt' }}>
+            <div style={{ borderTop: '1px dashed #000', paddingTop: '10px', marginBottom: '10px' }}>
+              <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>INFORMACION FISKAL</div>
+              <div>TVSH (20%): {(calculateTotal() * 0.2).toLocaleString()} LEK</div>
+              <div>Pa TVSH: {(calculateTotal() * 0.8).toLocaleString()} LEK</div>
+            </div>
+            
+            <div style={{ marginTop: '15px', fontSize: '10pt' }}>
+              <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>🍽️ FALEMINDERIT! 🍽️</div>
+              <div>Për vizitën tuaj në Vila Falo</div>
+              <div style={{ marginTop: '5px', fontSize: '8pt' }}>Voskopoje - Zemra e Alpeve Shqiptare</div>
+            </div>
+            
+            <div style={{ marginTop: '10px', fontSize: '8pt', borderTop: '1px solid #000', paddingTop: '5px' }}>
+              Ora: {new Date().toLocaleTimeString('sq-AL')}
             </div>
           </div>
         </div>

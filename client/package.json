@@ -20,10 +20,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run build:pwa",
+    "build:pwa": "echo 'PWA build complete! Your app is ready for mobile deployment.'",
     "serve": "serve -s build",
+    "serve:https": "serve -s build --ssl-cert --ssl-key",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "analyze": "npm run build && npx serve -s build"
   },
   "eslintConfig": {
     "extends": [

@@ -105,28 +105,44 @@ const TableGrid = ({ tables, onSelectTable }) => {
         return (
           <div
             key={table._id}
-            className={`relative group border-2 rounded-2xl p-5 text-center cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 ${styles.bg} ${styles.border} ring-2 ${styles.ring}`}
+            className="group bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 overflow-hidden cursor-pointer"
             onClick={() => onSelectTable(table)}
           >
-            <div className="flex flex-col items-center space-y-2">
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full ${styles.text} bg-white/50 group-hover:bg-white/80 transition-colors duration-200`}>
-                {getStatusIcon(table.status)}
-              </div>
-              <div className={`text-lg font-bold ${styles.text}`}>
-                Tavolina {table.number}
-              </div>
-              <div className={`text-sm font-medium px-3 py-1 rounded-full bg-white/60 ${styles.text}`}>
-                {getStatusText(table.status)}
+            <div className={`p-8 bg-gradient-to-br ${
+              table.status === 'free' ? 'from-emerald-50 to-green-100' :
+              table.status === 'ordering' ? 'from-amber-50 to-yellow-100' :
+              table.status === 'unpaid' ? 'from-rose-50 to-red-100' :
+              'from-blue-50 to-indigo-100'
+            }`}>
+              <div className="flex items-center mb-4">
+                <div className={`w-14 h-14 bg-gradient-to-br ${
+                  table.status === 'free' ? 'from-emerald-500 to-emerald-600' :
+                  table.status === 'ordering' ? 'from-amber-500 to-amber-600' :
+                  table.status === 'unpaid' ? 'from-rose-500 to-rose-600' :
+                  'from-blue-500 to-blue-600'
+                } rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                  <span className="text-white text-2xl font-bold">{table.number}</span>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-700 transition-colors duration-200">Tavolina {table.number}</h3>
+                  <p className={`text-sm font-medium ${
+                    table.status === 'free' ? 'text-emerald-600' :
+                    table.status === 'ordering' ? 'text-amber-600' :
+                    table.status === 'unpaid' ? 'text-rose-600' :
+                    'text-blue-600'
+                  }`}>{getStatusText(table.status)}</p>
+                </div>
               </div>
               {table.name && (
-                <div className="text-xs text-gray-500 mt-1 px-2 py-1 bg-white/40 rounded-md">
-                  {table.name}
-                </div>
+                <p className="text-gray-600 leading-relaxed">{table.name}</p>
               )}
             </div>
-            
-            {/* Hover effect overlay */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+            <div className={`h-1 bg-gradient-to-r ${
+              table.status === 'free' ? 'from-emerald-500 to-green-500' :
+              table.status === 'ordering' ? 'from-amber-500 to-yellow-500' :
+              table.status === 'unpaid' ? 'from-rose-500 to-red-500' :
+              'from-blue-500 to-indigo-500'
+            } transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`}></div>
           </div>
         );
       })}
@@ -148,7 +164,7 @@ const WaiterDashboard = () => {
   const [showPrinterConfig, setShowPrinterConfig] = useState(false);
   const [printerSettings, setPrinterSettings] = useState({
     interface: 'usb',
-    restaurantName: 'Vila Falo',
+    restaurantName: 'Vila Falo - Voskopoje, Korçë',
     autoTest: false // This autoTest property is in state but not used in the provided code.
   });
   const [printingStatus, setPrintingStatus] = useState('');

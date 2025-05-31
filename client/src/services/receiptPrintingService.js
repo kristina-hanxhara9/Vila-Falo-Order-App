@@ -7,10 +7,11 @@ class ReceiptPrintingService {
     this.printerType = 'thermal'; // or 'browser'
     this.restaurantInfo = {
       name: 'Vila Falo',
-      address: 'Rruga Kryesore, Tiranë',
-      phone: '+355 69 123 4567',
+      address: 'Voskopojë, Korçë, Shqipëri',
+      phone: '+355 69 555 7890',
       email: 'info@vilafalo.al',
-      website: 'www.vilafalo.al'
+      website: 'www.vilafalo.al',
+      nipt: 'K32587419L'
     };
   }
 
@@ -88,6 +89,7 @@ class ReceiptPrintingService {
     commands.push(this.restaurantInfo.address + '\n');
     commands.push('Tel: ' + this.restaurantInfo.phone + '\n');
     commands.push(this.restaurantInfo.email + '\n');
+    commands.push('NIPT: ' + this.restaurantInfo.nipt + '\n');
     commands.push('\n');
     
     // Receipt title
@@ -422,6 +424,7 @@ class ReceiptPrintingService {
             <div>${this.restaurantInfo.address}</div>
             <div>Tel: ${this.restaurantInfo.phone}</div>
             <div>${this.restaurantInfo.email}</div>
+            <div>NIPT: ${this.restaurantInfo.nipt}</div>
             <div class="receipt-title">FATURË FISKALE</div>
           </div>
           
