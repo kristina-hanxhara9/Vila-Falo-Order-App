@@ -638,7 +638,43 @@ const NewOrder = () => {
   }
   
   return (
-    <div className="container mx-auto px-4 py-6">
+    <>
+      <style>
+        {`
+          /* Force tiny text sizes */
+          .menu-item-name {
+            font-size: 6px !important;
+            line-height: 1 !important;
+            font-weight: 400 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          .menu-item-price {
+            font-size: 6px !important;
+            line-height: 1 !important;
+            font-weight: 500 !important;
+          }
+          .menu-item-container {
+            padding: 2px !important;
+            margin: 1px 0 !important;
+            height: auto !important;
+            min-height: 16px !important;
+          }
+          .menu-item-container h1,
+          .menu-item-container h2,
+          .menu-item-container h3,
+          .menu-item-container h4,
+          .menu-item-container h5,
+          .menu-item-container h6,
+          .menu-item-container p,
+          .menu-item-container span,
+          .menu-item-container div {
+            font-size: 6px !important;
+            line-height: 1 !important;
+          }
+        `}
+      </style>
+      <div className="container mx-auto px-4 py-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div>
           <div className="flex items-center mb-2">
@@ -836,18 +872,18 @@ const NewOrder = () => {
                     return (
                       <div
                         key={item._id}
-                        className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow`}
-                        style={{padding: '4px', fontSize: '10px !important'}}
+                        className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow menu-item-container`}
+                        style={{padding: '2px !important', fontSize: '6px !important', margin: '1px 0 !important', height: 'auto !important', minHeight: '16px !important'}}
                       >
                         {/* Ultra compact single line layout */}
-                        <div className="flex items-center justify-between" style={{minHeight: '20px'}}>
+                        <div className="flex items-center justify-between" style={{minHeight: '14px', height: '14px !important'}}>
                           <div className="flex items-center flex-1 min-w-0">
                             <span className="mr-1" style={{fontSize: '8px !important', lineHeight: '1'}}>{categoryIcon}</span>
                             <div className="flex-1 min-w-0 mr-2">
-                              <h3 className="font-medium text-gray-900 leading-tight truncate" style={{fontSize: '9px !important', lineHeight: '1.1 !important', fontWeight: '500 !important'}}>{item.albanianName}</h3>
+                              <h3 className="font-medium text-gray-900 leading-tight truncate menu-item-name" style={{fontSize: '6px !important', lineHeight: '1 !important', fontWeight: '400 !important', margin: '0 !important', padding: '0 !important'}}>{item.albanianName}</h3>
                             </div>
                             <div className="text-right mr-2 flex-shrink-0">
-                              <span className="font-semibold text-gray-900" style={{fontSize: '8px !important', fontWeight: '600 !important'}}>{item.price.toLocaleString()}</span>
+                              <span className="font-semibold text-gray-900 menu-item-price" style={{fontSize: '6px !important', fontWeight: '500 !important', lineHeight: '1 !important'}}>{item.price.toLocaleString()}</span>
                             </div>
                           </div>
                           
@@ -858,17 +894,17 @@ const NewOrder = () => {
                               className="bg-red-600 hover:bg-red-700 text-white rounded font-bold flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
                               onClick={() => handleQuantityChange(item._id, -1)}
                               disabled={itemQuantities[item._id] <= 0}
-                              style={{width: '16px', height: '16px', fontSize: '8px !important', lineHeight: '1', padding: '0'}}
+                              style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
                             >
                               −
                             </button>
-                            <div className="bg-gray-100 border border-gray-300 rounded flex items-center justify-center" style={{width: '20px', height: '16px'}}>
-                              <span className="font-semibold text-gray-900" style={{fontSize: '8px !important', lineHeight: '1'}}>{itemQuantities[item._id] || 0}</span>
+                            <div className="bg-gray-100 border border-gray-300 rounded flex items-center justify-center" style={{width: '16px', height: '12px'}}>
+                              <span className="font-semibold text-gray-900" style={{fontSize: '6px !important', lineHeight: '1'}}>{itemQuantities[item._id] || 0}</span>
                             </div>
                             <button
                               className="bg-green-600 hover:bg-green-700 text-white rounded font-bold flex items-center justify-center transition-colors"
                               onClick={() => handleQuantityChange(item._id, 1)}
-                              style={{width: '16px', height: '16px', fontSize: '8px !important', lineHeight: '1', padding: '0'}}
+                              style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
                             >
                               +
                             </button>
@@ -882,9 +918,9 @@ const NewOrder = () => {
                               }`}
                               onClick={() => addItemToOrder(item)}
                               disabled={itemQuantities[item._id] <= 0}
-                              style={{fontSize: '7px !important', padding: '2px 4px', lineHeight: '1', height: '16px'}}
+                              style={{fontSize: '5px !important', padding: '1px 2px !important', lineHeight: '1 !important', height: '12px', margin: '0 !important'}}
                             >
-                              {itemQuantities[item._id] > 0 ? 'Shto' : 'Zgjedh'}
+                              {itemQuantities[item._id] > 0 ? 'Add' : 'Sel'}
                             </button>
                           </div>
                         </div>
@@ -1177,7 +1213,7 @@ const NewOrder = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
