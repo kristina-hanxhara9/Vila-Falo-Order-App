@@ -736,7 +736,7 @@ const NewOrder = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Menu Items */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 order-2 lg:order-1">
           <div className="bg-white rounded-lg shadow mb-6">
             <div className="px-6 py-4 border-b">
               <h2 className="text-xl font-semibold">Menuja</h2>
@@ -744,19 +744,19 @@ const NewOrder = () => {
             
             <div className="p-6">
               {/* Mobile-Friendly Category Filter */}
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">📱 Zgjidhni Kategorinë</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="mb-4">
+                <h3 className="text-base font-semibold mb-3 text-gray-800">📱 Zgjidhni Kategorinë</h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   <button
-                    className={`flex items-center justify-center px-4 py-3 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg ${
+                    className={`flex items-center justify-center px-3 py-2 rounded-lg font-semibold transition-colors ${
                       selectedCategory === 'all'
-                        ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-xl'
-                        : 'bg-white border-2 border-indigo-200 text-indigo-600 hover:border-indigo-400'
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-white border border-indigo-200 text-indigo-600 hover:border-indigo-400'
                     }`}
                     onClick={() => setSelectedCategory('all')}
                   >
-                    <span className="text-xl mr-2">🍽️</span>
-                    <span className="text-sm font-bold">Të Gjitha</span>
+                    <span className="text-sm mr-1">🍽️</span>
+                    <span className="text-xs font-semibold">Të Gjitha</span>
                   </button>
                   
                   {categories.map(category => {
@@ -766,29 +766,29 @@ const NewOrder = () => {
                     switch(category) {
                       case 'food':
                         bgClass = isActive 
-                          ? 'bg-gradient-to-r from-emerald-500 to-green-600 text-white shadow-xl' 
-                          : 'bg-white border-2 border-emerald-200 text-emerald-600 hover:border-emerald-400';
+                          ? 'bg-green-600 text-white' 
+                          : 'bg-white border border-green-200 text-green-600 hover:border-green-400';
                         icon = '🍴';
                         name = 'Ushqime';
                         break;
                       case 'drink':
                         bgClass = isActive 
-                          ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-xl' 
-                          : 'bg-white border-2 border-blue-200 text-blue-600 hover:border-blue-400';
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-white border border-blue-200 text-blue-600 hover:border-blue-400';
                         icon = '🍹';
                         name = 'Pije';
                         break;
                       case 'dessert':
                         bgClass = isActive 
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-xl' 
-                          : 'bg-white border-2 border-amber-200 text-amber-600 hover:border-amber-400';
+                          ? 'bg-yellow-600 text-white' 
+                          : 'bg-white border border-yellow-200 text-yellow-600 hover:border-yellow-400';
                         icon = '🍰';
                         name = 'Ëmbëlsira';
                         break;
                       default:
                         bgClass = isActive 
-                          ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-xl' 
-                          : 'bg-white border-2 border-gray-200 text-gray-600 hover:border-gray-400';
+                          ? 'bg-gray-600 text-white' 
+                          : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-400';
                         icon = '🍽️';
                         name = category;
                     }
@@ -796,28 +796,28 @@ const NewOrder = () => {
                     return (
                       <button
                         key={category}
-                        className={`flex items-center justify-center px-4 py-3 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-1 shadow-lg ${bgClass}`}
+                        className={`flex items-center justify-center px-3 py-2 rounded-lg font-semibold transition-colors ${bgClass}`}
                         onClick={() => setSelectedCategory(category)}
                       >
-                        <span className="text-xl mr-2">{icon}</span>
-                        <span className="text-sm font-bold">{name}</span>
+                        <span className="text-sm mr-1">{icon}</span>
+                        <span className="text-xs font-semibold">{name}</span>
                       </button>
                     );
                   })}
                 </div>
               </div>
               
-              {/* Menu Items */}
+              {/* Menu Items - Mobile Optimized */}
               {menuItems.length === 0 ? (
-                <div className="text-center py-8">
+                <div className="text-center py-4">
                   <p className="text-gray-500">Duke ngarkuar artikujt e menusë...</p>
                 </div>
               ) : filteredMenuItems.length === 0 ? (
-                <div className="text-center py-8">
+                <div className="text-center py-4">
                   <p className="text-gray-500">Nuk u gjetën artikuj në këtë kategori</p>
                 </div>
               ) : (
-                <div className="grid gap-4">
+                <div className="space-y-2">
                   {filteredMenuItems.map(item => {
                     const categoryIcon = {
                       'food': '🍴',
@@ -826,78 +826,62 @@ const NewOrder = () => {
                     }[item.category] || '🍽️';
                     
                     const categoryColor = {
-                      'food': 'border-emerald-300 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100',
-                      'drink': 'border-blue-300 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100',
-                      'dessert': 'border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100'
-                    }[item.category] || 'border-gray-200 bg-gray-50';
+                      'food': 'border-l-4 border-green-500 bg-white',
+                      'drink': 'border-l-4 border-blue-500 bg-white',
+                      'dessert': 'border-l-4 border-yellow-500 bg-white'
+                    }[item.category] || 'border-l-4 border-gray-400 bg-white';
                     
                     return (
                       <div
                         key={item._id}
-                        className={`border-2 rounded-2xl p-4 ${categoryColor} transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1`}
+                        className={`${categoryColor} rounded-lg shadow-sm hover:shadow-md transition-shadow p-3`}
                       >
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex-1">
-                            <div className="flex items-center mb-2">
-                              <span className="text-3xl mr-3">{categoryIcon}</span>
-                              <div>
-                                <h3 className="font-bold text-gray-900 text-xl mb-1">{item.albanianName}</h3>
-                                {item.description && (
-                                  <p className="text-sm text-gray-600 italic">{item.description}</p>
-                                )}
-                              </div>
+                        {/* Compact inline layout */}
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center flex-1">
+                            <span className="text-lg mr-2">{categoryIcon}</span>
+                            <div className="flex-1">
+                              <h3 className="font-bold text-gray-900 text-sm leading-tight">{item.albanianName}</h3>
                             </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-2xl font-bold text-gray-900 bg-white px-3 py-1 rounded-xl shadow-sm">
-                              {item.price.toLocaleString()} LEK
+                            <div className="text-right ml-2">
+                              <span className="font-bold text-gray-900 text-sm">{item.price.toLocaleString()} LEK</span>
                             </div>
                           </div>
                         </div>
                         
-                        {/* Quantity Controls and Add Button */}
-                        <div className="flex items-center justify-between space-x-4">
-                          {/* Quantity Controls */}
-                          <div className="flex items-center space-x-3">
+                        {/* Mobile-friendly controls */}
+                        <div className="flex items-center justify-between">
+                          {/* Quantity Controls - Smaller and clearer */}
+                          <div className="flex items-center space-x-2">
                             <button
-                              className="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-2xl font-bold text-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
+                              className="w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-lg flex items-center justify-center shadow-md transition-colors disabled:opacity-50 disabled:bg-gray-400"
                               onClick={() => handleQuantityChange(item._id, -1)}
                               disabled={itemQuantities[item._id] <= 0}
                             >
                               −
                             </button>
-                            <div className="w-16 h-12 bg-white border-2 border-gray-300 rounded-2xl flex items-center justify-center shadow-inner">
-                              <span className="text-xl font-bold text-gray-900">{itemQuantities[item._id] || 0}</span>
+                            <div className="w-10 h-8 bg-gray-100 border border-gray-300 rounded-lg flex items-center justify-center">
+                              <span className="text-sm font-bold text-gray-900">{itemQuantities[item._id] || 0}</span>
                             </div>
                             <button
-                              className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-2xl font-bold text-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                              className="w-8 h-8 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold text-lg flex items-center justify-center shadow-md transition-colors"
                               onClick={() => handleQuantityChange(item._id, 1)}
                             >
                               +
                             </button>
                           </div>
                           
-                          {/* Add to Order Button */}
+                          {/* Add to Order Button - Compact */}
                           <button
-                            className={`flex-1 max-w-sm px-6 py-3 rounded-2xl font-bold text-base transition-all duration-300 transform shadow-lg hover:shadow-xl ${
+                            className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ml-3 ${
                               itemQuantities[item._id] > 0
-                                ? 'bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white hover:-translate-y-1 hover:scale-105'
-                                : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600 cursor-not-allowed'
+                                ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md'
+                                : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                             }`}
                             onClick={() => addItemToOrder(item)}
                             disabled={itemQuantities[item._id] <= 0}
                           >
-                            {itemQuantities[item._id] > 0 ? (
-                              <>
-                                <span className="mr-2">🛒</span>
-                                Shto në Porosi
-                              </>
-                            ) : (
-                              <>
-                                <span className="mr-2">🤏</span>
-                                Zgjidhni Sasinë
-                              </>
-                            )}
+                            {itemQuantities[item._id] > 0 ? 'Shto' : 'Zgjedh'}
                           </button>
                         </div>
                       </div>
@@ -982,9 +966,9 @@ const NewOrder = () => {
           </div>
         </div>
         
-        {/* Order Summary */}
-        <div className="lg:col-span-1">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 rounded-2xl shadow-xl sticky top-6">
+        {/* Order Summary - Fixed position on mobile */}
+        <div className="lg:col-span-1 order-1 lg:order-2">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 rounded-lg shadow-xl lg:sticky lg:top-6">
             <div className="px-6 py-4 border-b border-blue-200">
               <h2 className="text-xl font-semibold text-blue-900 flex items-center">
                 <span className="mr-2">🧾</span>
@@ -994,71 +978,67 @@ const NewOrder = () => {
             
             <div className="p-6">
               {orderItems.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">Nuk ka artikuj në porosi</p>
-                  <p className="text-sm text-gray-400 mt-2">
+                <div className="text-center py-4">
+                  <p className="text-gray-500 text-sm">Nuk ka artikuj në porosi</p>
+                  <p className="text-xs text-gray-400 mt-1">
                     Zgjidhni sasinë dhe shtoni artikujt nga menuja
                   </p>
                 </div>
               ) : (
-                <div className="mb-6">
+                <div className="mb-4 space-y-2">
                   {orderItems.map((item, index) => (
-                    <div key={index} className="border-b py-3 last:border-b-0">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <div className="font-medium">{item.name}</div>
-                          <div className="text-sm text-gray-600">
+                    <div key={index} className="border-b pb-2 last:border-b-0">
+                      <div className="flex justify-between items-center">
+                        <div className="flex-1">
+                          <div className="font-medium text-sm">{item.name}</div>
+                          <div className="text-xs text-gray-600">
                             {item.price.toLocaleString()} LEK x {item.quantity}
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="font-semibold">
+                        <div className="text-right ml-2">
+                          <div className="font-semibold text-sm">
                             {(item.price * item.quantity).toLocaleString()} LEK
                           </div>
-                          <div className="text-sm">
-                            <button
-                              className="text-red-600 hover:text-red-800"
-                              onClick={() => removeItemFromOrder(index)}
-                            >
-                              Hiq
-                            </button>
-                          </div>
+                          <button
+                            className="text-xs text-red-600 hover:text-red-800"
+                            onClick={() => removeItemFromOrder(index)}
+                          >
+                            Hiq
+                          </button>
                         </div>
                       </div>
                       
-                      {/* Improved order item controls in summary section */}
-                      <div className="mt-2 flex items-center">
-                        <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
+                      {/* Compact order item controls */}
+                      <div className="mt-1 flex items-center space-x-2">
+                        <div className="flex items-center border rounded overflow-hidden">
                           <button
-                            className="px-2 py-1 border-r bg-gray-100 hover:bg-gray-200"
+                            className="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-xs"
                             onClick={() => updateItemQuantity(index, item.quantity - 1)}
                           >
                             -
                           </button>
                           <input
                             type="number"
-                            className="w-10 text-center border-0"
+                            className="w-8 text-center border-0 text-xs"
                             value={item.quantity}
                             onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 1)}
                             min="1"
                           />
                           <button
-                            className="px-2 py-1 border-l bg-gray-100 hover:bg-gray-200"
+                            className="px-2 py-1 bg-gray-100 hover:bg-gray-200 text-xs"
                             onClick={() => updateItemQuantity(index, item.quantity + 1)}
                           >
                             +
                           </button>
                         </div>
                         
-                        <div className="ml-3 flex-grow">
-                          <input
-                            type="text"
-                            className="input w-full text-sm"
-                            placeholder="Shënime"
-                            value={item.notes}
-                            onChange={(e) => updateItemNotes(index, e.target.value)}
-                          />
-                        </div>
+                        <input
+                          type="text"
+                          className="flex-1 px-2 py-1 border rounded text-xs"
+                          placeholder="Shënime"
+                          value={item.notes}
+                          onChange={(e) => updateItemNotes(index, e.target.value)}
+                        />
                       </div>
                     </div>
                   ))}
@@ -1071,15 +1051,15 @@ const NewOrder = () => {
                   <span>{calculateTotal().toLocaleString()} LEK</span>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-3">
                   <button
-                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md"
                     onClick={submitOrder}
                     disabled={orderItems.length === 0 || submitting || (!tableId && !selectedTableId)}
                   >
                     {submitting ? (
                       <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -1095,13 +1075,13 @@ const NewOrder = () => {
                   
                   {/* Print Bill Button */}
                   <button
-                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md"
                     onClick={handlePrintBill}
                     disabled={orderItems.length === 0 || isPrinting}
                   >
                     {isPrinting ? (
                       <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
