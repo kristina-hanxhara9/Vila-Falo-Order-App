@@ -123,16 +123,59 @@ export const PWAInstallPrompt = () => {
   }, [showPrompt]);
 
   const handleInstall = async () => {
+    console.log('🚀 Install button clicked');
+    
     if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`Install ${outcome}`);
-      setDeferredPrompt(null);
+      try {
+        // Show the browser's install prompt
+        console.log('📱 Showing browser install prompt...');
+        deferredPrompt.prompt();
+        
+        // Wait for the user's response
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`🎯 User choice: ${outcome}`);
+        
+        if (outcome === 'accepted') {
+          console.log('✅ User accepted the install prompt');
+          setDeferredPrompt(null);
+        } else {
+          console.log('❌ User dismissed the install prompt');
+        }
+      } catch (error) {
+        console.error('❌ Install prompt error:', error);
+        showFallbackInstructions();
+      }
     } else {
-      // Fallback instructions
-      alert('To install Vila Falo app:\n\n📱 Mobile: Use "Add to Home Screen" from browser menu\n💻 Desktop: Look for install icon in address bar');
+      console.log('⚠️ No deferred prompt available, showing manual instructions');
+      showFallbackInstructions();
     }
+    
     setShowPrompt(false);
+  };
+  
+  const showFallbackInstructions = () => {
+    const isChrome = navigator.userAgent.includes('Chrome');
+    const isEdge = navigator.userAgent.includes('Edge');
+    const isSafari = navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome');
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    let instructions = 'To install Vila Falo app:';
+    
+    if (isChrome && !isMobile) {
+      instructions += '\n\n🖥️ Chrome Desktop:\n• Look for ⊕ icon in address bar\n• Or: Menu (⋮) → "Install Vila Falo"';
+    } else if (isChrome && isMobile) {
+      instructions += '\n\n📱 Chrome Mobile:\n• Menu (⋮) → "Add to Home Screen"\n• Or: "Install App" if available';
+    } else if (isEdge) {
+      instructions += '\n\n🖥️ Edge:\n• Look for ⊕ icon in address bar\n• Or: Menu (⋯) → "Apps" → "Install this site"';
+    } else if (isSafari) {
+      instructions += '\n\n📱 Safari iOS:\n• Tap Share button (📤)\n• Select "Add to Home Screen"\n• Tap "Add"';
+    } else {
+      instructions += '\n\n🌐 Your Browser:\n• Look for install icon in address bar\n• Or check browser menu for "Install" or "Add to Home Screen"';
+    }
+    
+    instructions += '\n\n💡 Tip: The app icon will appear on your home screen/desktop!';
+    
+    alert(instructions);
   };
 
   if (!showPrompt) return null;
