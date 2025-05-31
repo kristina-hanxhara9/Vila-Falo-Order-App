@@ -1,0 +1,436 @@
+/* 
+ * 🎨 VILA FALO ORDER PAGE ENHANCEMENTS 🎨
+ * Colorful, modern styling for the waiter order page
+ * Enhanced gradients, animations, and mobile-first design
+ */
+
+/* 🎯 Enhanced Menu Item Cards */
+.menu-item-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-width: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-item-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.menu-item-card:hover::before {
+  left: 100%;
+}
+
+/* 🌈 Enhanced Category Button Styles */
+.category-button {
+  position: relative;
+  overflow: hidden;
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+
+.category-button::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, currentColor, transparent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.3s ease-out;
+}
+
+.category-button:hover::before {
+  transform: scaleX(1);
+}
+
+/* 🎨 Gradient Backgrounds for Categories */
+.category-food {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
+  border-color: #34d399;
+}
+
+.category-food:hover {
+  background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 50%, #34d399 100%);
+  transform: translateY(-2px);
+}
+
+.category-drink {
+  background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 50%, #60a5fa 100%);
+  border-color: #3b82f6;
+}
+
+.category-drink:hover {
+  background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 50%, #2563eb 100%);
+  transform: translateY(-2px);
+}
+
+.category-dessert {
+  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 50%, #fb923c 100%);
+  border-color: #f97316;
+}
+
+.category-dessert:hover {
+  background: linear-gradient(135deg, #fdba74 0%, #fb923c 50%, #ea580c 100%);
+  transform: translateY(-2px);
+}
+
+/* 🎯 Enhanced Quantity Controls */
+.quantity-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quantity-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.quantity-button:active::after {
+  width: 200%;
+  height: 200%;
+}
+
+/* 🌟 Enhanced Gradient Buttons */
+.gradient-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gradient-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.gradient-button:hover::before {
+  left: 100%;
+}
+
+/* 🎨 Food Item Category Indicators */
+.food-category-mishrat {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-left: 4px solid #dc2626;
+}
+
+.food-category-lakror {
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  border-left: 4px solid #7c3aed;
+}
+
+.food-category-patate {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-left: 4px solid #f59e0b;
+}
+
+.food-category-sallat {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  border-left: 4px solid #16a34a;
+}
+
+.food-category-salce {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border-left: 4px solid #0284c7;
+}
+
+.food-category-djath {
+  background: linear-gradient(135deg, #fef7cd 0%, #fef08a 100%);
+  border-left: 4px solid #ca8a04;
+}
+
+/* 🎯 Price Display Enhancement */
+.price-tag {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.price-tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* 🎨 Order Summary Enhancements */
+.order-summary {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
+  border: 2px solid #3b82f6;
+  position: relative;
+  overflow: hidden;
+}
+
+.order-summary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(59, 130, 246, 0.1) 60deg, transparent 120deg);
+  animation: rotate 10s linear infinite;
+  z-index: 0;
+}
+
+.order-summary > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 🌟 Custom Item Section */
+.custom-item-section {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
+  border: 2px solid #0ea5e9;
+  position: relative;
+}
+
+.custom-item-section::after {
+  content: '✨';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* 🎯 Enhanced Button Animations */
+.btn-enhance {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-enhance:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.btn-enhance:active {
+  transform: translateY(-1px);
+  transition: all 0.1s;
+}
+
+/* 🎨 Loading States */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* 🎯 Mobile Optimizations */
+@media (max-width: 768px) {
+  .menu-item-card {
+    padding: 1rem;
+  }
+  
+  .quantity-button {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+  
+  .price-tag {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .category-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* 🎨 Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  .menu-item-card,
+  .quantity-button,
+  .gradient-button,
+  .btn-enhance {
+    animation: none;
+    transition: none;
+  }
+  
+  .menu-item-card::before,
+  .quantity-button::after,
+  .gradient-button::before {
+    display: none;
+  }
+  
+  .order-summary::before {
+    animation: none;
+  }
+}
+
+/* 🎯 Dark Mode Support (Future Enhancement) */
+@media (prefers-color-scheme: dark) {
+  .menu-item-card {
+    background: rgba(31, 41, 55, 0.8);
+    border-color: rgb(75, 85, 99);
+  }
+  
+  .price-tag {
+    background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+    border-color: #6b7280;
+    color: #f9fafb;
+  }
+  
+  .order-summary {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #4b5563 100%);
+    border-color: #6b7280;
+  }
+}
+
+/* 🎨 Enhanced Focus States */
+.enhanced-focus:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3), 0 0 0 6px rgba(59, 130, 246, 0.1);
+  transform: scale(1.02);
+}
+
+/* 🎯 Success Animations */
+.success-bounce {
+  animation: successBounce 0.6s ease-out;
+}
+
+@keyframes successBounce {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.1); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* 🌟 Error State Animations */
+.error-shake {
+  animation: errorShake 0.5s ease-in-out;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* 🎨 Floating Action Styles */
+.floating-action {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.floating-action:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
+}
+
+/* 🎯 Category-specific hover effects */
+.category-food:hover {
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+}
+
+.category-drink:hover {
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+}
+
+.category-dessert:hover {
+  box-shadow: 0 10px 25px rgba(251, 146, 60, 0.3);
+}
+
+/* 🌈 Rainbow border animation for special items */
+.rainbow-border {
+  border-image: linear-gradient(45deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff0080, #ff0000) 1;
+  animation: rainbow-rotate 3s linear infinite;
+}
+
+@keyframes rainbow-rotate {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* 🎯 Tooltip Enhancements */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
+/* 🎨 Enhanced scroll behavior */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.smooth-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.smooth-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.smooth-scroll::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 4px;
+}
+
+.smooth-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}

@@ -210,6 +210,46 @@ const NewOrder = () => {
     };
   }, []);
   
+  // Custom sorting function for food items
+  const getFoodSortOrder = (itemName) => {
+    const name = itemName.toLowerCase();
+    
+    // Mishrat (Meats) - priority 1
+    if (name.includes('mish') || name.includes('biftek') || name.includes('qofta') || 
+        name.includes('suxhuk') || name.includes('proshut') || name.includes('viçin') || 
+        name.includes('derri') || name.includes('pule') || name.includes('gjel')) {
+      return 1;
+    }
+    
+    // Lakror - priority 2  
+    if (name.includes('lakror') || name.includes('byrek')) {
+      return 2;
+    }
+    
+    // Patate te skuqura - priority 3
+    if (name.includes('patate') && (name.includes('skuq') || name.includes('crispy') || name.includes('chips'))) {
+      return 3;
+    }
+    
+    // Sallatrat - priority 4
+    if (name.includes('sallat') || name.includes('salad')) {
+      return 4;
+    }
+    
+    // Salce - priority 5
+    if (name.includes('salc') || name.includes('sauce') || name.includes('krem')) {
+      return 5;
+    }
+    
+    // Djathrat - priority 6
+    if (name.includes('djath') || name.includes('cheese') || name.includes('kackavall')) {
+      return 6;
+    }
+    
+    // Other foods - priority 7
+    return 7;
+  };
+
   // Filter menu items by category
   const filteredMenuItems = React.useMemo(() => {
     console.log('Selected category:', selectedCategory);
@@ -228,10 +268,22 @@ const NewOrder = () => {
     
     console.log('Filtered items count:', filtered.length);
     
-    // Then sort by category in the preferred order
+    // Sort by category first, then by custom food order
     return filtered.sort((a, b) => {
-      const order = { 'food': 1, 'drink': 2, 'dessert': 3 };
-      return (order[a.category] || 99) - (order[b.category] || 99);
+      const categoryOrder = { 'food': 1, 'drink': 2, 'dessert': 3 };
+      const categoryDiff = (categoryOrder[a.category] || 99) - (categoryOrder[b.category] || 99);
+      
+      if (categoryDiff !== 0) {
+        return categoryDiff;
+      }
+      
+      // If same category and it's food, use custom food sorting
+      if (a.category === 'food') {
+        return getFoodSortOrder(a.albanianName) - getFoodSortOrder(b.albanianName);
+      }
+      
+      // For drinks and desserts, sort alphabetically
+      return a.albanianName.localeCompare(b.albanianName);
     });
   }, [menuItems, selectedCategory]);
   
@@ -774,64 +826,63 @@ const NewOrder = () => {
                     }[item.category] || '🍽️';
                     
                     const categoryColor = {
-                      'food': 'border-green-200 bg-green-50',
-                      'drink': 'border-blue-200 bg-blue-50',
-                      'dessert': 'border-orange-200 bg-orange-50'
+                      'food': 'border-emerald-300 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100',
+                      'drink': 'border-blue-300 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100',
+                      'dessert': 'border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100'
                     }[item.category] || 'border-gray-200 bg-gray-50';
                     
                     return (
                       <div
                         key={item._id}
-                        className={`menu-item-card ${categoryColor} transition-all duration-200`}
+                        className={`border-2 rounded-2xl p-4 ${categoryColor} transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1`}
                       >
-                        <div className="flex justify-between items-start mb-3">
+                        <div className="flex justify-between items-start mb-4">
                           <div className="flex-1">
                             <div className="flex items-center mb-2">
-                              <span className="text-2xl mr-2">{categoryIcon}</span>
+                              <span className="text-3xl mr-3">{categoryIcon}</span>
                               <div>
-                                <h3 className="font-bold text-gray-800 text-lg">{item.albanianName}</h3>
-                                <div className="inline-flex items-center px-2 py-1 bg-white rounded-full text-xs font-medium text-gray-600">
-                                  {getCategoryName(item.category)}
-                                </div>
+                                <h3 className="font-bold text-gray-900 text-xl mb-1">{item.albanianName}</h3>
+                                {item.description && (
+                                  <p className="text-sm text-gray-600 italic">{item.description}</p>
+                                )}
                               </div>
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-xl font-bold text-gray-800">
+                            <div className="text-2xl font-bold text-gray-900 bg-white px-3 py-1 rounded-xl shadow-sm">
                               {item.price.toLocaleString()} LEK
                             </div>
-                            <div className="text-sm text-gray-500">Çmimi</div>
                           </div>
                         </div>
                         
-                        {/* Mobile-First Quantity Controls - One Line Layout */}
-                        <div className="flex items-center justify-between space-x-3">
-                          {/* Quantity Controls - Compact */}
-                          <div className="flex items-center space-x-2">
+                        {/* Quantity Controls and Add Button */}
+                        <div className="flex items-center justify-between space-x-4">
+                          {/* Quantity Controls */}
+                          <div className="flex items-center space-x-3">
                             <button
-                              className="w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold text-lg flex items-center justify-center transition-all duration-200 shadow-lg"
+                              className="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-2xl font-bold text-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:transform-none"
                               onClick={() => handleQuantityChange(item._id, -1)}
                               disabled={itemQuantities[item._id] <= 0}
                             >
                               −
                             </button>
-                            <div className="w-12 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
-                              <span className="text-lg font-bold text-gray-800">{itemQuantities[item._id] || 0}</span>
+                            <div className="w-16 h-12 bg-white border-2 border-gray-300 rounded-2xl flex items-center justify-center shadow-inner">
+                              <span className="text-xl font-bold text-gray-900">{itemQuantities[item._id] || 0}</span>
                             </div>
                             <button
-                              className="w-10 h-10 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-lg flex items-center justify-center transition-all duration-200 shadow-lg"
+                              className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-2xl font-bold text-xl flex items-center justify-center transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                               onClick={() => handleQuantityChange(item._id, 1)}
                             >
                               +
                             </button>
                           </div>
                           
-                          {/* Add to Order Button - Prominent */}
+                          {/* Add to Order Button */}
                           <button
-                            className={`flex-1 max-w-xs px-4 py-3 rounded-2xl font-bold text-sm transition-all duration-300 transform shadow-lg ${
+                            className={`flex-1 max-w-sm px-6 py-3 rounded-2xl font-bold text-base transition-all duration-300 transform shadow-lg hover:shadow-xl ${
                               itemQuantities[item._id] > 0
-                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:-translate-y-1 shadow-xl'
-                                : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                ? 'bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white hover:-translate-y-1 hover:scale-105'
+                                : 'bg-gradient-to-r from-gray-300 to-gray-400 text-gray-600 cursor-not-allowed'
                             }`}
                             onClick={() => addItemToOrder(item)}
                             disabled={itemQuantities[item._id] <= 0}
@@ -843,7 +894,7 @@ const NewOrder = () => {
                               </>
                             ) : (
                               <>
-                                <span className="mr-2">📝</span>
+                                <span className="mr-2">🤏</span>
                                 Zgjidhni Sasinë
                               </>
                             )}
@@ -858,20 +909,26 @@ const NewOrder = () => {
           </div>
           
           {/* Custom Item */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-xl font-semibold">Artikull i Personalizuar</h2>
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl shadow-lg">
+            <div className="px-6 py-4 border-b border-indigo-200">
+              <h2 className="text-xl font-semibold text-indigo-900 flex items-center">
+                <span className="mr-2">✨</span>
+                Artikull i Personalizuar
+              </h2>
             </div>
             
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Emri
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <span className="flex items-center">
+                      <span className="mr-2">📝</span>
+                      Emri
+                    </span>
                   </label>
                   <input
                     type="text"
-                    className="input w-full"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
                     placeholder="Emri i artikullit"
                     value={customItem.name}
                     onChange={(e) => setCustomItem({ ...customItem, name: e.target.value })}
@@ -879,12 +936,15 @@ const NewOrder = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Çmimi (LEK)
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <span className="flex items-center">
+                      <span className="mr-2">💰</span>
+                      Çmimi (LEK)
+                    </span>
                   </label>
                   <input
                     type="number"
-                    className="input w-full"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
                     placeholder="Çmimi"
                     value={customItem.price}
                     onChange={(e) => setCustomItem({ ...customItem, price: e.target.value })}
@@ -893,12 +953,15 @@ const NewOrder = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Sasia
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <span className="flex items-center">
+                      <span className="mr-2">🔢</span>
+                      Sasia
+                    </span>
                   </label>
                   <input
                     type="number"
-                    className="input w-full"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
                     value={customItem.quantity}
                     onChange={(e) => setCustomItem({ ...customItem, quantity: parseInt(e.target.value) || 1 })}
                     min="1"
@@ -906,12 +969,13 @@ const NewOrder = () => {
                 </div>
               </div>
               
-              <div className="mt-4">
+              <div className="mt-6">
                 <button
-                  className="btn btn-primary w-full"
+                  className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex items-center justify-center"
                   onClick={addCustomItem}
                 >
-                  Shto Artikull
+                  <span className="mr-2">➕</span>
+                  Shto Artikull të Personalizuar
                 </button>
               </div>
             </div>
@@ -920,9 +984,12 @@ const NewOrder = () => {
         
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow sticky top-6">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-xl font-semibold">Përmbledhja e Porosisë</h2>
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 rounded-2xl shadow-xl sticky top-6">
+            <div className="px-6 py-4 border-b border-blue-200">
+              <h2 className="text-xl font-semibold text-blue-900 flex items-center">
+                <span className="mr-2">🧾</span>
+                Përmbledhja e Porosisë
+              </h2>
             </div>
             
             <div className="p-6">
@@ -1004,9 +1071,9 @@ const NewOrder = () => {
                   <span>{calculateTotal().toLocaleString()} LEK</span>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-4">
                   <button
-                    className="btn btn-primary w-full"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center"
                     onClick={submitOrder}
                     disabled={orderItems.length === 0 || submitting || (!tableId && !selectedTableId)}
                   >
@@ -1019,13 +1086,16 @@ const NewOrder = () => {
                         Duke dërguar...
                       </span>
                     ) : (
-                      'Dërgo Porosinë'
+                      <>
+                        <span className="mr-2">🚀</span>
+                        Dërgo Porosinë
+                      </>
                     )}
                   </button>
                   
                   {/* Print Bill Button */}
                   <button
-                    className="btn bg-green-600 hover:bg-green-700 text-white w-full flex items-center justify-center"
+                    className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center"
                     onClick={handlePrintBill}
                     disabled={orderItems.length === 0 || isPrinting}
                   >
@@ -1039,9 +1109,7 @@ const NewOrder = () => {
                       </span>
                     ) : (
                       <>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" clipRule="evenodd" />
-                        </svg>
+                        <span className="mr-2">🖨️</span>
                         Printo Faturën
                       </>
                     )}

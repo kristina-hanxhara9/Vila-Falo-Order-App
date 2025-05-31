@@ -6,6 +6,7 @@
 @import './styles/vila-css-overrides.css';
 @import './styles/global-button-fixes.css';
 @import './styles/kitchen-button-fixes.css';
+@import './styles/vila-order-page-enhancements.css';
 
 /* Reset and Base Styles */
 * {
