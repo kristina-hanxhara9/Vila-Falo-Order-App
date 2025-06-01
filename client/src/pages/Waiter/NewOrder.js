@@ -675,540 +675,541 @@ const NewOrder = () => {
         `}
       </style>
       <div className="container mx-auto px-4 py-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div>
-          <div className="flex items-center mb-2">
-            {tableId ? (
-              <Link to={`/waiter/table/${tableId}`} className="text-blue-600 hover:text-blue-800">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 inline" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                </svg>
-                Kthehu te Tavolina
-              </Link>
-            ) : (
-              <Link to="/waiter" className="text-blue-600 hover:text-blue-800">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 inline" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                </svg>
-                Kthehu
-              </Link>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+          <div>
+            <div className="flex items-center mb-2">
+              {tableId ? (
+                <Link to={`/waiter/table/${tableId}`} className="text-blue-600 hover:text-blue-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 inline" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                  </svg>
+                  Kthehu te Tavolina
+                </Link>
+              ) : (
+                <Link to="/waiter" className="text-blue-600 hover:text-blue-800">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 inline" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                  </svg>
+                  Kthehu
+                </Link>
+              )}
+            </div>
+            <h1 className="text-2xl font-bold">
+              Porosi e Re {table && `- Tavolina ${table.number}`}
+            </h1>
+            <p className="text-gray-600">Kamarieri: {user?.name}</p>
+          </div>
+        </div>
+        
+        {success && (
+          <div className="alert alert-success" role="alert">
+            <div className="flex items-center">
+              <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <h4 className="font-semibold mb-1">Sukses!</h4>
+                <p>{success}</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            <div className="flex items-center">
+              <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <h4 className="font-semibold mb-1">Gabim!</h4>
+                <p>{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Table Selection (only if no tableId is provided) */}
+        {!tableId && (
+          <div className="bg-white rounded-lg shadow mb-6 p-6">
+            <h2 className="text-lg font-semibold mb-4">Zgjidhni Tavolinën</h2>
+            <select
+              className="input w-full mb-4"
+              value={selectedTableId}
+              onChange={handleTableChange}
+            >
+              <option value="">Zgjidhni një tavolinë</option>
+              {tables.map(table => (
+                <option key={table._id} value={table._id}>
+                  Tavolina {table.number} - {
+                    table.status === 'free' ? 'E lirë' :
+                    table.status === 'ordering' ? 'Duke porositur' :
+                    table.status === 'unpaid' ? 'E papaguar' : 'E paguar'
+                  }
+                </option>
+              ))}
+            </select>
+            
+            {table && (
+              <div className="p-3 bg-gray-50 rounded-md">
+                <p className="text-gray-700">
+                  <span className="font-medium">Tavolina {table.number}</span> - 
+                  <span className={`ml-2 px-2 py-1 rounded text-sm ${
+                    table.status === 'free' ? 'bg-green-100 text-green-800' :
+                    table.status === 'ordering' ? 'bg-yellow-100 text-yellow-800' :
+                    table.status === 'unpaid' ? 'bg-red-100 text-red-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {table.status === 'free' ? 'E lirë' :
+                     table.status === 'ordering' ? 'Duke porositur' :
+                     table.status === 'unpaid' ? 'E papaguar' : 'E paguar'}
+                  </span>
+                </p>
+              </div>
             )}
           </div>
-          <h1 className="text-2xl font-bold">
-            Porosi e Re {table && `- Tavolina ${table.number}`}
-          </h1>
-          <p className="text-gray-600">Kamarieri: {user?.name}</p>
-        </div>
-      </div>
-      
-      {success && (
-        <div className="alert alert-success" role="alert">
-          <div className="flex items-center">
-            <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <div>
-              <h4 className="font-semibold mb-1">Sukses!</h4>
-              <p>{success}</p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          <div className="flex items-center">
-            <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-            <div>
-              <h4 className="font-semibold mb-1">Gabim!</h4>
-              <p>{error}</p>
-            </div>
-          </div>
-        </div>
-      )}
-      
-      {/* Table Selection (only if no tableId is provided) */}
-      {!tableId && (
-        <div className="bg-white rounded-lg shadow mb-6 p-6">
-          <h2 className="text-lg font-semibold mb-4">Zgjidhni Tavolinën</h2>
-          <select
-            className="input w-full mb-4"
-            value={selectedTableId}
-            onChange={handleTableChange}
-          >
-            <option value="">Zgjidhni një tavolinë</option>
-            {tables.map(table => (
-              <option key={table._id} value={table._id}>
-                Tavolina {table.number} - {
-                  table.status === 'free' ? 'E lirë' :
-                  table.status === 'ordering' ? 'Duke porositur' :
-                  table.status === 'unpaid' ? 'E papaguar' : 'E paguar'
-                }
-              </option>
-            ))}
-          </select>
-          
-          {table && (
-            <div className="p-3 bg-gray-50 rounded-md">
-              <p className="text-gray-700">
-                <span className="font-medium">Tavolina {table.number}</span> - 
-                <span className={`ml-2 px-2 py-1 rounded text-sm ${
-                  table.status === 'free' ? 'bg-green-100 text-green-800' :
-                  table.status === 'ordering' ? 'bg-yellow-100 text-yellow-800' :
-                  table.status === 'unpaid' ? 'bg-red-100 text-red-800' :
-                  'bg-blue-100 text-blue-800'
-                }`}>
-                  {table.status === 'free' ? 'E lirë' :
-                   table.status === 'ordering' ? 'Duke porositur' :
-                   table.status === 'unpaid' ? 'E papaguar' : 'E paguar'}
-                </span>
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Menu Items */}
-        <div className="lg:col-span-2 order-2 lg:order-1">
-          <div className="bg-white rounded-lg shadow mb-6">
-            <div className="px-6 py-4 border-b">
-              <h2 className="text-xl font-semibold">Menuja</h2>
-            </div>
-            
-            <div className="p-6">
-              {/* Mobile-Friendly Category Filter */}
-              <div className="mb-3">
-                <h3 className="text-sm font-medium mb-2 text-gray-800">📱 Zgjidhni Kategorinë</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
-                  <button
-                    className={`flex items-center justify-center rounded font-medium transition-colors ${
-                      selectedCategory === 'all'
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-white border border-indigo-200 text-indigo-600 hover:border-indigo-400'
-                    }`}
-                    onClick={() => setSelectedCategory('all')}
-                    style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
-                  >
-                    <span className="mr-1" style={{fontSize: '8px !important'}}>🍽️</span>
-                    <span>Të Gjitha</span>
-                  </button>
-                  
-                  {categories.map(category => {
-                    const isActive = selectedCategory === category;
-                    let bgClass, icon, name;
-                    
-                    switch(category) {
-                      case 'food':
-                        bgClass = isActive 
-                          ? 'bg-green-600 text-white' 
-                          : 'bg-white border border-green-200 text-green-600 hover:border-green-400';
-                        icon = '🍴';
-                        name = 'Ushqime';
-                        break;
-                      case 'drink':
-                        bgClass = isActive 
-                          ? 'bg-blue-600 text-white' 
-                          : 'bg-white border border-blue-200 text-blue-600 hover:border-blue-400';
-                        icon = '🍹';
-                        name = 'Pije';
-                        break;
-                      case 'dessert':
-                        bgClass = isActive 
-                          ? 'bg-yellow-600 text-white' 
-                          : 'bg-white border border-yellow-200 text-yellow-600 hover:border-yellow-400';
-                        icon = '🍰';
-                        name = 'Ëmbëlsira';
-                        break;
-                      default:
-                        bgClass = isActive 
-                          ? 'bg-gray-600 text-white' 
-                          : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-400';
-                        icon = '🍽️';
-                        name = category;
-                    }
-                    
-                    return (
-                      <button
-                        key={category}
-                        className={`flex items-center justify-center rounded font-medium transition-colors ${bgClass}`}
-                        onClick={() => setSelectedCategory(category)}
-                        style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
-                      >
-                        <span className="mr-1" style={{fontSize: '8px !important'}}>{icon}</span>
-                        <span>{name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+        )}
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Menu Items */}
+          <div className="lg:col-span-2 order-2 lg:order-1">
+            <div className="bg-white rounded-lg shadow mb-6">
+              <div className="px-6 py-4 border-b">
+                <h2 className="text-xl font-semibold">Menuja</h2>
               </div>
               
-              {/* Menu Items - Mobile Optimized */}
-              {menuItems.length === 0 ? (
-                <div className="text-center py-4">
-                  <p className="text-gray-500">Duke ngarkuar artikujt e menusë...</p>
-                </div>
-              ) : filteredMenuItems.length === 0 ? (
-                <div className="text-center py-4">
-                  <p className="text-gray-500">Nuk u gjetën artikuj në këtë kategori</p>
-                </div>
-              ) : (
-                <div className="space-y-1">
-                  {filteredMenuItems.map(item => {
-                    const categoryIcon = {
-                      'food': '🍴',
-                      'drink': '🍹',
-                      'dessert': '🍰'
-                    }[item.category] || '🍽️';
+              <div className="p-6">
+                {/* Mobile-Friendly Category Filter */}
+                <div className="mb-3">
+                  <h3 className="text-sm font-medium mb-2 text-gray-800">📱 Zgjidhni Kategorinë</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
+                    <button
+                      className={`flex items-center justify-center rounded font-medium transition-colors ${
+                        selectedCategory === 'all'
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-white border border-indigo-200 text-indigo-600 hover:border-indigo-400'
+                      }`}
+                      onClick={() => setSelectedCategory('all')}
+                      style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
+                    >
+                      <span className="mr-1" style={{fontSize: '8px !important'}}>🍽️</span>
+                      <span>Të Gjitha</span>
+                    </button>
                     
-                    const categoryColor = {
-                      'food': 'border-l-2 border-green-500 bg-white',
-                      'drink': 'border-l-2 border-blue-500 bg-white',
-                      'dessert': 'border-l-2 border-yellow-500 bg-white'
-                    }[item.category] || 'border-l-2 border-gray-400 bg-white';
-                    
-                    return (
-                      <div
-                        key={item._id}
-                        className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow menu-item-container`}
-                        style={{padding: '2px !important', fontSize: '6px !important', margin: '1px 0 !important', height: 'auto !important', minHeight: '16px !important'}}
-                      >
-                        {/* Ultra compact single line layout */}
-                        <div className="flex items-center justify-between" style={{minHeight: '14px', height: '14px !important'}}>
-                          <div className="flex items-center flex-1 min-w-0">
-                            <span className="mr-1" style={{fontSize: '8px !important', lineHeight: '1'}}>{categoryIcon}</span>
-                            <div className="flex-1 min-w-0 mr-2">
-                              <h3 className="font-medium text-gray-900 leading-tight truncate menu-item-name" style={{fontSize: '6px !important', lineHeight: '1 !important', fontWeight: '400 !important', margin: '0 !important', padding: '0 !important'}}>{item.albanianName}</h3>
+                    {categories.map(category => {
+                      const isActive = selectedCategory === category;
+                      let bgClass, icon, name;
+                      
+                      switch(category) {
+                        case 'food':
+                          bgClass = isActive 
+                            ? 'bg-green-600 text-white' 
+                            : 'bg-white border border-green-200 text-green-600 hover:border-green-400';
+                          icon = '🍴';
+                          name = 'Ushqime';
+                          break;
+                        case 'drink':
+                          bgClass = isActive 
+                            ? 'bg-blue-600 text-white' 
+                            : 'bg-white border border-blue-200 text-blue-600 hover:border-blue-400';
+                          icon = '🍹';
+                          name = 'Pije';
+                          break;
+                        case 'dessert':
+                          bgClass = isActive 
+                            ? 'bg-yellow-600 text-white' 
+                            : 'bg-white border border-yellow-200 text-yellow-600 hover:border-yellow-400';
+                          icon = '🍰';
+                          name = 'Ëmbëlsira';
+                          break;
+                        default:
+                          bgClass = isActive 
+                            ? 'bg-gray-600 text-white' 
+                            : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-400';
+                          icon = '🍽️';
+                          name = category;
+                      }
+                      
+                      return (
+                        <button
+                          key={category}
+                          className={`flex items-center justify-center rounded font-medium transition-colors ${bgClass}`}
+                          onClick={() => setSelectedCategory(category)}
+                          style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
+                        >
+                          <span className="mr-1" style={{fontSize: '8px !important'}}>{icon}</span>
+                          <span>{name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                {/* Menu Items - Mobile Optimized */}
+                {menuItems.length === 0 ? (
+                  <div className="text-center py-4">
+                    <p className="text-gray-500">Duke ngarkuar artikujt e menusë...</p>
+                  </div>
+                ) : filteredMenuItems.length === 0 ? (
+                  <div className="text-center py-4">
+                    <p className="text-gray-500">Nuk u gjetën artikuj në këtë kategori</p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    {filteredMenuItems.map(item => {
+                      const categoryIcon = {
+                        'food': '🍴',
+                        'drink': '🍹',
+                        'dessert': '🍰'
+                      }[item.category] || '🍽️';
+                      
+                      const categoryColor = {
+                        'food': 'border-l-2 border-green-500 bg-white',
+                        'drink': 'border-l-2 border-blue-500 bg-white',
+                        'dessert': 'border-l-2 border-yellow-500 bg-white'
+                      }[item.category] || 'border-l-2 border-gray-400 bg-white';
+                      
+                      return (
+                        <div
+                          key={item._id}
+                          className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow menu-item-container`}
+                          style={{padding: '2px !important', fontSize: '6px !important', margin: '1px 0 !important', height: 'auto !important', minHeight: '16px !important'}}
+                        >
+                          {/* Ultra compact single line layout */}
+                          <div className="flex items-center justify-between" style={{minHeight: '14px', height: '14px !important'}}>
+                            <div className="flex items-center flex-1 min-w-0">
+                              <span className="mr-1" style={{fontSize: '8px !important', lineHeight: '1'}}>{categoryIcon}</span>
+                              <div className="flex-1 min-w-0 mr-2">
+                                <h3 className="font-medium text-gray-900 leading-tight truncate menu-item-name" style={{fontSize: '6px !important', lineHeight: '1 !important', fontWeight: '400 !important', margin: '0 !important', padding: '0 !important'}}>{item.albanianName}</h3>
+                              </div>
+                              <div className="text-right mr-2 flex-shrink-0">
+                                <span className="font-semibold text-gray-900 menu-item-price" style={{fontSize: '6px !important', fontWeight: '500 !important', lineHeight: '1 !important'}}>{item.price.toLocaleString()}</span>
+                              </div>
                             </div>
-                            <div className="text-right mr-2 flex-shrink-0">
-                              <span className="font-semibold text-gray-900 menu-item-price" style={{fontSize: '6px !important', fontWeight: '500 !important', lineHeight: '1 !important'}}>{item.price.toLocaleString()}</span>
+                            
+                            {/* Ultra compact controls */}
+                            <div className="flex items-center flex-shrink-0" style={{gap: '2px'}}>
+                              {/* Quantity Controls */}
+                              <button
+                                className="bg-red-600 hover:bg-red-700 text-white rounded font-bold flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
+                                onClick={() => handleQuantityChange(item._id, -1)}
+                                disabled={itemQuantities[item._id] <= 0}
+                                style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
+                              >
+                                −
+                              </button>
+                              <div className="bg-gray-100 border border-gray-300 rounded flex items-center justify-center" style={{width: '16px', height: '12px'}}>
+                                <span className="font-semibold text-gray-900" style={{fontSize: '6px !important', lineHeight: '1'}}>{itemQuantities[item._id] || 0}</span>
+                              </div>
+                              <button
+                                className="bg-green-600 hover:bg-green-700 text-white rounded font-bold flex items-center justify-center transition-colors"
+                                onClick={() => handleQuantityChange(item._id, 1)}
+                                style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
+                              >
+                                +
+                              </button>
+                              
+                              {/* Add Button */}
+                              <button
+                                className={`rounded font-medium transition-all ${
+                                  itemQuantities[item._id] > 0
+                                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                    : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                }`}
+                                onClick={() => addItemToOrder(item)}
+                                disabled={itemQuantities[item._id] <= 0}
+                                style={{fontSize: '5px !important', padding: '1px 2px !important', lineHeight: '1 !important', height: '12px', margin: '0 !important'}}
+                              >
+                                {itemQuantities[item._id] > 0 ? 'Add' : 'Sel'}
+                              </button>
                             </div>
                           </div>
-                          
-                          {/* Ultra compact controls */}
-                          <div className="flex items-center flex-shrink-0" style={{gap: '2px'}}>
-                            {/* Quantity Controls */}
-                            <button
-                              className="bg-red-600 hover:bg-red-700 text-white rounded font-bold flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
-                              onClick={() => handleQuantityChange(item._id, -1)}
-                              disabled={itemQuantities[item._id] <= 0}
-                              style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
-                            >
-                              −
-                            </button>
-                            <div className="bg-gray-100 border border-gray-300 rounded flex items-center justify-center" style={{width: '16px', height: '12px'}}>
-                              <span className="font-semibold text-gray-900" style={{fontSize: '6px !important', lineHeight: '1'}}>{itemQuantities[item._id] || 0}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Custom Item */}
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl shadow-lg">
+              <div className="px-6 py-4 border-b border-indigo-200">
+                <h2 className="text-xl font-semibold text-indigo-900 flex items-center">
+                  <span className="mr-2">✨</span>
+                  Artikull i Personalizuar
+                </h2>
+              </div>
+              
+              <div className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <span className="flex items-center">
+                        <span className="mr-2">📝</span>
+                        Emri
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      placeholder="Emri i artikullit"
+                      value={customItem.name}
+                      onChange={(e) => setCustomItem({ ...customItem, name: e.target.value })}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <span className="flex items-center">
+                        <span className="mr-2">💰</span>
+                        Çmimi (LEK)
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      placeholder="Çmimi"
+                      value={customItem.price}
+                      onChange={(e) => setCustomItem({ ...customItem, price: e.target.value })}
+                      min="0"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <span className="flex items-center">
+                        <span className="mr-2">🔢</span>
+                        Sasia
+                      </span>
+                    </label>
+                    <input
+                      type="number"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                      value={customItem.quantity}
+                      onChange={(e) => setCustomItem({ ...customItem, quantity: parseInt(e.target.value) || 1 })}
+                      min="1"
+                    />
+                  </div>
+                </div>
+                
+                <div className="mt-6">
+                  <button
+                    className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex items-center justify-center"
+                    onClick={addCustomItem}
+                  >
+                    <span className="mr-2">➕</span>
+                    Shto Artikull të Personalizuar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Order Summary - Fixed position on mobile */}
+          <div className="lg:col-span-1 order-1 lg:order-2">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 rounded-lg shadow-xl lg:sticky lg:top-6">
+              <div className="px-4 py-3 border-b border-blue-200">
+                <h2 className="text-base font-semibold text-blue-900 flex items-center">
+                  <span className="mr-1 text-sm">🧾</span>
+                  Përmbledhja e Porosisë
+                </h2>
+              </div>
+              
+              <div className="p-4">
+                {orderItems.length === 0 ? (
+                  <div className="text-center py-3">
+                    <p className="text-gray-500 text-xs">Nuk ka artikuj në porosi</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Zgjidhni sasinë dhe shtoni artikujt
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mb-3 space-y-1">
+                    {orderItems.map((item, index) => (
+                      <div key={index} className="border-b pb-1 last:border-b-0">
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <div className="font-medium" style={{fontSize: '8px !important', lineHeight: '1.1'}}>{item.name}</div>
+                            <div className="text-gray-600" style={{fontSize: '7px !important', lineHeight: '1'}}>
+                              {item.price.toLocaleString()} LEK x {item.quantity}
+                            </div>
+                          </div>
+                          <div className="text-right ml-2">
+                            <div className="font-semibold" style={{fontSize: '8px !important', lineHeight: '1.1'}}>
+                              {(item.price * item.quantity).toLocaleString()} LEK
                             </div>
                             <button
-                              className="bg-green-600 hover:bg-green-700 text-white rounded font-bold flex items-center justify-center transition-colors"
-                              onClick={() => handleQuantityChange(item._id, 1)}
-                              style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
+                              className="text-red-600 hover:text-red-800"
+                              onClick={() => removeItemFromOrder(index)}
+                              style={{fontSize: '7px !important', lineHeight: '1'}}
                             >
-                              +
-                            </button>
-                            
-                            {/* Add Button */}
-                            <button
-                              className={`rounded font-medium transition-all ${
-                                itemQuantities[item._id] > 0
-                                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                                  : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                              }`}
-                              onClick={() => addItemToOrder(item)}
-                              disabled={itemQuantities[item._id] <= 0}
-                              style={{fontSize: '5px !important', padding: '1px 2px !important', lineHeight: '1 !important', height: '12px', margin: '0 !important'}}
-                            >
-                              {itemQuantities[item._id] > 0 ? 'Add' : 'Sel'}
+                              Hiq
                             </button>
                           </div>
                         </div>
+                        
+                        {/* Ultra compact order item controls */}
+                        <div className="mt-1 flex items-center space-x-1">
+                          <div className="flex items-center border rounded overflow-hidden" style={{height: '16px'}}>
+                            <button
+                              className="bg-gray-100 hover:bg-gray-200"
+                              onClick={() => updateItemQuantity(index, item.quantity - 1)}
+                              style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
+                            >
+                              -
+                            </button>
+                            <input
+                              type="number"
+                              className="text-center border-0"
+                              value={item.quantity}
+                              onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 1)}
+                              min="1"
+                              style={{fontSize: '7px !important', width: '20px', height: '16px', lineHeight: '1', padding: '0'}}
+                            />
+                            <button
+                              className="bg-gray-100 hover:bg-gray-200"
+                              onClick={() => updateItemQuantity(index, item.quantity + 1)}
+                              style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
+                            >
+                              +
+                            </button>
+                          </div>
+                          
+                          <input
+                            type="text"
+                            className="flex-1 border rounded"
+                            placeholder="Shënime"
+                            value={item.notes}
+                            onChange={(e) => updateItemNotes(index, e.target.value)}
+                            style={{fontSize: '7px !important', padding: '1px 2px', height: '16px', lineHeight: '1'}}
+                          />
+                        </div>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Custom Item */}
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-2xl shadow-lg">
-            <div className="px-6 py-4 border-b border-indigo-200">
-              <h2 className="text-xl font-semibold text-indigo-900 flex items-center">
-                <span className="mr-2">✨</span>
-                Artikull i Personalizuar
-              </h2>
-            </div>
-            
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <span className="flex items-center">
-                      <span className="mr-2">📝</span>
-                      Emri
-                    </span>
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                    placeholder="Emri i artikullit"
-                    value={customItem.name}
-                    onChange={(e) => setCustomItem({ ...customItem, name: e.target.value })}
-                  />
-                </div>
+                    ))}
+                  </div>
+                )}
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <span className="flex items-center">
-                      <span className="mr-2">💰</span>
-                      Çmimi (LEK)
-                    </span>
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                    placeholder="Çmimi"
-                    value={customItem.price}
-                    onChange={(e) => setCustomItem({ ...customItem, price: e.target.value })}
-                    min="0"
-                  />
+                <div className="border-t pt-3">
+                  <div className="flex justify-between items-center text-lg font-bold mb-3">
+                    <span>Total:</span>
+                    <span>{calculateTotal().toLocaleString()} LEK</span>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <button
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
+                      onClick={submitOrder}
+                      disabled={orderItems.length === 0 || submitting || (!tableId && !selectedTableId)}
+                    >
+                      {submitting ? (
+                        <span className="flex items-center justify-center">
+                          <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Duke dërguar...
+                        </span>
+                      ) : (
+                        <>
+                          <span className="mr-1 text-xs">🚀</span>
+                          Dërgo Porosinë
+                        </>
+                      )}
+                    </button>
+                    
+                    {/* Print Bill Button */}
+                    <button
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
+                      onClick={handlePrintBill}
+                      disabled={orderItems.length === 0 || isPrinting}
+                    >
+                      {isPrinting ? (
+                        <span className="flex items-center justify-center">
+                          <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Duke printuar...
+                        </span>
+                      ) : (
+                        <>
+                          <span className="mr-1 text-xs">🖨️</span>
+                          Printo Faturën
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    <span className="flex items-center">
-                      <span className="mr-2">🔢</span>
-                      Sasia
-                    </span>
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
-                    value={customItem.quantity}
-                    onChange={(e) => setCustomItem({ ...customItem, quantity: parseInt(e.target.value) || 1 })}
-                    min="1"
-                  />
-                </div>
-              </div>
-              
-              <div className="mt-6">
-                <button
-                  className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl flex items-center justify-center"
-                  onClick={addCustomItem}
-                >
-                  <span className="mr-2">➕</span>
-                  Shto Artikull të Personalizuar
-                </button>
               </div>
             </div>
           </div>
         </div>
         
-        {/* Order Summary - Fixed position on mobile */}
-        <div className="lg:col-span-1 order-1 lg:order-2">
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 rounded-lg shadow-xl lg:sticky lg:top-6">
-            <div className="px-4 py-3 border-b border-blue-200">
-              <h2 className="text-base font-semibold text-blue-900 flex items-center">
-                <span className="mr-1 text-sm">🧾</span>
-                Përmbledhja e Porosisë
-              </h2>
-            </div>
-            
-            <div className="p-4">
-              {orderItems.length === 0 ? (
-                <div className="text-center py-3">
-                  <p className="text-gray-500 text-xs">Nuk ka artikuj në porosi</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Zgjidhni sasinë dhe shtoni artikujt
-                  </p>
-                </div>
-              ) : (
-                <div className="mb-3 space-y-1">
-                  {orderItems.map((item, index) => (
-                    <div key={index} className="border-b pb-1 last:border-b-0">
-                      <div className="flex justify-between items-center">
-                        <div className="flex-1">
-                          <div className="font-medium" style={{fontSize: '8px !important', lineHeight: '1.1'}}>{item.name}</div>
-                          <div className="text-gray-600" style={{fontSize: '7px !important', lineHeight: '1'}}>
-                            {item.price.toLocaleString()} LEK x {item.quantity}
-                          </div>
-                        </div>
-                        <div className="text-right ml-2">
-                          <div className="font-semibold" style={{fontSize: '8px !important', lineHeight: '1.1'}}>
-                            {(item.price * item.quantity).toLocaleString()} LEK
-                          </div>
-                          <button
-                            className="text-red-600 hover:text-red-800"
-                            onClick={() => removeItemFromOrder(index)}
-                            style={{fontSize: '7px !important', lineHeight: '1'}}
-                          >
-                            Hiq
-                          </button>
-                        </div>
-                      </div>
-                      
-                      {/* Ultra compact order item controls */}
-                      <div className="mt-1 flex items-center space-x-1">
-                        <div className="flex items-center border rounded overflow-hidden" style={{height: '16px'}}>
-                          <button
-                            className="bg-gray-100 hover:bg-gray-200"
-                            onClick={() => updateItemQuantity(index, item.quantity - 1)}
-                            style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
-                          >
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            className="text-center border-0"
-                            value={item.quantity}
-                            onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 1)}
-                            min="1"
-                            style={{fontSize: '7px !important', width: '20px', height: '16px', lineHeight: '1', padding: '0'}}
-                          />
-                          <button
-                            className="bg-gray-100 hover:bg-gray-200"
-                            onClick={() => updateItemQuantity(index, item.quantity + 1)}
-                            style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
-                          >
-                            +
-                          </button>
-                        </div>
-                        
-                        <input
-                          type="text"
-                          className="flex-1 border rounded"
-                          placeholder="Shënime"
-                          value={item.notes}
-                          onChange={(e) => updateItemNotes(index, e.target.value)}
-                          style={{fontSize: '7px !important', padding: '1px 2px', height: '16px', lineHeight: '1'}}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              
-              <div className="border-t pt-3">
-                <div className="flex justify-between items-center text-lg font-bold mb-3">
-                  <span>Total:</span>
-                  <span>{calculateTotal().toLocaleString()} LEK</span>
-                </div>
-                
-                <div className="space-y-2">
-                  <button
-                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
-                    onClick={submitOrder}
-                    disabled={orderItems.length === 0 || submitting || (!tableId && !selectedTableId)}
-                  >
-                    {submitting ? (
-                      <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Duke dërguar...
-                      </span>
-                    ) : (
-                      <>
-                        <span className="mr-1 text-xs">🚀</span>
-                        Dërgo Porosinë
-                      </>
-                    )}
-                  </button>
-                  
-                  {/* Print Bill Button */}
-                  <button
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
-                    onClick={handlePrintBill}
-                    disabled={orderItems.length === 0 || isPrinting}
-                  >
-                    {isPrinting ? (
-                      <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Duke printuar...
-                      </span>
-                    ) : (
-                      <>
-                        <span className="mr-1 text-xs">🖨️</span>
-                        Printo Faturën
-                      </>
-                    )}
-                  </button>
-                </div>
+        {/* Hidden Print Template */}
+        <div className="hidden">
+          <div ref={printRef} className="print-template p-4" style={{ fontFamily: 'monospace', fontSize: '11pt', width: '80mm', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '16pt', marginBottom: '8px' }}>VILA FALO</div>
+              <div style={{ fontSize: '12pt', marginBottom: '5px' }}>Restaurant & Bar</div>
+              <div style={{ fontSize: '10pt' }}>Voskopoje, Korçë</div>
+              <div style={{ fontSize: '10pt', marginBottom: '5px' }}>Shqipëri</div>
+              <div style={{ fontSize: '9pt' }}>Tel: +355 69 123 4567</div>
+              <div style={{ fontSize: '9pt' }}>NIPT: K12345678A</div>
+              <div style={{ marginTop: '10px', borderBottom: '1px dashed #000', paddingBottom: '5px' }}>
+                {formatDate(new Date())}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Hidden Print Template */}
-      <div className="hidden">
-        <div ref={printRef} className="print-template p-4" style={{ fontFamily: 'monospace', fontSize: '11pt', width: '80mm', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <div style={{ fontWeight: 'bold', fontSize: '16pt', marginBottom: '8px' }}>VILA FALO</div>
-            <div style={{ fontSize: '12pt', marginBottom: '5px' }}>Restaurant & Bar</div>
-            <div style={{ fontSize: '10pt' }}>Voskopoje, Korçë</div>
-            <div style={{ fontSize: '10pt', marginBottom: '5px' }}>Shqipëri</div>
-            <div style={{ fontSize: '9pt' }}>Tel: +355 69 123 4567</div>
-            <div style={{ fontSize: '9pt' }}>NIPT: K12345678A</div>
-            <div style={{ marginTop: '10px', borderBottom: '1px dashed #000', paddingBottom: '5px' }}>
-              {formatDate(new Date())}
+            
+            <div style={{ marginBottom: '10px' }}>
+              <div><strong>Kamarier:</strong> {user?.name || 'N/A'}</div>
+              <div><strong>Tavolina:</strong> {table ? table.number : selectedTableId ? tables.find(t => t._id === selectedTableId)?.number || 'N/A' : 'N/A'}</div>
+              <div style={{ borderBottom: '1px dashed #000', paddingBottom: '5px', marginTop: '5px' }}></div>
             </div>
-          </div>
-          
-          <div style={{ marginBottom: '10px' }}>
-            <div><strong>Kamarier:</strong> {user?.name || 'N/A'}</div>
-            <div><strong>Tavolina:</strong> {table ? table.number : selectedTableId ? tables.find(t => t._id === selectedTableId)?.number || 'N/A' : 'N/A'}</div>
-            <div style={{ borderBottom: '1px dashed #000', paddingBottom: '5px', marginTop: '5px' }}></div>
-          </div>
-          
-          <div>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Artikulli</th>
-                  <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '20%' }}>Sasia</th>
-                  <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Çmimi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orderItems.map((item, index) => (
-                  <tr key={index} style={{ borderBottom: '1px dotted #ddd' }}>
-                    <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'left' }}>{item.name}</td>
-                    <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'right' }}>{item.quantity}x</td>
-                    <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'right' }}>{(item.price * item.quantity).toLocaleString()} LEK</td>
+            
+            <div>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th style={{ textAlign: 'left', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Artikulli</th>
+                    <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '20%' }}>Sasia</th>
+                    <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Çmimi</th>
                   </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr style={{ borderTop: '2px solid #000' }}>
-                  <th colSpan="2" style={{ textAlign: 'left', paddingTop: '8px', fontSize: '12pt' }}>TOTAL:</th>
-                  <th style={{ textAlign: 'right', paddingTop: '8px', fontSize: '12pt' }}>{calculateTotal().toLocaleString()} LEK</th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          
-          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '9pt' }}>
-            <div style={{ borderTop: '1px dashed #000', paddingTop: '10px', marginBottom: '10px' }}>
-              <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>INFORMACION FISKAL</div>
-              <div>TVSH (20%): {(calculateTotal() * 0.2).toLocaleString()} LEK</div>
-              <div>Pa TVSH: {(calculateTotal() * 0.8).toLocaleString()} LEK</div>
+                </thead>
+                <tbody>
+                  {orderItems.map((item, index) => (
+                    <tr key={index} style={{ borderBottom: '1px dotted #ddd' }}>
+                      <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'left' }}>{item.name}</td>
+                      <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'right' }}>{item.quantity}x</td>
+                      <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'right' }}>{(item.price * item.quantity).toLocaleString()} LEK</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr style={{ borderTop: '2px solid #000' }}>
+                    <th colSpan="2" style={{ textAlign: 'left', paddingTop: '8px', fontSize: '12pt' }}>TOTAL:</th>
+                    <th style={{ textAlign: 'right', paddingTop: '8px', fontSize: '12pt' }}>{calculateTotal().toLocaleString()} LEK</th>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
             
-            <div style={{ marginTop: '15px', fontSize: '10pt' }}>
-              <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>🍽️ FALEMINDERIT! 🍽️</div>
-              <div>Për vizitën tuaj në Vila Falo</div>
-              <div style={{ marginTop: '5px', fontSize: '8pt' }}>Voskopoje - Zemra e Alpeve Shqiptare</div>
-            </div>
-            
-            <div style={{ marginTop: '10px', fontSize: '8pt', borderTop: '1px solid #000', paddingTop: '5px' }}>
-              Ora: {new Date().toLocaleTimeString('sq-AL')}
+            <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '9pt' }}>
+              <div style={{ borderTop: '1px dashed #000', paddingTop: '10px', marginBottom: '10px' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>INFORMACION FISKAL</div>
+                <div>TVSH (20%): {(calculateTotal() * 0.2).toLocaleString()} LEK</div>
+                <div>Pa TVSH: {(calculateTotal() * 0.8).toLocaleString()} LEK</div>
+              </div>
+              
+              <div style={{ marginTop: '15px', fontSize: '10pt' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>🍽️ FALEMINDERIT! 🍽️</div>
+                <div>Për vizitën tuaj në Vila Falo</div>
+                <div style={{ marginTop: '5px', fontSize: '8pt' }}>Voskopoje - Zemra e Alpeve Shqiptare</div>
+              </div>
+              
+              <div style={{ marginTop: '10px', fontSize: '8pt', borderTop: '1px solid #000', paddingTop: '5px' }}>
+                Ora: {new Date().toLocaleTimeString('sq-AL')}
+              </div>
             </div>
           </div>
         </div>
