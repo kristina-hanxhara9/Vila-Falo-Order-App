@@ -641,36 +641,120 @@ const NewOrder = () => {
     <>
       <style>
         {`
-          /* Force tiny text sizes */
+          /* Mobile-friendly responsive text sizes */
           .menu-item-name {
-            font-size: 6px !important;
-            line-height: 1 !important;
-            font-weight: 400 !important;
+            font-size: 14px !important;
+            line-height: 1.3 !important;
+            font-weight: 500 !important;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 2px 0 !important;
           }
           .menu-item-price {
-            font-size: 6px !important;
-            line-height: 1 !important;
-            font-weight: 500 !important;
+            font-size: 14px !important;
+            line-height: 1.3 !important;
+            font-weight: 600 !important;
+            color: #059669 !important;
           }
           .menu-item-container {
-            padding: 2px !important;
-            margin: 1px 0 !important;
-            height: auto !important;
-            min-height: 16px !important;
+            padding: 12px !important;
+            margin: 6px 0 !important;
+            min-height: 64px !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
           }
-          .menu-item-container h1,
-          .menu-item-container h2,
-          .menu-item-container h3,
-          .menu-item-container h4,
-          .menu-item-container h5,
-          .menu-item-container h6,
-          .menu-item-container p,
-          .menu-item-container span,
-          .menu-item-container div {
-            font-size: 6px !important;
-            line-height: 1 !important;
+          .menu-item-container:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+          }
+          
+          /* Mobile-optimized button sizes */
+          .mobile-btn {
+            min-width: 44px !important;
+            min-height: 44px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
+          }
+          .mobile-btn-sm {
+            min-width: 36px !important;
+            min-height: 36px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            border-radius: 6px !important;
+          }
+          .mobile-quantity-input {
+            width: 50px !important;
+            height: 36px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            text-align: center !important;
+            border-radius: 6px !important;
+          }
+          
+          /* Order item styling */
+          .order-item {
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            padding: 8px 0 !important;
+          }
+          .order-item-price {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+          }
+          .order-item-controls {
+            margin-top: 8px !important;
+          }
+          .order-item-controls input {
+            height: 32px !important;
+            font-size: 13px !important;
+          }
+          .order-item-controls button {
+            height: 32px !important;
+            font-size: 13px !important;
+            min-width: 32px !important;
+          }
+          
+          /* Category buttons */
+          .category-btn {
+            height: 44px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            padding: 8px 12px !important;
+            border-radius: 8px !important;
+          }
+          
+          @media (max-width: 768px) {
+            .menu-item-name {
+              font-size: 16px !important;
+            }
+            .menu-item-price {
+              font-size: 16px !important;
+            }
+            .menu-item-container {
+              padding: 16px !important;
+              margin: 8px 0 !important;
+              min-height: 80px !important;
+            }
+            .mobile-btn {
+              min-width: 48px !important;
+              min-height: 48px !important;
+              font-size: 18px !important;
+            }
+            .mobile-btn-sm {
+              min-width: 40px !important;
+              min-height: 40px !important;
+              font-size: 16px !important;
+            }
+            .mobile-quantity-input {
+              width: 60px !important;
+              height: 40px !important;
+              font-size: 16px !important;
+            }
+            .category-btn {
+              height: 48px !important;
+              font-size: 16px !important;
+            }
           }
         `}
       </style>
@@ -780,19 +864,18 @@ const NewOrder = () => {
               
               <div className="p-6">
                 {/* Mobile-Friendly Category Filter */}
-                <div className="mb-3">
-                  <h3 className="text-sm font-medium mb-2 text-gray-800">📱 Zgjidhni Kategorinë</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-1">
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-4 text-gray-800">📱 Zgjidhni Kategorinë</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <button
-                      className={`flex items-center justify-center rounded font-medium transition-colors ${
+                      className={`category-btn flex items-center justify-center transition-colors shadow-sm ${
                         selectedCategory === 'all'
-                          ? 'bg-indigo-600 text-white'
-                          : 'bg-white border border-indigo-200 text-indigo-600 hover:border-indigo-400'
+                          ? 'bg-indigo-600 text-white shadow-lg'
+                          : 'bg-white border-2 border-indigo-200 text-indigo-600 hover:border-indigo-400 hover:bg-indigo-50'
                       }`}
                       onClick={() => setSelectedCategory('all')}
-                      style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
                     >
-                      <span className="mr-1" style={{fontSize: '8px !important'}}>🍽️</span>
+                      <span className="mr-2 text-lg">🍽️</span>
                       <span>Të Gjitha</span>
                     </button>
                     
@@ -833,11 +916,10 @@ const NewOrder = () => {
                       return (
                         <button
                           key={category}
-                          className={`flex items-center justify-center rounded font-medium transition-colors ${bgClass}`}
+                          className={`category-btn flex items-center justify-center transition-colors shadow-sm ${bgClass}`}
                           onClick={() => setSelectedCategory(category)}
-                          style={{fontSize: '8px !important', padding: '3px 6px', lineHeight: '1', height: '20px'}}
                         >
-                          <span className="mr-1" style={{fontSize: '8px !important'}}>{icon}</span>
+                          <span className="mr-2 text-lg">{icon}</span>
                           <span>{name}</span>
                         </button>
                       );
@@ -855,7 +937,7 @@ const NewOrder = () => {
                     <p className="text-gray-500">Nuk u gjetën artikuj në këtë kategori</p>
                   </div>
                 ) : (
-                  <div className="space-y-1">
+                  <div className="space-y-4">
                     {filteredMenuItems.map(item => {
                       const categoryIcon = {
                         'food': '🍴',
@@ -872,55 +954,52 @@ const NewOrder = () => {
                       return (
                         <div
                           key={item._id}
-                          className={`${categoryColor} rounded shadow-sm hover:shadow transition-shadow menu-item-container`}
-                          style={{padding: '2px !important', fontSize: '6px !important', margin: '1px 0 !important', height: 'auto !important', minHeight: '16px !important'}}
+                          className={`${categoryColor} menu-item-container shadow-md hover:shadow-lg`}
                         >
-                          {/* Ultra compact single line layout */}
-                          <div className="flex items-center justify-between" style={{minHeight: '14px', height: '14px !important'}}>
+                          {/* Mobile-friendly layout */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            {/* Item info */}
                             <div className="flex items-center flex-1 min-w-0">
-                              <span className="mr-1" style={{fontSize: '8px !important', lineHeight: '1'}}>{categoryIcon}</span>
-                              <div className="flex-1 min-w-0 mr-2">
-                                <h3 className="font-medium text-gray-900 leading-tight truncate menu-item-name" style={{fontSize: '6px !important', lineHeight: '1 !important', fontWeight: '400 !important', margin: '0 !important', padding: '0 !important'}}>{item.albanianName}</h3>
-                              </div>
-                              <div className="text-right mr-2 flex-shrink-0">
-                                <span className="font-semibold text-gray-900 menu-item-price" style={{fontSize: '6px !important', fontWeight: '500 !important', lineHeight: '1 !important'}}>{item.price.toLocaleString()}</span>
+                              <span className="mr-3 text-2xl">{categoryIcon}</span>
+                              <div className="flex-1 min-w-0">
+                                <h3 className="menu-item-name text-gray-900 truncate">{item.albanianName}</h3>
+                                <div className="menu-item-price mt-1">{item.price.toLocaleString()} LEK</div>
                               </div>
                             </div>
                             
-                            {/* Ultra compact controls */}
-                            <div className="flex items-center flex-shrink-0" style={{gap: '2px'}}>
+                            {/* Controls */}
+                            <div className="flex items-center gap-3 flex-shrink-0">
                               {/* Quantity Controls */}
-                              <button
-                                className="bg-red-600 hover:bg-red-700 text-white rounded font-bold flex items-center justify-center transition-colors disabled:opacity-50 disabled:bg-gray-400"
-                                onClick={() => handleQuantityChange(item._id, -1)}
-                                disabled={itemQuantities[item._id] <= 0}
-                                style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
-                              >
-                                −
-                              </button>
-                              <div className="bg-gray-100 border border-gray-300 rounded flex items-center justify-center" style={{width: '16px', height: '12px'}}>
-                                <span className="font-semibold text-gray-900" style={{fontSize: '6px !important', lineHeight: '1'}}>{itemQuantities[item._id] || 0}</span>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  className="mobile-btn-sm bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all disabled:opacity-50 disabled:bg-gray-400 shadow-sm"
+                                  onClick={() => handleQuantityChange(item._id, -1)}
+                                  disabled={itemQuantities[item._id] <= 0}
+                                >
+                                  −
+                                </button>
+                                <div className="mobile-quantity-input bg-gray-50 border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-gray-900">
+                                  {itemQuantities[item._id] || 0}
+                                </div>
+                                <button
+                                  className="mobile-btn-sm bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-all shadow-sm"
+                                  onClick={() => handleQuantityChange(item._id, 1)}
+                                >
+                                  +
+                                </button>
                               </div>
-                              <button
-                                className="bg-green-600 hover:bg-green-700 text-white rounded font-bold flex items-center justify-center transition-colors"
-                                onClick={() => handleQuantityChange(item._id, 1)}
-                                style={{width: '12px', height: '12px', fontSize: '6px !important', lineHeight: '1', padding: '0 !important', margin: '0 !important'}}
-                              >
-                                +
-                              </button>
                               
                               {/* Add Button */}
                               <button
-                                className={`rounded font-medium transition-all ${
+                                className={`mobile-btn transition-all shadow-sm ${
                                   itemQuantities[item._id] > 0
-                                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                                    ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg transform hover:scale-105'
                                     : 'bg-gray-300 text-gray-600 cursor-not-allowed'
                                 }`}
                                 onClick={() => addItemToOrder(item)}
                                 disabled={itemQuantities[item._id] <= 0}
-                                style={{fontSize: '5px !important', padding: '1px 2px !important', lineHeight: '1 !important', height: '12px', margin: '0 !important'}}
                               >
-                                {itemQuantities[item._id] > 0 ? 'Add' : 'Sel'}
+                                {itemQuantities[item._id] > 0 ? '✓ Shto' : 'Zgjidh'}
                               </button>
                             </div>
                           </div>
@@ -1018,59 +1097,57 @@ const NewOrder = () => {
               
               <div className="p-4">
                 {orderItems.length === 0 ? (
-                  <div className="text-center py-3">
-                    <p className="text-gray-500 text-xs">Nuk ka artikuj në porosi</p>
-                    <p className="text-xs text-gray-400 mt-1">
+                  <div className="text-center py-6">
+                    <div className="text-4xl mb-2">🛍️</div>
+                    <p className="text-gray-500 text-sm">Nuk ka artikuj në porosi</p>
+                    <p className="text-sm text-gray-400 mt-2">
                       Zgjidhni sasinë dhe shtoni artikujt
                     </p>
                   </div>
                 ) : (
-                  <div className="mb-3 space-y-1">
+                  <div className="mb-4 space-y-3">
                     {orderItems.map((item, index) => (
-                      <div key={index} className="border-b pb-1 last:border-b-0">
-                        <div className="flex justify-between items-center">
+                      <div key={index} className="order-item border-b-2 border-blue-100 pb-3 last:border-b-0">
+                        <div className="flex justify-between items-start">
                           <div className="flex-1">
-                            <div className="font-medium" style={{fontSize: '8px !important', lineHeight: '1.1'}}>{item.name}</div>
-                            <div className="text-gray-600" style={{fontSize: '7px !important', lineHeight: '1'}}>
+                            <div className="font-semibold text-gray-900">{item.name}</div>
+                            <div className="text-gray-600 order-item-price mt-1">
                               {item.price.toLocaleString()} LEK x {item.quantity}
                             </div>
                           </div>
-                          <div className="text-right ml-2">
-                            <div className="font-semibold" style={{fontSize: '8px !important', lineHeight: '1.1'}}>
+                          <div className="text-right ml-3">
+                            <div className="font-bold text-green-600 order-item-price">
                               {(item.price * item.quantity).toLocaleString()} LEK
                             </div>
                             <button
-                              className="text-red-600 hover:text-red-800"
+                              className="text-red-500 hover:text-red-700 font-medium mt-1 text-sm"
                               onClick={() => removeItemFromOrder(index)}
-                              style={{fontSize: '7px !important', lineHeight: '1'}}
                             >
-                              Hiq
+                              🗑️ Hiq
                             </button>
                           </div>
                         </div>
                         
-                        {/* Ultra compact order item controls */}
-                        <div className="mt-1 flex items-center space-x-1">
-                          <div className="flex items-center border rounded overflow-hidden" style={{height: '16px'}}>
+                        {/* Order item controls */}
+                        <div className="order-item-controls flex items-center space-x-2">
+                          <div className="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden">
                             <button
-                              className="bg-gray-100 hover:bg-gray-200"
+                              className="bg-gray-100 hover:bg-gray-200 px-3 transition-colors"
                               onClick={() => updateItemQuantity(index, item.quantity - 1)}
-                              style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
                             >
                               -
                             </button>
                             <input
                               type="number"
-                              className="text-center border-0"
+                              className="text-center border-0 bg-white font-semibold"
                               value={item.quantity}
                               onChange={(e) => updateItemQuantity(index, parseInt(e.target.value) || 1)}
                               min="1"
-                              style={{fontSize: '7px !important', width: '20px', height: '16px', lineHeight: '1', padding: '0'}}
+                              style={{width: '50px'}}
                             />
                             <button
-                              className="bg-gray-100 hover:bg-gray-200"
+                              className="bg-gray-100 hover:bg-gray-200 px-3 transition-colors"
                               onClick={() => updateItemQuantity(index, item.quantity + 1)}
-                              style={{fontSize: '7px !important', padding: '1px 3px', lineHeight: '1', height: '16px'}}
                             >
                               +
                             </button>
@@ -1078,11 +1155,10 @@ const NewOrder = () => {
                           
                           <input
                             type="text"
-                            className="flex-1 border rounded"
-                            placeholder="Shënime"
+                            className="flex-1 border-2 border-gray-300 rounded-lg px-3 py-2"
+                            placeholder="Shënime (opsionale)"
                             value={item.notes}
                             onChange={(e) => updateItemNotes(index, e.target.value)}
-                            style={{fontSize: '7px !important', padding: '1px 2px', height: '16px', lineHeight: '1'}}
                           />
                         </div>
                       </div>
@@ -1090,21 +1166,23 @@ const NewOrder = () => {
                   </div>
                 )}
                 
-                <div className="border-t pt-3">
-                  <div className="flex justify-between items-center text-lg font-bold mb-3">
-                    <span>Total:</span>
-                    <span>{calculateTotal().toLocaleString()} LEK</span>
+                <div className="border-t-2 border-blue-200 pt-4">
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-lg mb-4">
+                    <div className="flex justify-between items-center text-xl font-bold">
+                      <span className="text-gray-700">💰 Total:</span>
+                      <span className="text-green-600">{calculateTotal().toLocaleString()} LEK</span>
+                    </div>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <button
-                      className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
+                      className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg shadow-lg transform hover:scale-105"
                       onClick={submitOrder}
                       disabled={orderItems.length === 0 || submitting || (!tableId && !selectedTableId)}
                     >
                       {submitting ? (
                         <span className="flex items-center justify-center">
-                          <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
@@ -1112,7 +1190,7 @@ const NewOrder = () => {
                         </span>
                       ) : (
                         <>
-                          <span className="mr-1 text-xs">🚀</span>
+                          <span className="mr-2 text-xl">🚀</span>
                           Dërgo Porosinë
                         </>
                       )}
@@ -1120,13 +1198,13 @@ const NewOrder = () => {
                     
                     {/* Print Bill Button */}
                     <button
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm"
+                      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg shadow-lg transform hover:scale-105"
                       onClick={handlePrintBill}
                       disabled={orderItems.length === 0 || isPrinting}
                     >
                       {isPrinting ? (
                         <span className="flex items-center justify-center">
-                          <svg className="animate-spin -ml-1 mr-2 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
@@ -1134,7 +1212,7 @@ const NewOrder = () => {
                         </span>
                       ) : (
                         <>
-                          <span className="mr-1 text-xs">🖨️</span>
+                          <span className="mr-2 text-xl">🖨️</span>
                           Printo Faturën
                         </>
                       )}
@@ -1146,68 +1224,68 @@ const NewOrder = () => {
           </div>
         </div>
         
-        {/* Hidden Print Template */}
+        {/* Hidden Print Template - Optimized for one page */}
         <div className="hidden">
-          <div ref={printRef} className="print-template p-4" style={{ fontFamily: 'monospace', fontSize: '11pt', width: '80mm', margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-              <div style={{ fontWeight: 'bold', fontSize: '16pt', marginBottom: '8px' }}>VILA FALO</div>
-              <div style={{ fontSize: '12pt', marginBottom: '5px' }}>Restaurant & Bar</div>
-              <div style={{ fontSize: '10pt' }}>Voskopoje, Korçë</div>
-              <div style={{ fontSize: '10pt', marginBottom: '5px' }}>Shqipëri</div>
-              <div style={{ fontSize: '9pt' }}>Tel: +355 69 123 4567</div>
-              <div style={{ fontSize: '9pt' }}>NIPT: K12345678A</div>
-              <div style={{ marginTop: '10px', borderBottom: '1px dashed #000', paddingBottom: '5px' }}>
+          <div ref={printRef} className="print-template p-2" style={{ fontFamily: 'monospace', fontSize: '9pt', width: '80mm', margin: '0 auto', lineHeight: '1.2' }}>
+            <div style={{ textAlign: 'center', marginBottom: '8px' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '14pt', marginBottom: '4px' }}>VILA FALO</div>
+              <div style={{ fontSize: '10pt', marginBottom: '3px' }}>Restaurant & Bar</div>
+              <div style={{ fontSize: '8pt' }}>Voskopoje, Korçë</div>
+              <div style={{ fontSize: '8pt', marginBottom: '3px' }}>Shqipëri</div>
+              <div style={{ fontSize: '8pt' }}>Tel: +355 69 123 4567</div>
+              <div style={{ fontSize: '8pt' }}>NIPT: K12345678A</div>
+              <div style={{ marginTop: '6px', borderBottom: '1px dashed #000', paddingBottom: '3px', fontSize: '8pt' }}>
                 {formatDate(new Date())}
               </div>
             </div>
             
-            <div style={{ marginBottom: '10px' }}>
+            <div style={{ marginBottom: '6px', fontSize: '8pt' }}>
               <div><strong>Kamarier:</strong> {user?.name || 'N/A'}</div>
               <div><strong>Tavolina:</strong> {table ? table.number : selectedTableId ? tables.find(t => t._id === selectedTableId)?.number || 'N/A' : 'N/A'}</div>
-              <div style={{ borderBottom: '1px dashed #000', paddingBottom: '5px', marginTop: '5px' }}></div>
+              <div style={{ borderBottom: '1px dashed #000', paddingBottom: '3px', marginTop: '3px' }}></div>
             </div>
             
             <div>
-              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '8pt' }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: 'left', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Artikulli</th>
-                    <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '20%' }}>Sasia</th>
-                    <th style={{ textAlign: 'right', paddingBottom: '5px', borderBottom: '1px solid #000', width: '40%' }}>Çmimi</th>
+                    <th style={{ textAlign: 'left', paddingBottom: '3px', borderBottom: '1px solid #000', width: '45%' }}>Artikulli</th>
+                    <th style={{ textAlign: 'right', paddingBottom: '3px', borderBottom: '1px solid #000', width: '15%' }}>Sasia</th>
+                    <th style={{ textAlign: 'right', paddingBottom: '3px', borderBottom: '1px solid #000', width: '40%' }}>Çmimi</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orderItems.map((item, index) => (
                     <tr key={index} style={{ borderBottom: '1px dotted #ddd' }}>
-                      <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'left' }}>{item.name}</td>
-                      <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'right' }}>{item.quantity}x</td>
-                      <td style={{ paddingTop: '5px', paddingBottom: '5px', textAlign: 'right' }}>{(item.price * item.quantity).toLocaleString()} LEK</td>
+                      <td style={{ paddingTop: '2px', paddingBottom: '2px', textAlign: 'left', fontSize: '8pt' }}>{item.name}</td>
+                      <td style={{ paddingTop: '2px', paddingBottom: '2px', textAlign: 'right', fontSize: '8pt' }}>{item.quantity}x</td>
+                      <td style={{ paddingTop: '2px', paddingBottom: '2px', textAlign: 'right', fontSize: '8pt' }}>{(item.price * item.quantity).toLocaleString()} LEK</td>
                     </tr>
                   ))}
                 </tbody>
                 <tfoot>
                   <tr style={{ borderTop: '2px solid #000' }}>
-                    <th colSpan="2" style={{ textAlign: 'left', paddingTop: '8px', fontSize: '12pt' }}>TOTAL:</th>
-                    <th style={{ textAlign: 'right', paddingTop: '8px', fontSize: '12pt' }}>{calculateTotal().toLocaleString()} LEK</th>
+                    <th colSpan="2" style={{ textAlign: 'left', paddingTop: '4px', fontSize: '10pt' }}>TOTAL:</th>
+                    <th style={{ textAlign: 'right', paddingTop: '4px', fontSize: '10pt' }}>{calculateTotal().toLocaleString()} LEK</th>
                   </tr>
                 </tfoot>
               </table>
             </div>
             
-            <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '9pt' }}>
-              <div style={{ borderTop: '1px dashed #000', paddingTop: '10px', marginBottom: '10px' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>INFORMACION FISKAL</div>
+            <div style={{ marginTop: '8px', textAlign: 'center', fontSize: '7pt' }}>
+              <div style={{ borderTop: '1px dashed #000', paddingTop: '4px', marginBottom: '4px' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '2px', fontSize: '8pt' }}>INFORMACION FISKAL</div>
                 <div>TVSH (20%): {(calculateTotal() * 0.2).toLocaleString()} LEK</div>
                 <div>Pa TVSH: {(calculateTotal() * 0.8).toLocaleString()} LEK</div>
               </div>
               
-              <div style={{ marginTop: '15px', fontSize: '10pt' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>🍽️ FALEMINDERIT! 🍽️</div>
-                <div>Për vizitën tuaj në Vila Falo</div>
-                <div style={{ marginTop: '5px', fontSize: '8pt' }}>Voskopoje - Zemra e Alpeve Shqiptare</div>
+              <div style={{ marginTop: '6px', fontSize: '8pt' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>🍽️ FALEMINDERIT! 🍽️</div>
+                <div style={{ fontSize: '7pt' }}>Për vizitën tuaj në Vila Falo</div>
+                <div style={{ marginTop: '2px', fontSize: '6pt' }}>Voskopoje - Zemra e Alpeve Shqiptare</div>
               </div>
               
-              <div style={{ marginTop: '10px', fontSize: '8pt', borderTop: '1px solid #000', paddingTop: '5px' }}>
+              <div style={{ marginTop: '4px', fontSize: '6pt', borderTop: '1px solid #000', paddingTop: '2px' }}>
                 Ora: {new Date().toLocaleTimeString('sq-AL')}
               </div>
             </div>
