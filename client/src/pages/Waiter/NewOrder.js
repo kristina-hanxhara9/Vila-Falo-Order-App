@@ -656,9 +656,9 @@ const NewOrder = () => {
             color: #059669 !important;
           }
           .menu-item-container {
-            padding: 12px !important;
-            margin: 6px 0 !important;
-            min-height: 64px !important;
+            padding: 8px 12px !important;
+            margin: 3px 0 !important;
+            min-height: 48px !important;
             border-radius: 8px !important;
             transition: all 0.2s ease !important;
           }
@@ -667,29 +667,37 @@ const NewOrder = () => {
             box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
           }
           
-          /* Mobile-optimized button sizes */
+          /* Mobile-optimized button sizes - compact */
           .mobile-btn {
             min-width: 44px !important;
-            min-height: 44px !important;
-            font-size: 16px !important;
-            font-weight: 600 !important;
-            border-radius: 8px !important;
-            transition: all 0.2s ease !important;
-          }
-          .mobile-btn-sm {
-            min-width: 36px !important;
-            min-height: 36px !important;
+            min-height: 40px !important;
             font-size: 14px !important;
             font-weight: 600 !important;
             border-radius: 6px !important;
+            transition: all 0.2s ease !important;
+            padding: 0 8px !important;
+          }
+          .mobile-btn-sm {
+            min-width: 32px !important;
+            min-height: 32px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            border-radius: 4px !important;
           }
           .mobile-quantity-input {
-            width: 50px !important;
-            height: 36px !important;
+            width: 40px !important;
+            height: 32px !important;
             font-size: 14px !important;
             font-weight: 600 !important;
             text-align: center !important;
-            border-radius: 6px !important;
+            border-radius: 4px !important;
+          }
+          
+          /* Hide LEK on small screens */
+          @media (max-width: 480px) {
+            .lek-currency {
+              display: none !important;
+            }
           }
           
           /* Order item styling */
@@ -725,36 +733,36 @@ const NewOrder = () => {
           }
           
           @media (max-width: 768px) {
-            .menu-item-name {
-              font-size: 16px !important;
-            }
-            .menu-item-price {
-              font-size: 16px !important;
-            }
-            .menu-item-container {
-              padding: 16px !important;
-              margin: 8px 0 !important;
-              min-height: 80px !important;
-            }
-            .mobile-btn {
-              min-width: 48px !important;
-              min-height: 48px !important;
-              font-size: 18px !important;
-            }
-            .mobile-btn-sm {
-              min-width: 40px !important;
-              min-height: 40px !important;
-              font-size: 16px !important;
-            }
-            .mobile-quantity-input {
-              width: 60px !important;
-              height: 40px !important;
-              font-size: 16px !important;
-            }
-            .category-btn {
-              height: 48px !important;
-              font-size: 16px !important;
-            }
+          .menu-item-name {
+          font-size: 15px !important;
+          }
+          .menu-item-price {
+          font-size: 15px !important;
+          }
+          .menu-item-container {
+          padding: 10px 12px !important;
+          margin: 4px 0 !important;
+          min-height: 50px !important;
+          }
+          .mobile-btn {
+          min-width: 48px !important;
+          min-height: 42px !important;
+          font-size: 15px !important;
+          }
+          .mobile-btn-sm {
+          min-width: 36px !important;
+          min-height: 36px !important;
+          font-size: 15px !important;
+          }
+          .mobile-quantity-input {
+          width: 45px !important;
+          height: 36px !important;
+          font-size: 15px !important;
+          }
+          .category-btn {
+          height: 48px !important;
+          font-size: 16px !important;
+          }
           }
         `}
       </style>
@@ -956,42 +964,42 @@ const NewOrder = () => {
                           key={item._id}
                           className={`${categoryColor} menu-item-container shadow-md hover:shadow-lg`}
                         >
-                          {/* Mobile-friendly layout */}
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            {/* Item info */}
-                            <div className="flex items-center flex-1 min-w-0">
-                              <span className="mr-3 text-2xl">{categoryIcon}</span>
+                          {/* Single line compact layout */}
+                          <div className="flex items-center justify-between gap-2">
+                            {/* Item info - left side */}
+                            <div className="flex items-center flex-1 min-w-0 gap-2">
+                              <span className="text-xl flex-shrink-0">{categoryIcon}</span>
                               <div className="flex-1 min-w-0">
-                                <h3 className="menu-item-name text-gray-900 truncate">{item.albanianName}</h3>
-                                <div className="menu-item-price mt-1">{item.price.toLocaleString()} LEK</div>
+                                <h3 className="menu-item-name text-gray-900 truncate leading-tight">{item.albanianName}</h3>
+                                <div className="menu-item-price text-green-600 font-semibold">
+                                  {item.price.toLocaleString()}<span className="lek-currency"> LEK</span>
+                                </div>
                               </div>
                             </div>
                             
-                            {/* Controls */}
-                            <div className="flex items-center gap-3 flex-shrink-0">
+                            {/* Controls - right side in single line */}
+                            <div className="flex items-center gap-1 flex-shrink-0">
                               {/* Quantity Controls */}
-                              <div className="flex items-center gap-2">
-                                <button
-                                  className="mobile-btn-sm bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all disabled:opacity-50 disabled:bg-gray-400 shadow-sm"
-                                  onClick={() => handleQuantityChange(item._id, -1)}
-                                  disabled={itemQuantities[item._id] <= 0}
-                                >
-                                  −
-                                </button>
-                                <div className="mobile-quantity-input bg-gray-50 border-2 border-gray-300 rounded-lg flex items-center justify-center font-bold text-gray-900">
-                                  {itemQuantities[item._id] || 0}
-                                </div>
-                                <button
-                                  className="mobile-btn-sm bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-all shadow-sm"
-                                  onClick={() => handleQuantityChange(item._id, 1)}
-                                >
-                                  +
-                                </button>
+                              <button
+                                className="mobile-btn-sm bg-red-500 hover:bg-red-600 text-white flex items-center justify-center transition-all disabled:opacity-50 disabled:bg-gray-400 shadow-sm"
+                                onClick={() => handleQuantityChange(item._id, -1)}
+                                disabled={itemQuantities[item._id] <= 0}
+                              >
+                                −
+                              </button>
+                              <div className="mobile-quantity-input bg-gray-50 border-2 border-gray-300 rounded flex items-center justify-center font-bold text-gray-900">
+                                {itemQuantities[item._id] || 0}
                               </div>
+                              <button
+                                className="mobile-btn-sm bg-green-500 hover:bg-green-600 text-white flex items-center justify-center transition-all shadow-sm"
+                                onClick={() => handleQuantityChange(item._id, 1)}
+                              >
+                                +
+                              </button>
                               
                               {/* Add Button */}
                               <button
-                                className={`mobile-btn transition-all shadow-sm ${
+                                className={`mobile-btn transition-all shadow-sm ml-1 ${
                                   itemQuantities[item._id] > 0
                                     ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg transform hover:scale-105'
                                     : 'bg-gray-300 text-gray-600 cursor-not-allowed'
@@ -1224,69 +1232,76 @@ const NewOrder = () => {
           </div>
         </div>
         
-        {/* Hidden Print Template - Optimized for one page */}
+        {/* Hidden Print Template - Thermal Receipt Format */}
         <div className="hidden">
-          <div ref={printRef} className="print-template p-2" style={{ fontFamily: 'monospace', fontSize: '9pt', width: '80mm', margin: '0 auto', lineHeight: '1.2' }}>
-            <div style={{ textAlign: 'center', marginBottom: '8px' }}>
-              <div style={{ fontWeight: 'bold', fontSize: '14pt', marginBottom: '4px' }}>VILA FALO</div>
-              <div style={{ fontSize: '10pt', marginBottom: '3px' }}>Restaurant & Bar</div>
-              <div style={{ fontSize: '8pt' }}>Voskopoje, Korçë</div>
-              <div style={{ fontSize: '8pt', marginBottom: '3px' }}>Shqipëri</div>
-              <div style={{ fontSize: '8pt' }}>Tel: +355 69 123 4567</div>
-              <div style={{ fontSize: '8pt' }}>NIPT: K12345678A</div>
-              <div style={{ marginTop: '6px', borderBottom: '1px dashed #000', paddingBottom: '3px', fontSize: '8pt' }}>
+          <div ref={printRef} className="print-template" style={{ fontFamily: 'monospace', fontSize: '7pt', width: '80mm', margin: '0', padding: '2mm', lineHeight: '1.1', maxHeight: '200mm' }}>
+            <div style={{ textAlign: 'center', marginBottom: '4mm' }}>
+              <div style={{ fontWeight: 'bold', fontSize: '12pt', marginBottom: '2mm' }}>VILA FALO</div>
+              <div style={{ fontSize: '8pt', marginBottom: '1mm' }}>Restaurant & Bar</div>
+              <div style={{ fontSize: '7pt' }}>Voskopoje, Korçë, Shqipëri</div>
+              <div style={{ fontSize: '7pt' }}>Tel: +355 69 123 4567</div>
+              <div style={{ fontSize: '7pt' }}>NIPT: K12345678A</div>
+              <div style={{ marginTop: '2mm', borderBottom: '1px dashed #000', paddingBottom: '1mm', fontSize: '7pt' }}>
                 {formatDate(new Date())}
               </div>
             </div>
             
-            <div style={{ marginBottom: '6px', fontSize: '8pt' }}>
+            <div style={{ marginBottom: '2mm', fontSize: '7pt' }}>
               <div><strong>Kamarier:</strong> {user?.name || 'N/A'}</div>
               <div><strong>Tavolina:</strong> {table ? table.number : selectedTableId ? tables.find(t => t._id === selectedTableId)?.number || 'N/A' : 'N/A'}</div>
-              <div style={{ borderBottom: '1px dashed #000', paddingBottom: '3px', marginTop: '3px' }}></div>
+              <div style={{ borderBottom: '1px dashed #000', paddingBottom: '1mm', marginTop: '1mm' }}></div>
             </div>
             
             <div>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '8pt' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '7pt' }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: 'left', paddingBottom: '3px', borderBottom: '1px solid #000', width: '45%' }}>Artikulli</th>
-                    <th style={{ textAlign: 'right', paddingBottom: '3px', borderBottom: '1px solid #000', width: '15%' }}>Sasia</th>
-                    <th style={{ textAlign: 'right', paddingBottom: '3px', borderBottom: '1px solid #000', width: '40%' }}>Çmimi</th>
+                    <th style={{ textAlign: 'left', paddingBottom: '1mm', borderBottom: '1px solid #000', width: '50%' }}>Artikulli</th>
+                    <th style={{ textAlign: 'center', paddingBottom: '1mm', borderBottom: '1px solid #000', width: '15%' }}>Sasia</th>
+                    <th style={{ textAlign: 'right', paddingBottom: '1mm', borderBottom: '1px solid #000', width: '35%' }}>Çmimi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {orderItems.map((item, index) => (
-                    <tr key={index} style={{ borderBottom: '1px dotted #ddd' }}>
-                      <td style={{ paddingTop: '2px', paddingBottom: '2px', textAlign: 'left', fontSize: '8pt' }}>{item.name}</td>
-                      <td style={{ paddingTop: '2px', paddingBottom: '2px', textAlign: 'right', fontSize: '8pt' }}>{item.quantity}x</td>
-                      <td style={{ paddingTop: '2px', paddingBottom: '2px', textAlign: 'right', fontSize: '8pt' }}>{(item.price * item.quantity).toLocaleString()} LEK</td>
+                  {orderItems.slice(0, Math.min(orderItems.length, 20)).map((item, index) => (
+                    <tr key={index} style={{ borderBottom: '1px dotted #ccc' }}>
+                      <td style={{ paddingTop: '0.5mm', paddingBottom: '0.5mm', textAlign: 'left', fontSize: '7pt', wordWrap: 'break-word' }}>
+                        {item.name.length > 25 ? item.name.substring(0, 25) + '...' : item.name}
+                      </td>
+                      <td style={{ paddingTop: '0.5mm', paddingBottom: '0.5mm', textAlign: 'center', fontSize: '7pt' }}>{item.quantity}x</td>
+                      <td style={{ paddingTop: '0.5mm', paddingBottom: '0.5mm', textAlign: 'right', fontSize: '7pt' }}>{(item.price * item.quantity).toLocaleString()}</td>
                     </tr>
                   ))}
+                  {orderItems.length > 20 && (
+                    <tr>
+                      <td colSpan="3" style={{ textAlign: 'center', fontSize: '6pt', fontStyle: 'italic', padding: '1mm' }}>
+                        ... dhe {orderItems.length - 20} artikuj të tjerë
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
                 <tfoot>
                   <tr style={{ borderTop: '2px solid #000' }}>
-                    <th colSpan="2" style={{ textAlign: 'left', paddingTop: '4px', fontSize: '10pt' }}>TOTAL:</th>
-                    <th style={{ textAlign: 'right', paddingTop: '4px', fontSize: '10pt' }}>{calculateTotal().toLocaleString()} LEK</th>
+                    <th colSpan="2" style={{ textAlign: 'left', paddingTop: '2mm', fontSize: '9pt' }}>TOTAL:</th>
+                    <th style={{ textAlign: 'right', paddingTop: '2mm', fontSize: '9pt' }}>{calculateTotal().toLocaleString()} LEK</th>
                   </tr>
                 </tfoot>
               </table>
             </div>
             
-            <div style={{ marginTop: '8px', textAlign: 'center', fontSize: '7pt' }}>
-              <div style={{ borderTop: '1px dashed #000', paddingTop: '4px', marginBottom: '4px' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '2px', fontSize: '8pt' }}>INFORMACION FISKAL</div>
-                <div>TVSH (20%): {(calculateTotal() * 0.2).toLocaleString()} LEK</div>
-                <div>Pa TVSH: {(calculateTotal() * 0.8).toLocaleString()} LEK</div>
+            <div style={{ marginTop: '2mm', textAlign: 'center', fontSize: '6pt' }}>
+              <div style={{ borderTop: '1px dashed #000', paddingTop: '1mm', marginBottom: '1mm' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '0.5mm', fontSize: '7pt' }}>INFORMACION FISKAL</div>
+                <div>TVSH (20%): {(calculateTotal() * 0.2).toLocaleString()}</div>
+                <div>Pa TVSH: {(calculateTotal() * 0.8).toLocaleString()}</div>
               </div>
               
-              <div style={{ marginTop: '6px', fontSize: '8pt' }}>
-                <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>🍽️ FALEMINDERIT! 🍽️</div>
-                <div style={{ fontSize: '7pt' }}>Për vizitën tuaj në Vila Falo</div>
-                <div style={{ marginTop: '2px', fontSize: '6pt' }}>Voskopoje - Zemra e Alpeve Shqiptare</div>
+              <div style={{ marginTop: '1mm', fontSize: '7pt' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '0.5mm' }}>FALEMINDERIT!</div>
+                <div style={{ fontSize: '6pt' }}>Vila Falo - Voskopoje</div>
               </div>
               
-              <div style={{ marginTop: '4px', fontSize: '6pt', borderTop: '1px solid #000', paddingTop: '2px' }}>
-                Ora: {new Date().toLocaleTimeString('sq-AL')}
+              <div style={{ marginTop: '1mm', fontSize: '6pt', borderTop: '1px solid #000', paddingTop: '0.5mm' }}>
+                {new Date().toLocaleTimeString('sq-AL')}
               </div>
             </div>
           </div>
