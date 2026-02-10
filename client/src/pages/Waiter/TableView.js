@@ -116,7 +116,7 @@ const TableView = () => {
     if (tableId) {
       fetchData();
     }
-  }, [tableId]);
+  }, [tableId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Listen for socket events
   useEffect(() => {

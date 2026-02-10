@@ -11,9 +11,9 @@ const TableManagement = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [tableHistory, setTableHistory] = useState({});
-  const [selectedTable, setSelectedTable] = useState(null);
-  const [showHistory, setShowHistory] = useState(false);
+  const [tableHistory, setTableHistory] = useState({}); // eslint-disable-line no-unused-vars
+  const [, setSelectedTable] = useState(null);
+  const [, setShowHistory] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
   
   // Form state for adding/editing tables
@@ -122,20 +122,6 @@ const TableManagement = () => {
     setIsFormOpen(true);
   };
   
-  // Open form for editing table
-  const openEditForm = (table, e) => {
-    if (e) e.stopPropagation();
-    
-    setCurrentTable({
-      ...table,
-      number: table.number,
-      name: table.name || '',
-      capacity: table.capacity
-    });
-    setIsEditing(true);
-    setIsFormOpen(true);
-  };
-  
   // Close form
   const closeForm = () => {
     setIsFormOpen(false);
@@ -155,18 +141,6 @@ const TableManagement = () => {
   // Hide confirmation modal
   const hideConfirmation = () => {
     setConfirmationModal({ show: false, tableId: null, action: null, title: '', message: '' });
-  };
-  
-  // Show history modal
-  const toggleHistory = (table, e) => {
-    if (e) e.stopPropagation();
-    if (selectedTable && selectedTable._id === table._id) {
-      setSelectedTable(null);
-      setShowHistory(false);
-    } else {
-      setSelectedTable(table);
-      setShowHistory(true);
-    }
   };
   
   // Submit form (add or update)
@@ -399,22 +373,6 @@ const TableManagement = () => {
       return `${table.number} - ${table.name}`;
     }
     return `${table.number}`;
-  };
-  
-  // Format date and time
-  const formatDateTime = (isoString) => {
-    try {
-      const date = new Date(isoString);
-      return date.toLocaleString('sq-AL', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (err) {
-      return isoString;
-    }
   };
   
   // Filter tables based on status

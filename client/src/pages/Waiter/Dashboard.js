@@ -39,16 +39,6 @@ const TableGrid = ({ tables, onSelectTable }) => {
   // Ensure tables is always an array
   const safeTablesArray = Array.isArray(tables) ? tables : [];
   
-  // Get enhanced status styling
-  const getStatusStyles = (status) => {
-    return STATUS_STYLES[status] || {
-      bg: 'bg-gray-50 hover:bg-gray-100',
-      border: 'border-gray-300 hover:border-gray-400', 
-      text: 'text-gray-600',
-      ring: 'ring-gray-400/20'
-    };
-  };
-  
   // Table status texts in Albanian
   const getStatusText = (status) => {
     switch (status) {
@@ -65,43 +55,9 @@ const TableGrid = ({ tables, onSelectTable }) => {
     }
   };
   
-  // Get status icon
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'free':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-          </svg>
-        );
-      case 'ordering':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-          </svg>
-        );
-      case 'unpaid':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-          </svg>
-        );
-      case 'paid':
-        return (
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
-            <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
-          </svg>
-        );
-      default:
-        return null;
-    }
-  };
-  
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
       {safeTablesArray.map((table) => {
-        const styles = getStatusStyles(table.status);
         return (
           <div
             key={table._id}
@@ -156,8 +112,7 @@ const WaiterDashboard = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [showTableManagement, setShowTableManagement] = useState(false); // This state is declared but not directly used to show/hide a specific table management UI in this file. It might be for future use or managed differently.
-  const [selectedTable, setSelectedTable] = useState(null); // Used for quick table status change, then set to null.
+  const [, setSelectedTable] = useState(null);
   
   // Thermal Printer State
   const [thermalPrinter] = useState(new ThermalPrinterService());
@@ -409,44 +364,6 @@ const WaiterDashboard = () => {
     thermalPrinter.configurePrinter({ ...printerSettings, ...newSettings }); // Ensure new settings are applied to the service
   };
 
-  // Handle table status change (for the quick table management)
-  const changeTableStatus = async (tableId, newStatus) => {
-    try {
-      // Include token in request headers
-      const config = {
-        headers: {
-          'x-auth-token': token
-        }
-      };
-      
-      // Update table status
-      const updateResponse = await axios.put(`${API_URL}/tables/${tableId}`, { 
-        status: newStatus
-      }, config);
-      
-      // Update local state with safety check
-      const safeTablesLocal = Array.isArray(tables) ? tables : []; // Renamed to avoid conflict
-      setTables(safeTablesLocal.map(table => 
-        table._id === tableId ? updateResponse.data : table
-      ));
-      
-      // Emit socket event
-      if (socket && connected) {
-        socket.emit('table-status-change', {
-          _id: tableId,
-          status: newStatus,
-          updatedBy: 'Waiter'
-        });
-      }
-      
-      setSelectedTable(null);
-      
-    } catch (err) {
-      setError('Gabim gjatë ndryshimit të statusit të tavolinës');
-      console.error(err);
-    }
-  };
-  
   // Toggle table management mode
   const navigateToTableManagement = () => {
     navigate('/waiter/tables');

@@ -28,13 +28,10 @@ serviceWorker.register({
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-// PWA Install prompt handling - now handled by React components
-let deferredPrompt;
-
+// PWA Install prompt handling
 window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('💾 PWA install prompt triggered');
   e.preventDefault();
-  deferredPrompt = e;
+  window.deferredInstallPrompt = e;
 });
 
 window.addEventListener('appinstalled', (evt) => {

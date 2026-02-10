@@ -6,14 +6,6 @@ import { SocketContext } from '../../contexts/SocketContext';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Enhanced status colors and metrics
-const METRIC_COLORS = {
-  revenue: { bg: 'from-emerald-500 to-green-600', icon: 'text-emerald-600', border: 'border-emerald-500' },
-  orders: { bg: 'from-blue-500 to-indigo-600', icon: 'text-blue-600', border: 'border-blue-500' },
-  active: { bg: 'from-amber-500 to-orange-600', icon: 'text-amber-600', border: 'border-amber-500' },
-  tables: { bg: 'from-purple-500 to-violet-600', icon: 'text-purple-600', border: 'border-purple-500' }
-};
-
 const ManagerDashboard = () => {
   // Dashboard state
   const [stats, setStats] = useState({
@@ -29,7 +21,7 @@ const ManagerDashboard = () => {
     }
   });
   const [recentOrders, setRecentOrders] = useState([]);
-  const [tables, setTables] = useState([]);
+  const [, setTables] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 

@@ -45,7 +45,7 @@ export const SocketProvider = ({ children }) => {
     return () => {
       socketInstance.disconnect();
     };
-  }, [isAuthenticated, token]);
+  }, [isAuthenticated, token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <SocketContext.Provider value={{ socket, connected }}>
