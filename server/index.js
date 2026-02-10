@@ -34,7 +34,18 @@ connectDB();
 
 // Security headers
 app.use(helmet({
-  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? undefined : false,
+  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      connectSrc: ["'self'", "https://fonts.googleapis.com", "wss:", "ws:"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      workerSrc: ["'self'"],
+      manifestSrc: ["'self'"],
+    }
+  } : false,
 }));
 
 // Rate limiting
