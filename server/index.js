@@ -2,12 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const connectDB = require('./config/db');
-const config = require('./config/config');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
+
+// Load .env BEFORE reading config so env vars are available
 require('dotenv').config();
+
+const config = require('./config/config');
+const connectDB = require('./config/db');
 
 // Validate required environment variables
 if (!config.mongoURI) {
