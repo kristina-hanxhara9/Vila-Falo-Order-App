@@ -12,8 +12,6 @@ const TableManagement = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [tableHistory, setTableHistory] = useState({}); // eslint-disable-line no-unused-vars
-  const [, setSelectedTable] = useState(null);
-  const [, setShowHistory] = useState(false);
   const [filterStatus, setFilterStatus] = useState('all');
   
   // Form state for adding/editing tables
