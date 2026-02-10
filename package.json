@@ -19,7 +19,8 @@
     "dev:server": "npm --workspace=server run dev",
     "start:client": "npm --workspace=client run serve",
     "dev:client": "npm --workspace=client start",
-    "heroku-postbuild": "npm --workspace=client install && npm --workspace=client run build"
+    "build": "npm --workspace=client install && npm --workspace=client run build",
+    "heroku-postbuild": "npm run build"
   },
   "keywords": [
     "restaurant",

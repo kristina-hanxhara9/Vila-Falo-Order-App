@@ -21,7 +21,8 @@ const UserManagement = () => {
     _id: '',
     name: '',
     username: '',
-    role: 'waiter'
+    role: 'waiter',
+    pin: ''
   });
   
   // Fetch users
@@ -68,7 +69,8 @@ const UserManagement = () => {
       _id: '',
       name: '',
       username: '',
-      role: 'waiter'
+      role: 'waiter',
+      pin: ''
     });
     setIsEditing(false);
     setIsFormOpen(true);
@@ -80,7 +82,8 @@ const UserManagement = () => {
       _id: user._id,
       name: user.name,
       username: user.username,
-      role: user.role
+      role: user.role,
+      pin: ''
     });
     setIsEditing(true);
     setIsFormOpen(true);
@@ -107,11 +110,13 @@ const UserManagement = () => {
       
       if (isEditing) {
         // Update existing user
-        const userData = { 
+        const userData = {
           name: currentUser.name,
           username: currentUser.username,
           role: currentUser.role
         };
+        // Only send PIN if it was entered (optional on edit)
+        if (currentUser.pin) userData.pin = currentUser.pin;
         
         const res = await axios.put(
           `${API_URL}/auth/users/${currentUser._id}`, 
@@ -132,11 +137,12 @@ const UserManagement = () => {
         setIsFormOpen(false);
         setError(''); // Clear any errors
       } else {
-        // Add new user - passwordless system
-        const userData = { 
+        // Add new user with PIN
+        const userData = {
           name: currentUser.name,
           username: currentUser.username,
-          role: currentUser.role
+          role: currentUser.role,
+          pin: currentUser.pin
         };
         
         const res = await axios.post(
@@ -425,6 +431,24 @@ const UserManagement = () => {
                       <option value="kitchen">Kuzhina</option>
                       <option value="manager">Manaxher</option>
                     </select>
+                  </div>
+
+                  <div>
+                    <label className="form-label">
+                      PIN (4 shifra){isEditing ? ' - lini bosh per te mos ndryshuar' : ''}
+                    </label>
+                    <input
+                      type="password"
+                      name="pin"
+                      inputMode="numeric"
+                      maxLength={4}
+                      pattern="[0-9]*"
+                      className="form-control text-center text-xl tracking-widest"
+                      placeholder="****"
+                      value={currentUser.pin}
+                      onChange={(e) => setCurrentUser({...currentUser, pin: e.target.value.replace(/\D/g, '')})}
+                      required={!isEditing}
+                    />
                   </div>
                 </div>
               </div>

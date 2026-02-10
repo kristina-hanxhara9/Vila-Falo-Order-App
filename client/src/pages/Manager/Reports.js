@@ -44,96 +44,13 @@ const Reports = () => {
           }
         };
         
-        // Fetch orders for the date range
-        const ordersRes = await axios.get(
-          `${API_URL}/orders?start=${dateRange.startDate}&end=${dateRange.endDate}`, 
+        // Fetch aggregated report data from server
+        const reportRes = await axios.get(
+          `${API_URL}/orders/reports/summary?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`,
           config
         );
-        
-        // Filter to only include paid orders for sales calculations
-        const paidOrders = ordersRes.data.filter(order => order.paymentStatus === 'paid');
-        
-        // Calculate total sales
-        const totalSales = paidOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-        
-        // Group sales by day
-        const salesByDay = {};
-        paidOrders.forEach(order => {
-          const date = new Date(order.createdAt).toISOString().split('T')[0];
-          
-          if (!salesByDay[date]) {
-            salesByDay[date] = 0;
-          }
-          
-          salesByDay[date] += order.totalAmount;
-        });
-        
-        // Convert to array format for charting
-        const salesByDayArray = Object.keys(salesByDay).map(date => ({
-          date,
-          amount: salesByDay[date]
-        })).sort((a, b) => new Date(a.date) - new Date(b.date));
-        
-        // Count order statuses
-        const completedOrders = ordersRes.data.filter(order => order.status === 'completed').length;
-        const canceledOrders = ordersRes.data.filter(order => order.status === 'canceled').length;
-        
-        // Gather data about items sold
-        const itemsSold = {};
-        const categoriesSold = {};
-        
-        paidOrders.forEach(order => {
-          order.items.forEach(item => {
-            const itemName = item.name;
-            const categoryName = item.category || 'Të tjera';
-            const quantity = item.quantity;
-            const totalPrice = item.price * quantity;
-            
-            // Add to items tracking
-            if (!itemsSold[itemName]) {
-              itemsSold[itemName] = {
-                name: itemName,
-                quantity: 0,
-                revenue: 0,
-                category: categoryName
-              };
-            }
-            
-            itemsSold[itemName].quantity += quantity;
-            itemsSold[itemName].revenue += totalPrice;
-            
-            // Add to categories tracking
-            if (!categoriesSold[categoryName]) {
-              categoriesSold[categoryName] = {
-                name: categoryName,
-                quantity: 0,
-                revenue: 0
-              };
-            }
-            
-            categoriesSold[categoryName].quantity += quantity;
-            categoriesSold[categoryName].revenue += totalPrice;
-          });
-        });
-        
-        // Convert to arrays and sort by revenue
-        const itemsArray = Object.values(itemsSold).sort((a, b) => b.revenue - a.revenue);
-        const categoriesArray = Object.values(categoriesSold).sort((a, b) => b.revenue - a.revenue);
-        
-        // Update report data
-        setReportData({
-          sales: {
-            total: totalSales,
-            byDay: salesByDayArray
-          },
-          orders: {
-            total: ordersRes.data.length,
-            completed: completedOrders,
-            canceled: canceledOrders
-          },
-          items: itemsArray,
-          categories: categoriesArray
-        });
+
+        setReportData(reportRes.data);
         
         setLoading(false);
       } catch (err) {

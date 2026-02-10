@@ -1,38 +1,52 @@
-// src/contexts/SocketContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import io from 'socket.io-client';
+import { AuthContext } from './AuthContext';
 
 export const SocketContext = createContext();
 
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'https://dry-cliffs-57282-2269f6e54282.herokuapp.com';
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000';
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
+  const { token, isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
-    // Initialize socket connection
-    const socketInstance = io(SOCKET_URL);
-    
+    // Only connect when authenticated
+    if (!isAuthenticated || !token) {
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+        setConnected(false);
+      }
+      return;
+    }
+
+    const socketInstance = io(SOCKET_URL, {
+      auth: { token }
+    });
+
     socketInstance.on('connect', () => {
-      console.log('Socket connected');
       setConnected(true);
     });
-    
+
     socketInstance.on('disconnect', () => {
-      console.log('Socket disconnected');
       setConnected(false);
     });
-    
-    // Set socket instance
+
+    socketInstance.on('connect_error', (err) => {
+      if (err.message === 'Authentication required' || err.message === 'Invalid token') {
+        setConnected(false);
+      }
+    });
+
     setSocket(socketInstance);
-    
-    // Cleanup on unmount
+
     return () => {
       socketInstance.disconnect();
     };
-  }, []);
-  
+  }, [isAuthenticated, token]);
+
   return (
     <SocketContext.Provider value={{ socket, connected }}>
       {children}
