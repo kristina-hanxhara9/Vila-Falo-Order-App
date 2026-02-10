@@ -7,33 +7,6 @@ import ThermalPrinterService from '../../services/ThermalPrinterService';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// Enhanced status colors with better contrast and modern palette
-const STATUS_STYLES = {
-  free: {
-    bg: 'bg-emerald-50 hover:bg-emerald-100',
-    border: 'border-emerald-400 hover:border-emerald-500',
-    text: 'text-emerald-700',
-    ring: 'ring-emerald-400/20'
-  },
-  ordering: {
-    bg: 'bg-amber-50 hover:bg-amber-100', 
-    border: 'border-amber-400 hover:border-amber-500',
-    text: 'text-amber-700',
-    ring: 'ring-amber-400/20'
-  },
-  unpaid: {
-    bg: 'bg-rose-50 hover:bg-rose-100',
-    border: 'border-rose-400 hover:border-rose-500', 
-    text: 'text-rose-700',
-    ring: 'ring-rose-400/20'
-  },
-  paid: {
-    bg: 'bg-blue-50 hover:bg-blue-100',
-    border: 'border-blue-400 hover:border-blue-500',
-    text: 'text-blue-700',
-    ring: 'ring-blue-400/20'
-  }
-};
 
 const TableGrid = ({ tables, onSelectTable }) => {
   // Ensure tables is always an array
@@ -112,8 +85,6 @@ const WaiterDashboard = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [, setSelectedTable] = useState(null);
-  
   // Thermal Printer State
   const [thermalPrinter] = useState(new ThermalPrinterService());
   const [showPrinterConfig, setShowPrinterConfig] = useState(false);
