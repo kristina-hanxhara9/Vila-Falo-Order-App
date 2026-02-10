@@ -65,6 +65,9 @@ app.use(express.json());
 app.use('/api/', apiLimiter);
 app.use('/api/auth/login', loginLimiter);
 
+// Make io accessible to API routes via req.app.get('io')
+app.set('io', io);
+
 // Socket handlers
 require('./sockets/index')(io);
 

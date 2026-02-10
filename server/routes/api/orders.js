@@ -253,6 +253,14 @@ router.post('/', auth, async (req, res) => {
       .populate('waiter', 'name')
       .populate('items.menuItem', 'name albanianName category price');
 
+    // Notify kitchen and manager of new order
+    const io = req.app.get('io');
+    if (io) {
+      io.to('kitchen').emit('new-order', populatedOrder);
+      io.to('manager').emit('order-received', populatedOrder);
+      io.to('kitchen').emit('order-updated', populatedOrder);
+    }
+
     res.status(201).json(populatedOrder);
   } catch (err) {
     console.error('Error creating order:', err.message);
@@ -294,6 +302,20 @@ router.put('/:id', auth, async (req, res) => {
       .populate('waiter', 'name')
       .populate('items.menuItem', 'name albanianName category');
 
+    // Notify all roles of order update
+    const io = req.app.get('io');
+    if (io) {
+      io.to('kitchen').emit('order-updated', populatedOrder);
+      io.to('waiters').to('waiter').emit('order-updated', populatedOrder);
+      io.to('manager').emit('order-updated', populatedOrder);
+      if (status === 'completed') {
+        io.to('waiters').to('waiter').emit('order-completed', {
+          orderId: populatedOrder._id,
+          timestamp: new Date()
+        });
+      }
+    }
+
     res.json(populatedOrder);
   } catch (err) {
     console.error('Error updating order:', err.message);
@@ -331,6 +353,18 @@ router.put('/:id/prepared', auth, async (req, res) => {
       .populate('waiter', 'name')
       .populate('items.menuItem', 'name albanianName category');
 
+    // Notify waiter that their order is ready
+    const io = req.app.get('io');
+    if (io) {
+      io.to('waiters').to('waiter').emit('order-completed', {
+        orderId: populatedOrder._id,
+        tableNumber: populatedOrder.table?.number,
+        timestamp: new Date()
+      });
+      io.to('waiters').to('waiter').emit('order-updated', populatedOrder);
+      io.to('manager').emit('order-updated', populatedOrder);
+    }
+
     res.json(populatedOrder);
   } catch (err) {
     console.error('Error marking order as prepared:', err.message);
@@ -366,6 +400,22 @@ router.put('/:id/item/:itemId/prepared', auth, async (req, res) => {
       .populate('waiter', 'name')
       .populate('items.menuItem', 'name albanianName category');
 
+    // Notify waiter that an item is ready
+    const io = req.app.get('io');
+    if (io) {
+      io.to('waiters').to('waiter').emit('order-item-updated', {
+        orderId: req.params.id,
+        itemId: req.params.itemId,
+        status: 'ready'
+      });
+      io.to('waiters').to('waiter').emit('order-updated', populatedOrder);
+      io.to('manager').emit('order-item-updated', {
+        orderId: req.params.id,
+        itemId: req.params.itemId,
+        status: 'ready'
+      });
+    }
+
     res.json(populatedOrder);
   } catch (err) {
     console.error('Error marking item as prepared:', err.message);
@@ -391,6 +441,13 @@ router.delete('/:id', auth, async (req, res) => {
 
     order.status = 'cancelled';
     await order.save();
+
+    // Notify kitchen and manager of cancellation
+    const io = req.app.get('io');
+    if (io) {
+      io.to('kitchen').emit('order-updated', { _id: req.params.id, status: 'cancelled' });
+      io.to('manager').emit('order-updated', { _id: req.params.id, status: 'cancelled' });
+    }
 
     res.json({ message: 'Order cancelled successfully' });
   } catch (err) {
