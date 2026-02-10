@@ -1,7 +1,16 @@
 // server/config/config.js
+
+// Strip accidental "KEY=" prefix from env var values (common Railway misconfiguration)
+function cleanEnv(val, prefix) {
+  if (val && val.startsWith(prefix + '=')) {
+    return val.slice(prefix.length + 1);
+  }
+  return val;
+}
+
 module.exports = {
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: cleanEnv(process.env.JWT_SECRET, 'JWT_SECRET'),
   port: process.env.PORT || 5000,
-  mongoURI: process.env.MONGO_URI
+  mongoURI: cleanEnv(process.env.MONGO_URI, 'MONGO_URI')
 };
   
