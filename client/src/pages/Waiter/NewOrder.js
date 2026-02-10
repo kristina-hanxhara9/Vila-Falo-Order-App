@@ -141,8 +141,8 @@ const NewOrder = () => {
     };
     
     fetchData();
-  }, [tableId]);
-  
+  }, [tableId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Update selected table when tableId changes
   useEffect(() => {
     if (tableId) {
@@ -286,20 +286,6 @@ const NewOrder = () => {
       return a.albanianName.localeCompare(b.albanianName);
     });
   }, [menuItems, selectedCategory]);
-  
-  // Get category name in Albanian
-  const getCategoryName = (category) => {
-    switch (category) {
-      case 'food':
-        return 'Ushqime';
-      case 'drink':
-        return 'Pije';
-      case 'dessert':
-        return 'Ëmbëlsira';
-      default:
-        return category;
-    }
-  };
   
   // Handle item quantity change
   const handleQuantityChange = (itemId, delta) => {

@@ -9,14 +9,14 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const WaiterTableManagement = () => {
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [selectedTable, setSelectedTable] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   
   // Form state for adding/editing tables
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); // eslint-disable-line no-unused-vars
   const [currentTable, setCurrentTable] = useState({
     _id: '',
     number: '',
@@ -305,22 +305,6 @@ const WaiterTableManagement = () => {
         return 'E paguar';
       default:
         return status;
-    }
-  };
-  
-  // Get status class for styling
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'free':
-        return 'bg-green-100 text-green-800';
-      case 'ordering':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'unpaid':
-        return 'bg-red-100 text-red-800';
-      case 'paid':
-        return 'bg-blue-100 text-blue-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
     }
   };
   

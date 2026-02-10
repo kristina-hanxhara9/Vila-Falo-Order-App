@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       setAuthToken(token);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const loadUser = async () => {

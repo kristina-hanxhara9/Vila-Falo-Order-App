@@ -40,7 +40,7 @@ const KitchenDashboard = () => {
   const [success, setSuccess] = useState('');
   const [notifications, setNotifications] = useState([]);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const [lastOrderCount, setLastOrderCount] = useState(0);
+  const [lastOrderCount, setLastOrderCount] = useState(0); // eslint-disable-line no-unused-vars
   const [isKitchenDisplay, setIsKitchenDisplay] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   

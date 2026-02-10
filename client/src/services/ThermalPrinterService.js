@@ -185,7 +185,6 @@ class ThermalPrinterService {
 
   // Format a line with multiple columns
   formatLine(col1, col2, col3, col4) {
-    const width = 48;
     const col1Width = 20;
     const col2Width = 6;
     const col3Width = 10;
@@ -201,7 +200,6 @@ class ThermalPrinterService {
 
   // Format price line (quantity, unit price, total)
   formatPriceLine(qty, price, total) {
-    const width = 48;
     const qtyWidth = 8;
     const priceWidth = 15;
     const totalWidth = 15;
