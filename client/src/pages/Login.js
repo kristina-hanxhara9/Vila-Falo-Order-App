@@ -4,16 +4,15 @@ import { AuthContext } from '../contexts/AuthContext';
 
 const Login = () => {
   const [username, setUsername] = useState('');
+  const [pin, setPin] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const { login, isAuthenticated, user } = useContext(AuthContext);
   const navigate = useNavigate();
-  
-  // Redirect if already authenticated
+
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Redirect based on user role
       if (user.role === 'waiter') {
         navigate('/waiter');
       } else if (user.role === 'kitchen') {
@@ -23,25 +22,26 @@ const Login = () => {
       }
     }
   }, [isAuthenticated, user, navigate]);
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!username) {
-      setError('Ju lutem plotësoni emrin e përdoruesit');
+      setError('Ju lutem shkruani emrin e perdoruesit');
       return;
     }
-    
+
+    if (!pin || pin.length !== 4) {
+      setError('Ju lutem shkruani PIN-in (4 shifra)');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
-      
-      console.log('Login form - attempting login with username:', username);
-      
-      const user = await login(username);
-      console.log('Login form - login successful, user:', user);
-      
-      // Redirect based on user role
+
+      const user = await login(username, pin);
+
       if (user.role === 'waiter') {
         navigate('/waiter');
       } else if (user.role === 'kitchen') {
@@ -50,43 +50,62 @@ const Login = () => {
         navigate('/manager');
       }
     } catch (err) {
-      console.error('Login form - login error:', err);
-      setError(err.response?.data?.message || 'Përdoruesi nuk u gjet');
+      setError(err.response?.data?.message || 'Kredencialet jane te gabuara');
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800">Vila Falo</h1>
-          <p className="text-gray-600">Sistemi i Menaxhimit të Porosive</p>
+          <p className="text-gray-600">Sistemi i Menaxhimit te Porosive</p>
         </div>
-        
+
         {error && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
             <p>{error}</p>
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit}>
-          <div className="mb-6">
+          <div className="mb-4">
             <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">
-              Emri i përdoruesit
+              Emri i perdoruesit
             </label>
             <input
               type="text"
               id="username"
               className="input w-full"
-              placeholder="Shkruani emrin e përdoruesit"
+              placeholder="Shkruani emrin e perdoruesit"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
               required
             />
           </div>
-          
+
+          <div className="mb-6">
+            <label htmlFor="pin" className="block text-gray-700 text-sm font-bold mb-2">
+              PIN (4 shifra)
+            </label>
+            <input
+              type="password"
+              id="pin"
+              inputMode="numeric"
+              maxLength={4}
+              pattern="[0-9]*"
+              className="input w-full text-center text-2xl tracking-widest"
+              placeholder="****"
+              value={pin}
+              onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
+              autoComplete="current-password"
+              required
+            />
+          </div>
+
           <div className="flex items-center justify-between">
             <button
               type="submit"

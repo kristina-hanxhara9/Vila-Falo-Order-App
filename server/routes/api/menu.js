@@ -8,25 +8,16 @@ const auth = require('../../middleware/auth');
 // @access  Public
 router.get('/', async (req, res) => {
   try {
-    console.log('GET /api/menu - Fetching all menu items');
-    
-    // Query all menu items and sort them
     const menuItems = await MenuItem.find().sort({ category: 1, name: 1 });
-    
-    console.log(`Found ${menuItems.length} menu items`);
-    
-    // Check if any items were found
+
     if (menuItems.length === 0) {
-      console.log('No menu items found in database');
       return res.status(404).json({ message: 'No menu items found' });
-    } else {
-      console.log('Menu items categories:', menuItems.map(item => item.category));
     }
-    
+
     res.json(menuItems);
   } catch (err) {
     console.error('Error fetching menu items:', err.message);
-    res.status(500).send('Gabim në server');
+    res.status(500).json({ message: 'Gabim ne server' });
   }
 });
 
@@ -35,15 +26,16 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/category/:category', async (req, res) => {
   try {
-    console.log(`GET /api/menu/category/${req.params.category} - Fetching menu items by category`);
-    
-    const menuItems = await MenuItem.find({ 
+    const validCategories = ['food', 'drink', 'dessert'];
+    if (!validCategories.includes(req.params.category)) {
+      return res.status(400).json({ message: 'Invalid category' });
+    }
+
+    const menuItems = await MenuItem.find({
       category: req.params.category,
       available: true
     }).sort({ name: 1 });
-    
-    console.log(`Found ${menuItems.length} menu items in category ${req.params.category}`);
-    
+
     if (menuItems.length === 0) {
       return res.status(404).json({ message: 'No menu items found in this category' });
     }
@@ -51,7 +43,7 @@ router.get('/category/:category', async (req, res) => {
     res.json(menuItems);
   } catch (err) {
     console.error('Error fetching menu items by category:', err.message);
-    res.status(500).send('Gabim në server');
+    res.status(500).json({ message: 'Gabim ne server' });
   }
 });
 
@@ -59,19 +51,17 @@ router.get('/category/:category', async (req, res) => {
 // @desc    Add a new menu item
 // @access  Private (manager only)
 router.post('/', auth, async (req, res) => {
-  // Check if user is manager
   if (req.user.role !== 'manager') {
-    return res.status(403).json({ message: 'Nuk keni akses në këtë funksion' });
+    return res.status(403).json({ message: 'Nuk keni akses ne kete funksion' });
   }
 
   const { name, albanianName, category, price, description, albanianDescription } = req.body;
-  
+
   if (!name || !category || !price) {
     return res.status(400).json({ message: 'Please provide name, category, and price' });
   }
 
   try {
-    // Create new menu item
     const newMenuItem = new MenuItem({
       name,
       albanianName,
@@ -80,12 +70,12 @@ router.post('/', auth, async (req, res) => {
       description,
       albanianDescription
     });
-    
+
     const menuItem = await newMenuItem.save();
     res.json(menuItem);
   } catch (err) {
     console.error('Error creating menu item:', err.message);
-    res.status(500).send('Gabim në server');
+    res.status(500).json({ message: 'Gabim ne server' });
   }
 });
 
@@ -93,21 +83,19 @@ router.post('/', auth, async (req, res) => {
 // @desc    Update a menu item
 // @access  Private (manager only)
 router.put('/:id', auth, async (req, res) => {
-  // Check if user is manager
   if (req.user.role !== 'manager') {
-    return res.status(403).json({ message: 'Nuk keni akses në këtë funksion' });
+    return res.status(403).json({ message: 'Nuk keni akses ne kete funksion' });
   }
-  
+
   try {
     let menuItem = await MenuItem.findById(req.params.id);
-    
+
     if (!menuItem) {
-      return res.status(404).json({ message: 'Artikulli i menusë nuk u gjet' });
+      return res.status(404).json({ message: 'Artikulli i menuse nuk u gjet' });
     }
-    
+
     const { name, albanianName, category, price, available, description, albanianDescription } = req.body;
-    
-    // Build menu item object
+
     const menuItemFields = {};
     if (name) menuItemFields.name = name;
     if (albanianName) menuItemFields.albanianName = albanianName;
@@ -116,17 +104,17 @@ router.put('/:id', auth, async (req, res) => {
     if (available !== undefined) menuItemFields.available = available;
     if (description) menuItemFields.description = description;
     if (albanianDescription) menuItemFields.albanianDescription = albanianDescription;
-    
+
     menuItem = await MenuItem.findByIdAndUpdate(
       req.params.id,
       { $set: menuItemFields },
       { new: true }
     );
-    
+
     res.json(menuItem);
   } catch (err) {
     console.error('Error updating menu item:', err.message);
-    res.status(500).send('Gabim në server');
+    res.status(500).json({ message: 'Gabim ne server' });
   }
 });
 
@@ -134,25 +122,23 @@ router.put('/:id', auth, async (req, res) => {
 // @desc    Delete a menu item
 // @access  Private (manager only)
 router.delete('/:id', auth, async (req, res) => {
-  // Check if user is manager
   if (req.user.role !== 'manager') {
-    return res.status(403).json({ message: 'Nuk keni akses në këtë funksion' });
+    return res.status(403).json({ message: 'Nuk keni akses ne kete funksion' });
   }
-  
+
   try {
     const menuItem = await MenuItem.findById(req.params.id);
-    
+
     if (!menuItem) {
-      return res.status(404).json({ message: 'Artikulli i menusë nuk u gjet' });
+      return res.status(404).json({ message: 'Artikulli i menuse nuk u gjet' });
     }
-    
+
     await MenuItem.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Artikulli i menusë u fshi' });
+    res.json({ message: 'Artikulli i menuse u fshi' });
   } catch (err) {
     console.error('Error deleting menu item:', err.message);
-    res.status(500).send('Gabim në server');
+    res.status(500).json({ message: 'Gabim ne server' });
   }
 });
 
-// Export the router
 module.exports = router;

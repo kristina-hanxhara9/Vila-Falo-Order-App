@@ -113,6 +113,53 @@ const ManagerDashboard = () => {
     fetchDashboardData();
   }, [token]);
 
+  // Real-time updates via socket
+  useEffect(() => {
+    if (!socket) return;
+
+    const refreshData = () => {
+      const config = { headers: { 'x-auth-token': token } };
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      Promise.all([
+        axios.get(`${API_URL}/orders`, config),
+        axios.get(`${API_URL}/tables`, config)
+      ]).then(([ordersRes, tablesRes]) => {
+        const todayOrders = ordersRes.data.filter(order => new Date(order.createdAt) >= today);
+        const dailyRevenue = todayOrders.reduce((sum, order) =>
+          order.paymentStatus === 'paid' ? sum + order.totalAmount : sum, 0);
+        const activeOrders = ordersRes.data.filter(order => order.status === 'active');
+        const sortedOrders = [...ordersRes.data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setRecentOrders(sortedOrders.slice(0, 5));
+        setTables(tablesRes.data);
+
+        setStats({
+          totalOrders: todayOrders.length,
+          activeOrders: activeOrders.length,
+          dailyRevenue,
+          tables: {
+            total: tablesRes.data.length,
+            free: tablesRes.data.filter(t => t.status === 'free').length,
+            ordering: tablesRes.data.filter(t => t.status === 'ordering').length,
+            unpaid: tablesRes.data.filter(t => t.status === 'unpaid').length,
+            paid: tablesRes.data.filter(t => t.status === 'paid').length
+          }
+        });
+      }).catch(() => {});
+    };
+
+    socket.on('order-received', refreshData);
+    socket.on('order-updated', refreshData);
+    socket.on('table-updated', refreshData);
+
+    return () => {
+      socket.off('order-received', refreshData);
+      socket.off('order-updated', refreshData);
+      socket.off('table-updated', refreshData);
+    };
+  }, [socket, token]);
+
   // Handle logout
   const handleLogout = () => {
     logout();

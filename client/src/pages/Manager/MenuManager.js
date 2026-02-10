@@ -7,6 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const MenuManagement = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -48,10 +49,14 @@ const MenuManagement = () => {
     fetchMenuItems();
   }, []);
   
-  // Filter menu items by category
-  const filteredMenuItems = selectedCategory === 'all'
-    ? menuItems
-    : menuItems.filter(item => item.category === selectedCategory);
+  // Filter menu items by category and search term
+  const filteredMenuItems = menuItems.filter(item => {
+    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+    const matchesSearch = !searchTerm ||
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (item.albanianName && item.albanianName.toLowerCase().includes(searchTerm.toLowerCase()));
+    return matchesCategory && matchesSearch;
+  });
   
   // Get category name in Albanian
   const getCategoryName = (category) => {
@@ -215,8 +220,18 @@ const MenuManagement = () => {
         </div>
       )}
       
-      {/* Category Filter */}
+      {/* Search and Category Filter */}
       <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Kerko artikuj..."
+            className="input w-full"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Kerko artikuj te menuse"
+          />
+        </div>
         <div className="flex flex-wrap gap-2">
           <button
             className={`px-3 py-1 rounded-full text-sm ${

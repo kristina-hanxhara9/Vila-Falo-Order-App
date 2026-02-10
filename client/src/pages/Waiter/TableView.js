@@ -81,16 +81,15 @@ const TableView = () => {
           }
         };
 
-        console.log('🔍 Fetching table and order data for tableId:', tableId);
-
+    
         // Fetch table details
         const tableRes = await axios.get(`${API_URL}/tables/${tableId}`, config);
-        console.log('📋 Table data:', tableRes.data);
+
         setTable(tableRes.data);
 
         // Fetch ALL orders and filter for this table's active order
         const ordersRes = await axios.get(`${API_URL}/orders`, config);
-        console.log('📦 All orders:', ordersRes.data);
+
         
         // Find active order for this table
         const allOrders = Array.isArray(ordersRes.data) ? ordersRes.data : [];
@@ -100,19 +99,10 @@ const TableView = () => {
           const isForThisTable = orderTableId === tableId;
           const isActive = order.status === 'active';
           
-          console.log('🔍 Checking order:', {
-            orderId: order._id,
-            orderTableId,
-            tableId,
-            isForThisTable,
-            isActive,
-            status: order.status
-          });
-          
           return isForThisTable && isActive;
         });
         
-        console.log('✅ Found table order:', tableOrder);
+
         setOrder(tableOrder || null);
 
         setLoading(false);
@@ -162,17 +152,22 @@ const TableView = () => {
   const handleMarkAsPaid = async () => {
     try {
       if (!order) {
-        setError('Nuk ka porosi për t’u paguar');
+        setError('Nuk ka porosi për tu paguar');
         return;
       }
-      
+
+      const total = order.totalAmount || calculateOrderTotal(order.items);
+      if (!window.confirm(`Konfirmoni pagesën për Tavolinën ${table.number}?\n\nTotali: ${total.toLocaleString()} LEK`)) {
+        return;
+      }
+
       const config = {
         headers: {
           'x-auth-token': token || localStorage.getItem('token')
         }
       };
 
-      console.log('💳 Marking order as paid:', order._id);
+
       await axios.put(`${API_URL}/orders/${order._id}/pay`, {}, config);
 
       // Emit socket event
@@ -187,7 +182,7 @@ const TableView = () => {
       setOrder((prevOrder) => ({ ...prevOrder, paymentStatus: 'paid' }));
       setTable((prevTable) => ({ ...prevTable, status: 'free', currentOrder: null }));
 
-      console.log('✅ Payment successful, redirecting to dashboard');
+
       // Redirect to waiter dashboard after a short delay
       setTimeout(() => {
         navigate('/waiter');
