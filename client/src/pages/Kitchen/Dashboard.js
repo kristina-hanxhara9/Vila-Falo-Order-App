@@ -122,7 +122,7 @@ const KitchenDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!token) {
-        console.log('❌ No token available');
+
         setError('No token available');
         navigate('/login');
         return;
@@ -131,7 +131,7 @@ const KitchenDashboard = () => {
       try {
         setLoading(true);
         setError('');
-        console.log('🔑 Using token:', token);
+
         
         const config = {
           headers: {
@@ -140,15 +140,15 @@ const KitchenDashboard = () => {
         };
         
         // First, fetch the menu items to get the names
-        console.log('📱 Fetching menu...');
+
         const menuRes = await axios.get(`${API_URL}/menu`, config);
-        console.log('📱 Menu response:', menuRes.data);
+
         setMenuItems(Array.isArray(menuRes.data) ? menuRes.data : []);
         
         // Then fetch orders
-        console.log('📋 Fetching orders...');
+
         const ordersRes = await axios.get(`${API_URL}/orders`, config);
-        console.log('📋 Orders response:', ordersRes.data);
+
         
         // Filter for active orders only with safety check
         const safeOrdersData = Array.isArray(ordersRes.data) ? ordersRes.data : [];
@@ -156,7 +156,7 @@ const KitchenDashboard = () => {
         
         // Sort by oldest first so kitchen can prioritize
         setOrders(activeOrders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)));
-        console.log('✅ All data fetched successfully');
+
         setLoading(false);
       } catch (err) {
         console.error('❌ Fetch error:', err);
@@ -174,7 +174,7 @@ const KitchenDashboard = () => {
     // Enhanced socket listeners with notifications
     if (socket) {
       socket.on('order-updated', (updatedOrder) => {
-        console.log('Received order update via socket:', updatedOrder);
+
         setOrders(currentOrders => {
           const safeCurrentOrders = Array.isArray(currentOrders) ? currentOrders : [];
           
@@ -201,7 +201,7 @@ const KitchenDashboard = () => {
       });
       
       socket.on('new-order', (newOrder) => {
-        console.log('Received new order via socket:', newOrder);
+
         
         if (newOrder.status === 'active') {
           // Check if order is urgent (older orders or special notes)
@@ -480,7 +480,7 @@ const KitchenDashboard = () => {
       
       // Force re-render to update time displays
       setOrders(currentOrders => [...currentOrders]);
-    }, 30000); // 30 seconds
+    }, 10000); // 10 seconds
     
     return () => clearInterval(interval);
   }, [orders, addNotification, getTimeDifferenceInfo]);
@@ -719,7 +719,7 @@ const KitchenDashboard = () => {
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                   </svg>
-                  Kitchen Display
+                  Ekrani i Kuzhinës
                 </button>
 
                 <button

@@ -178,7 +178,7 @@ const WaiterDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!token) {
-        console.log('❌ No token available');
+
         setError('No token available');
         navigate('/login');
         return;
@@ -186,7 +186,7 @@ const WaiterDashboard = () => {
 
       try {
         setLoading(true);
-        console.log('🔑 Using token:', token);
+
         
         const config = {
           headers: {
@@ -194,29 +194,23 @@ const WaiterDashboard = () => {
           }
         };
         
-        // Test menu API
-        console.log('📱 Fetching menu...');
+
         const menuRes = await axios.get(`${API_URL}/menu`, config);
-        console.log('📱 Menu response:', menuRes.data);
-        console.log('📱 Menu is array?', Array.isArray(menuRes.data));
+
         setMenuItems(Array.isArray(menuRes.data) ? menuRes.data : []);
         
-        // Test tables API
-        console.log('🪑 Fetching tables...');
+
         const tablesRes = await axios.get(`${API_URL}/tables`, config);
-        console.log('🪑 Tables response:', tablesRes.data);
-        console.log('🪑 Tables is array?', Array.isArray(tablesRes.data));
+
         const tablesData = Array.isArray(tablesRes.data) ? tablesRes.data : [];
         setTables(tablesData.sort((a, b) => a.number - b.number));
         
-        // Test orders API
-        console.log('📋 Fetching orders...');
+
         const ordersRes = await axios.get(`${API_URL}/orders/active`, config);
-        console.log('📋 Orders response:', ordersRes.data);
-        console.log('📋 Orders is array?', Array.isArray(ordersRes.data));
+
         setActiveOrders(Array.isArray(ordersRes.data) ? ordersRes.data : []);
         
-        console.log('✅ All data fetched successfully');
+
         setLoading(false);
       } catch (err) {
         console.error('❌ Fetch error:', err);
@@ -233,19 +227,6 @@ const WaiterDashboard = () => {
     
     fetchData();
   }, [token, navigate]);
-  
-  // Debug logging for state changes
-  useEffect(() => {
-    console.log('📊 Tables state changed:', tables, 'Is array?', Array.isArray(tables));
-  }, [tables]);
-
-  useEffect(() => {
-    console.log('📊 Orders state changed:', activeOrders, 'Is array?', Array.isArray(activeOrders));
-  }, [activeOrders]);
-
-  useEffect(() => {
-    console.log('📊 Menu state changed:', menuItems, 'Is array?', Array.isArray(menuItems));
-  }, [menuItems]);
   
   // Listen for socket events
   useEffect(() => {
@@ -471,21 +452,10 @@ const WaiterDashboard = () => {
     navigate('/waiter/tables');
   };
   
-  // Debug before render
-  console.log('🔍 Debug before render:');
-  console.log('tables:', tables, 'is array?', Array.isArray(tables));
-  console.log('activeOrders:', activeOrders, 'is array?', Array.isArray(activeOrders));
-  console.log('menuItems:', menuItems, 'is array?', Array.isArray(menuItems));
-
-  // Ensure safe arrays for rendering (declare once here)
+  // Ensure safe arrays for rendering
   const safeTables = Array.isArray(tables) ? tables : [];
   const safeActiveOrders = Array.isArray(activeOrders) ? activeOrders : [];
 
-  // Also check each order's items
-  safeActiveOrders.forEach((order, index) => {
-    console.log(`Order ${index} items:`, order.items, 'is array?', Array.isArray(order.items));
-  });
-  
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -626,7 +596,7 @@ const WaiterDashboard = () => {
             <div className="bg-gradient-to-r from-purple-500 to-indigo-600 px-8 py-6 rounded-t-3xl">
               <div className="flex justify-between items-center">
                 <h2 className="text-3xl font-bold text-white flex items-center">
-                  🖨️ Thermal Printer Configuration
+                  🖨️ Konfigurimi i Printerit
                 </h2>
                 <button 
                   onClick={() => setShowPrinterConfig(false)}
@@ -643,7 +613,7 @@ const WaiterDashboard = () => {
               {/* Printer Interface Selection */}
               <div>
                 <label className="block text-lg font-semibold text-gray-700 mb-3">
-                  Printer Connection Type
+                  Lloji i lidhjes së printerit
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {['usb', 'serial', 'network'].map(type => (
@@ -662,8 +632,8 @@ const WaiterDashboard = () => {
                         </div>
                         <div className="font-semibold capitalize">{type}</div>
                         <div className="text-sm text-gray-500 mt-1">
-                          {type === 'usb' ? 'USB Connection' : 
-                           type === 'serial' ? 'Serial Port' : 'Network (TCP/IP)'}
+                          {type === 'usb' ? 'Lidhje USB' :
+                           type === 'serial' ? 'Port Serial' : 'Rrjet (TCP/IP)'}
                         </div>
                       </div>
                     </div>
@@ -674,25 +644,25 @@ const WaiterDashboard = () => {
               {/* Restaurant Name */}
               <div>
                 <label className="block text-lg font-semibold text-gray-700 mb-3">
-                  Restaurant Name for Receipt
+                  Emri i restorantit për faturën
                 </label>
                 <input
                   type="text"
                   value={printerSettings.restaurantName}
                   onChange={(e) => updatePrinterSettings({ restaurantName: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-2xl focus:border-purple-500 focus:outline-none transition-colors duration-200 text-lg"
-                  placeholder="Enter restaurant name..."
+                  placeholder="Shkruani emrin e restorantit..."
                 />
               </div>
               
               {/* Network Settings (if network selected) */}
               {printerSettings.interface === 'network' && (
                 <div className="bg-blue-50 p-6 rounded-2xl border border-blue-200">
-                  <h3 className="text-xl font-bold text-blue-800 mb-4">🌐 Network Settings</h3>
+                  <h3 className="text-xl font-bold text-blue-800 mb-4">🌐 Cilësimet e rrjetit</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-blue-700 mb-2">
-                        Printer IP Address
+                        Adresa IP e printerit
                       </label>
                       <input
                         type="text"
@@ -704,7 +674,7 @@ const WaiterDashboard = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-blue-700 mb-2">
-                        Port
+                        Porti
                       </label>
                       <input
                         type="number"
@@ -722,17 +692,17 @@ const WaiterDashboard = () => {
               {printerSettings.interface !== 'network' && (
                 <div className="bg-green-50 p-6 rounded-2xl border border-green-200">
                   <h3 className="text-xl font-bold text-green-800 mb-3">
-                    {printerSettings.interface === 'usb' ? '🔌 USB' : '📡 Serial'} Connection Info
+                    {printerSettings.interface === 'usb' ? '🔌 USB' : '📡 Serial'} - Informacion lidhje
                   </h3>
                   <div className="text-green-700 space-y-2">
-                    <p>• Make sure your thermal printer is connected via {printerSettings.interface.toUpperCase()}</p>
-                    <p>• Supported printers: Epson, Star, Citizen, and ESC/POS compatible</p>
-                    <p>• Browser will request permission to access the printer</p>
+                    <p>• Sigurohuni që printeri termik është i lidhur përmes {printerSettings.interface.toUpperCase()}</p>
+                    <p>• Printerat e mbështetur: Epson, Star, Citizen, dhe ESC/POS</p>
+                    <p>• Shfletuesi do të kërkojë leje për të aksesuar printerin</p>
                     {printerSettings.interface === 'usb' && (
-                      <p>• Requires modern browser with Web USB API support (Chrome, Edge)</p>
+                      <p>• Kërkon shfletues modern me Web USB API (Chrome, Edge)</p>
                     )}
                     {printerSettings.interface === 'serial' && (
-                      <p>• Requires modern browser with Web Serial API support</p>
+                      <p>• Kërkon shfletues modern me Web Serial API</p>
                     )}
                   </div>
                 </div>
@@ -747,7 +717,7 @@ const WaiterDashboard = () => {
                   <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  🧪 Test Printer
+                  🧪 Testo Printerin
                 </button>
                 
                 <button
@@ -757,7 +727,7 @@ const WaiterDashboard = () => {
                   <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
-                  ❌ Close
+                  ❌ Mbyll
                 </button>
               </div>
             </div>
@@ -963,7 +933,7 @@ const WaiterDashboard = () => {
                           {printingOrder === order._id ? (
                             <>
                               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                              Printing...
+                              Duke printuar...
                             </>
                           ) : (
                             <>
