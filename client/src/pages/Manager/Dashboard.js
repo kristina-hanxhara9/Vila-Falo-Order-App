@@ -186,17 +186,17 @@ const ManagerDashboard = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-blue-700 to-purple-800"></div>
         <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-500/10 to-white/5"></div>
         
-        <div className="relative backdrop-blur-sm bg-white/10 border-b border-white/20 shadow-2xl">
+        <div className="vila-page-header">
           <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
               <div className="text-center lg:text-left">
                 <div className="flex items-center justify-center lg:justify-start space-x-3 mb-2">
-                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
                     <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <h1 className="text-4xl font-bold text-white bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                  <h1 className="text-4xl font-bold text-white">
                     Paneli i Menaxherit
                   </h1>
                 </div>
@@ -572,42 +572,42 @@ const ManagerDashboard = () => {
             <div className="h-1 bg-gradient-to-r from-amber-500 to-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
           </Link>
 
-          <Link to="/manager/settings" className="group bg-gradient-to-br from-rose-50 to-red-100 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-rose-200 overflow-hidden">
+          <div className="group bg-gradient-to-br from-rose-50 to-red-100 rounded-3xl shadow-lg border border-rose-200 overflow-hidden opacity-60 cursor-not-allowed relative">
+            <div className="absolute top-3 right-3 bg-rose-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10">Së shpejti</div>
             <div className="p-8">
               <div className="flex items-center mb-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl flex items-center justify-center mr-4">
                   <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-rose-700 transition-colors duration-200">Konfigurimet</h3>
+                  <h3 className="text-xl font-bold text-gray-800">Konfigurimet</h3>
                   <p className="text-rose-600 text-sm font-medium">Cilësimet e sistemit</p>
                 </div>
               </div>
               <p className="text-gray-600 leading-relaxed">Ndryshoni konfigurimet e restorantit</p>
             </div>
-            <div className="h-1 bg-gradient-to-r from-rose-500 to-red-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-          </Link>
+          </div>
 
-          <Link to="/manager/client-ordering" className="group bg-gradient-to-br from-pink-50 to-fuchsia-100 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-pink-200 overflow-hidden">
+          <div className="group bg-gradient-to-br from-pink-50 to-fuchsia-100 rounded-3xl shadow-lg border border-pink-200 overflow-hidden opacity-60 cursor-not-allowed relative">
+            <div className="absolute top-3 right-3 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full z-10">Së shpejti</div>
             <div className="p-8">
               <div className="flex items-center mb-4">
-                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mr-4">
                   <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-800 group-hover:text-pink-700 transition-colors duration-200">Porosia e Klientit</h3>
+                  <h3 className="text-xl font-bold text-gray-800">Porosia e Klientit</h3>
                   <p className="text-pink-600 text-sm font-medium">Self-service</p>
                 </div>
               </div>
               <p className="text-gray-600 leading-relaxed">Menaxhoni sistemin e porosisë së klientit</p>
             </div>
-            <div className="h-1 bg-gradient-to-r from-pink-500 to-fuchsia-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-          </Link>
+          </div>
         </div>
       </div>
     </div>

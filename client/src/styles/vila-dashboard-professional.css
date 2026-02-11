@@ -17,11 +17,26 @@
   min-height: 100vh;
 }
 
+/* === PAGE HEADERS - Gradient backgrounds === */
+.vila-page-header {
+  background: linear-gradient(135deg, #4338ca 0%, #1d4ed8 50%, #7c3aed 100%) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 20px rgba(67, 56, 202, 0.3) !important;
+}
+
+.vila-page-header-kitchen {
+  background: linear-gradient(135deg, #ea580c 0%, #dc2626 50%, #c2410c 100%) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: 0 4px 20px rgba(234, 88, 12, 0.3) !important;
+}
+
 /* === CARD STYLING - Consistent Light Gray === */
-.bg-white,
-.bg-white\/80,
-.bg-white\/70,
-.backdrop-blur-lg {
+/* Exclude page headers from card styling */
+.bg-white:not(.vila-page-header):not(.vila-page-header-kitchen),
+.bg-white\/80:not(.vila-page-header):not(.vila-page-header-kitchen),
+.bg-white\/70:not(.vila-page-header):not(.vila-page-header-kitchen) {
   background-color: #ffffff !important;
   backdrop-filter: blur(8px) !important;
   border: 1px solid #e5e7eb !important;
