@@ -12,7 +12,15 @@ function getMaskedUri(uri) {
 }
 
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI;
+  let uri = process.env.MONGO_URI;
+
+  // Guard against common mistake: env var value set as "MONGO_URI=mongodb+srv://..."
+  if (uri && uri.startsWith('MONGO_URI=')) {
+    console.warn('WARNING: MONGO_URI value contains "MONGO_URI=" prefix — stripping it automatically.');
+    console.warn('Please fix this in your Railway/hosting environment variables.');
+    uri = uri.replace(/^MONGO_URI=/, '');
+  }
+
   console.log(`Connecting to MongoDB: ${getMaskedUri(uri)}`);
 
   try {
