@@ -29,6 +29,9 @@ if (process.env.NODE_ENV === 'production' && config.jwtSecret.length < 32) {
 const app = express();
 const server = http.createServer(app);
 
+// Trust first proxy (Railway, Heroku, etc.) — required for rate limiting behind reverse proxy
+app.set('trust proxy', 1);
+
 // Connect to Database
 connectDB();
 
