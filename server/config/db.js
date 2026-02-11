@@ -24,10 +24,7 @@ const connectDB = async () => {
   console.log(`Connecting to MongoDB: ${getMaskedUri(uri)}`);
 
   try {
-    const conn = await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    const conn = await mongoose.connect(uri);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (err) {
