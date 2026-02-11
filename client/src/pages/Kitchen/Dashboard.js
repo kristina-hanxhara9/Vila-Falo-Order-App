@@ -675,8 +675,8 @@ const KitchenDashboard = () => {
   return (
     <div className="app-container">
       {/* Professional Header */}
-      <header className="vila-header">
-        <div className="vila-header-content">
+      <header className="vila-page-header-kitchen">
+        <div className="container mx-auto px-4 py-6">
           <div className="container">
             <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
               {/* Brand Section */}

@@ -95,7 +95,8 @@ const WaiterDashboard = () => {
   });
   const [printingStatus, setPrintingStatus] = useState('');
   const [printingOrder, setPrintingOrder] = useState(null);
-  
+  const [selectedTable, setSelectedTable] = useState(null);
+
   const { user, logout, token } = useContext(AuthContext);
   const { socket, connected } = useContext(SocketContext);
   const navigate = useNavigate();
@@ -198,9 +199,50 @@ const WaiterDashboard = () => {
     }
   }, [socket, connected]);
   
-  // Handle table selection
+  // Handle table selection - show modal
   const handleSelectTable = (table) => {
-    navigate(`/waiter/table/${table._id}`);
+    setSelectedTable(table);
+  };
+
+  // Get status text in Albanian
+  const getStatusText = (status) => {
+    switch (status) {
+      case 'free': return 'E lire';
+      case 'ordering': return 'Duke porositur';
+      case 'unpaid': return 'E papaguar';
+      case 'paid': return 'E paguar';
+      default: return status;
+    }
+  };
+
+  // Change table status
+  const changeTableStatus = async (tableId, newStatus) => {
+    try {
+      const config = { headers: { 'x-auth-token': token } };
+
+      if (newStatus === 'free') {
+        const table = tables.find(t => t._id === tableId);
+        if (table && table.currentOrder) {
+          await axios.put(`${API_URL}/orders/${table.currentOrder}/status`, { status: 'completed' }, config);
+        }
+      }
+
+      const updateResponse = await axios.put(`${API_URL}/tables/${tableId}`, {
+        status: newStatus,
+        currentOrder: newStatus === 'free' ? null : undefined
+      }, config);
+
+      setTables(tables.map(t => t._id === tableId ? updateResponse.data : t));
+
+      if (socket && connected) {
+        socket.emit('table-status-change', { _id: tableId, status: newStatus, updatedBy: 'Waiter' });
+      }
+
+      setSelectedTable(prev => prev && prev._id === tableId ? { ...prev, status: newStatus } : prev);
+    } catch (err) {
+      console.error('Status change error:', err);
+      setError('Gabim gjate ndryshimit te statusit');
+    }
   };
   
   // Handle navigation to new order page
@@ -363,10 +405,7 @@ const WaiterDashboard = () => {
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-screen">
       {/* Enhanced Header with glassmorphism effect */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-blue-500/10 to-white/5"></div>
-        
-        <div className="relative backdrop-blur-sm bg-white/10 border-b border-white/20 shadow-2xl">
+        <div className="vila-page-header">
           <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
               <div className="text-center lg:text-left">
@@ -402,9 +441,9 @@ const WaiterDashboard = () => {
                   <span className="font-semibold">Porosi e Re</span>
                 </button>
                 
-                <button 
+                <button
                   onClick={navigateToTableManagement}
-                  className="group px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:-translate-y-1 backdrop-blur-sm border border-white/30"
+                  className="group px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center transform hover:-translate-y-1"
                 >
                   <svg className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
@@ -903,9 +942,104 @@ const WaiterDashboard = () => {
         </div>
       </div>
       
+      {/* Table Detail Modal */}
+      {selectedTable && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedTable(null)}>
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className={`px-6 py-5 ${
+              selectedTable.status === 'free' ? 'bg-gradient-to-r from-emerald-500 to-green-600' :
+              selectedTable.status === 'ordering' ? 'bg-gradient-to-r from-amber-500 to-yellow-600' :
+              selectedTable.status === 'unpaid' ? 'bg-gradient-to-r from-rose-500 to-red-600' :
+              'bg-gradient-to-r from-blue-500 to-indigo-600'
+            }`}>
+              <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-white">Tavolina {selectedTable.number}</h2>
+                <button onClick={() => setSelectedTable(null)} className="text-white/80 hover:text-white">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <div className="text-sm text-gray-500">Kapaciteti</div>
+                  <div className="font-semibold text-gray-800">{selectedTable.capacity} persona</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">Statusi</div>
+                  <div className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${
+                    selectedTable.status === 'free' ? 'bg-green-100 text-green-800' :
+                    selectedTable.status === 'ordering' ? 'bg-yellow-100 text-yellow-800' :
+                    selectedTable.status === 'unpaid' ? 'bg-red-100 text-red-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {getStatusText(selectedTable.status)}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-700 mb-3">Ndrysho statusin:</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {selectedTable.status !== 'free' && (
+                    <button onClick={() => changeTableStatus(selectedTable._id, 'free')}
+                      className="py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition font-medium text-sm">
+                      E lire
+                    </button>
+                  )}
+                  {selectedTable.status !== 'ordering' && (
+                    <button onClick={() => changeTableStatus(selectedTable._id, 'ordering')}
+                      className="py-2 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 transition font-medium text-sm">
+                      Duke porositur
+                    </button>
+                  )}
+                  {selectedTable.status !== 'unpaid' && (
+                    <button onClick={() => changeTableStatus(selectedTable._id, 'unpaid')}
+                      className="py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition font-medium text-sm">
+                      E papaguar
+                    </button>
+                  )}
+                  {selectedTable.status !== 'paid' && (
+                    <button onClick={() => changeTableStatus(selectedTable._id, 'paid')}
+                      className="py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition font-medium text-sm">
+                      E paguar
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={() => { setSelectedTable(null); navigate(`/waiter/table/${selectedTable._id}`); }}
+                  className="w-full py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center justify-center font-semibold"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                  </svg>
+                  Shiko detajet
+                </button>
+                <button
+                  onClick={() => { setSelectedTable(null); navigate(`/waiter/table/${selectedTable._id}/order`); }}
+                  className="w-full py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition flex items-center justify-center font-semibold"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                  </svg>
+                  Bej porosi
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Floating Action Button for Mobile */}
       <div className="fixed bottom-6 right-6 lg:hidden">
-        <button 
+        <button
           onClick={handleNewOrder}
           className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 flex items-center justify-center"
         >
